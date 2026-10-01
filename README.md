@@ -2,7 +2,7 @@
 
 Sistema de gestão de fluxos no estilo kanban, inspirado no Pipefy, para equipes que cuidam de dados de pessoas.
 
-**Demonstração online:** [abrir o pipyscox](https://marcos-scox.github.io/pipyscox/)
+**Demonstração online:** [abrir o pipyscox](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/main/index.html)
 
 O sistema roda diretamente no navegador, sem servidor e sem instalação. Os dados ficam na pasta local escolhida pelo usuário.
 
@@ -10,7 +10,7 @@ O sistema roda diretamente no navegador, sem servidor e sem instalação. Os dad
 
 ## Como usar
 
-1. Abra a [demonstração online](https://marcos-scox.github.io/pipyscox/) ou descompacte o projeto e abra `index.html`.
+1. Abra a [demonstração online](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/main/index.html) ou descompacte o projeto e abra `index.html`.
 2. Na primeira execução, escolha uma pasta para os dados e informe seu nome.
 3. Use o menu lateral para criar pipys, configurar fases, cadastrar cards e acompanhar relatórios.
 4. Para compartilhar ou mover os dados, use **Configurações → Baixar ZIP** ou envie a pasta inteira.
