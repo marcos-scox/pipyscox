@@ -12,10 +12,11 @@
 }
 
 @media (max-width:900px){
-  .app,body.collapsed .app{grid-template-columns:0 1fr}
+  .app,body.collapsed .app{grid-template-columns:0 minmax(0,1fr);width:100%}
+  .main{width:100vw;max-width:100vw;min-width:0}
   .sidebar{position:fixed;z-index:70;left:0;top:0;bottom:0;width:min(250px,86vw);transform:translateX(-100%);transition:transform .2s;box-shadow:10px 0 30px rgba(0,0,0,.18)}
   body.mnav .sidebar{transform:none}
-  .search{width:auto;flex:1;max-width:none}.search .kbd{display:none}
+  .search{width:auto;flex:1;max-width:none;min-width:0}.search .kbd{display:none}
   .content{padding:16px;min-width:0}.crumbs{padding:0 16px}.header{padding:0 12px;gap:8px}
   .save-st .tx,.vsep{display:none}
   .cfg-grid{grid-template-columns:1fr}
