@@ -495,6 +495,29 @@ body:not(.collapsed) .nav-item:hover{padding-left:16px}
   .auto-form{grid-template-columns:1fr}
 }
 
+/* Modo mobile forçado: htmlpreview/Safari pode entregar uma viewport CSS de desktop
+   mesmo quando o dispositivo é um iPhone. A classe é aplicada pelo boot.js. */
+html.mobile-device,html.mobile-device body{width:100%;min-width:0;overflow-x:hidden}
+.mobile-device .app{width:100%;grid-template-columns:0 100vw!important}
+.mobile-device .main{width:100vw!important;max-width:100vw!important;min-width:0}
+.mobile-device .sidebar{position:fixed;z-index:70;left:0;top:0;bottom:0;width:min(250px,86vw);transform:translateX(-100%)}
+body.mobile-device.mnav .sidebar{transform:none}
+.mobile-device .header{height:56px;padding:0 8px;gap:8px}
+.mobile-device .search{width:auto;flex:1;max-width:none;min-width:0;padding:5px 8px;gap:5px}
+.mobile-device .search .kbd,.mobile-device .save-st .tx,.mobile-device .vsep{display:none}
+.mobile-device .avatar{width:32px;height:32px}
+.mobile-device .content{width:100%;min-width:0;padding:12px;overflow-x:hidden}
+.mobile-device .crumbs{padding:0 12px;min-height:34px;gap:5px;overflow:hidden;white-space:nowrap}
+.mobile-device .widgets{grid-template-columns:1fr!important;gap:10px;margin-bottom:14px}
+.mobile-device .widget{min-height:130px;padding:14px 14px 0}
+.mobile-device .pipe-grid,.mobile-device .rep-grid,.mobile-device .cfg-grid{grid-template-columns:1fr}
+.mobile-device .page-head,.mobile-device .toolbar,.mobile-device .filters,.mobile-device .modal-f,.mobile-device .cmt{flex-wrap:wrap}
+.mobile-device .filters>*{min-width:0;max-width:100%}
+.mobile-device .filters .search,.mobile-device .filters .input,.mobile-device .filters select{width:100%}
+.mobile-device .board{gap:10px;margin-right:-12px;padding-right:12px}
+.mobile-device .col{width:min(82vw,290px)}
+.mobile-device .modal.lg,.mobile-device .modal.md,.mobile-device .modal.draft{max-width:100%;width:100%}
+
 </style>
 <style>
 /* pipyscox · print.css
@@ -1841,6 +1864,8 @@ setInterval(()=>{if(S.db)maybeAutoBackup()},36e5);
    Inicialização */
 'use strict';
 /* ===================== Inicialização ===================== */
+const isMobileDevice=/Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent)||window.matchMedia?.('(max-width:640px)').matches;
+document.documentElement.classList.toggle('mobile-device',!!isMobileDevice);
 (async function boot(){
   try{S.theme=localStorage.getItem('pipyscox-theme')||'dark';S.user=localStorage.getItem('pipyscox-user')||''}catch(e){}
   renderTheme();renderAvatar();
