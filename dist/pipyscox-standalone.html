@@ -99,7 +99,7 @@ body.collapsed .nav-item{justify-content:center;padding:10px 0}
 .avatar.xs{width:20px;height:20px;font-size:9px;cursor:default}
 .crumbs{height:48px;flex:none;display:flex;align-items:center;gap:8px;padding:0 24px;border-bottom:1px solid var(--border);color:var(--text-2);font-size:14.5px}
 .crumbs a{cursor:pointer;color:var(--primary-2);text-decoration:underline}
-.content{flex:1;overflow:auto;padding:24px}
+.content{flex:1;overflow:auto;overflow-x:hidden;padding:24px;min-width:0}
 
 </style>
 <style>
@@ -639,6 +639,20 @@ function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('pipyscox',
 async function kvGet(k){try{const d=await idb();return await new Promise(res=>{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(undefined)})}catch(e){return undefined}}
 async function kvSet(k,v){try{const d=await idb();await new Promise(res=>{const tx=d.transaction('kv','readwrite');tx.objectStore('kv').put(v,k);tx.oncomplete=res;tx.onerror=res})}catch(e){}}
 
+/* ===================== Armazenamento local (celular) ===================== */
+const LOCAL_DB_KEY='pipyscox-local-db';
+function isLocalStore(){return !!S.dir?.local}
+async function openLocalStore(){
+  S.dir={name:'Armazenamento deste celular',local:true};
+  try{
+    const raw=localStorage.getItem(LOCAL_DB_KEY);
+    S.db=normalize(raw?JSON.parse(raw):{});
+  }catch(e){S.db=normalize({});}
+  S.lastMod=0;S.conflict=false;hideGate();renderAll();setSaveState('ok');
+  if(!S.user)await askUser();else ensurePerson(S.user);
+  await autoPurge();return true;
+}
+
 /* ===================== Sistema de arquivos ===================== */
 async function dirAt(parts,create,root=S.dir){let d=root;for(const p of parts){if(!p)continue;d=await d.getDirectoryHandle(p,{create})}return d}
 async function writeFile(path,data,root=S.dir){const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,true,root);const fh=await d.getFileHandle(name,{create:true});const w=await fh.createWritable();await w.write(data);await w.close()}
@@ -667,6 +681,7 @@ function normCard(c){c.values=c.values||{};c.createdAt=c.createdAt||nowISO();c.p
 
 /* ===================== Leitura / gravação com detecção de alteração externa ===================== */
 async function loadDb(){
+  if(isLocalStore()){try{S.db=normalize(JSON.parse(localStorage.getItem(LOCAL_DB_KEY)||'{}'))}catch(e){S.db=normalize({})}S.lastMod=0;S.conflict=false;return}
   try{const f=await readFile(DBFILE);S.db=normalize(JSON.parse(await f.text()));S.lastMod=f.lastModified}
   catch(e){
     if(e.name==='NotFoundError'||e.name==='TypeMismatchError'){S.db=normalize({});await writeFile(DBFILE,JSON.stringify(S.db,null,2));S.lastMod=(await readFile(DBFILE)).lastModified}
@@ -678,10 +693,11 @@ async function loadDb(){
   }
   S.conflict=false;
 }
-function setSaveState(st){const el=$('#saveSt');el.className='save-st '+(st==='saving'?'saving':st==='err'?'err':'');el.querySelector('.tx').textContent=st==='saving'?'Salvando...':st==='err'?(S.conflict?'Conflito de versões':'Erro ao salvar'):'Salvo na pasta'}
+function setSaveState(st){const el=$('#saveSt');el.className='save-st '+(st==='saving'?'saving':st==='err'?'err':'');el.querySelector('.tx').textContent=st==='saving'?'Salvando...':st==='err'?(S.conflict?'Conflito de versões':'Erro ao salvar'):(isLocalStore()?'Salvo neste celular':'Salvo na pasta')}
 function save(){if(!S.db)return;clearTimeout(S.saveT);setSaveState('saving');S.saveT=setTimeout(()=>flush(),350)}
 async function flush(force){
   clearTimeout(S.saveT);S.saveT=null;if(!S.dir||!S.db)return;if(S.conflict&&!force)return;
+  if(isLocalStore()){try{S.db.updatedAt=nowISO();localStorage.setItem(LOCAL_DB_KEY,JSON.stringify(S.db));setSaveState('ok');S.changeCount++}catch(e){setSaveState('err');toast('Não foi possível salvar neste celular: '+esc(e.message),'err',6000)}return;}
   S.saving=true;
   try{
     if(!force&&S.lastMod){let ext=0;try{ext=(await readFile(DBFILE)).lastModified}catch(e){}
@@ -942,7 +958,7 @@ function openPop(anchor,html){closePop();const r=anchor.getBoundingClientRect();
 /* ===================== Pasta / usuário ===================== */
 function showGate(mode,name){
   const g=$('#gate');g.classList.remove('hidden');let body='';
-  if(mode==='unsupported')body=`<h2>Navegador não suportado</h2><p>O pipyscox salva os dados direto numa pasta do seu computador. Abra este arquivo no <b>Google Chrome</b> ou <b>Microsoft Edge</b> (versão atual).</p>`;
+  if(mode==='unsupported')body=`<h2>Use o pipyscox no celular</h2><p>Este navegador não permite escolher uma pasta do aparelho. Você pode usar o modo local para salvar os dados neste celular ou abrir no Chrome/Edge do computador para trabalhar com uma pasta compartilhada.</p><div class="row" style="justify-content:center;flex-wrap:wrap"><button class="btn primary" data-act="useLocalStore">${ic('save')} Salvar neste celular</button></div>`;
   else if(mode==='reconnect')body=`<h2>Bem-vindo de volta</h2><p>Por segurança, o navegador pede confirmação para acessar a pasta <b>${esc(name)}</b> novamente.</p><div class="row" style="justify-content:center;flex-wrap:wrap"><button class="btn primary" data-act="gateReconnect">${ic('folder')} Reconectar à pasta</button><button class="btn ghost" data-act="gateChoose">Escolher outra pasta</button></div>`;
   else body=`<h2>Escolha a pasta de dados</h2><p>Todos os pipys, cards e arquivos ficam salvos nessa pasta. Você escolhe uma vez e pode trocar depois em Configurações. Se a pasta já tiver dados do pipyscox, eles são carregados automaticamente.</p><button class="btn primary" data-act="gateChoose">${ic('folder')} Escolher pasta</button>`;
   g.innerHTML=`<div class="box"><div style="color:var(--text);display:flex;justify-content:center">${LOGO.replace('class="brand-logo"','style="width:64px;height:64px"')}</div><div style="font-size:15px;margin-top:6px"><b>pipy</b><span style="color:var(--info)">scox</span></div>${body}</div>`;
@@ -1617,8 +1633,8 @@ const A={
   async trashEmpty(){if(!await confirmBox('Esvaziar lixeira',`Apagar definitivamente os ${S.db.trash.length} item(ns) da lixeira e seus anexos?`,'Esvaziar',true))return;for(const t of S.db.trash.slice())await purgeTrash(t);save();renderMain()},
   personAdd(){const n=$('#personIn').value.trim();if(!n)return;ensurePerson(n);renderMain()},
   personRm(el){S.db.settings.people=S.db.settings.people.filter(x=>x!==el.dataset.n);save();renderMain()},
-  async zipDownload(){toast('Gerando ZIP...','ok',1500);try{downloadBlob(await buildBackupZip(),`pipyscox-${stamp()}.zip`)}catch(e){toast('Erro ao gerar ZIP: '+esc(e.message),'err')}},
-  async backupFolder(){try{await backupToFolder();loadBackups()}catch(e){toast('Erro no backup: '+esc(e.message),'err')}},
+  async zipDownload(){if(isLocalStore()){toast('No modo celular, os dados ficam salvos neste navegador. Abra no computador para baixar um ZIP.','warn',5000);return}toast('Gerando ZIP...','ok',1500);try{downloadBlob(await buildBackupZip(),`pipyscox-${stamp()}.zip`)}catch(e){toast('Erro ao gerar ZIP: '+esc(e.message),'err')}},
+  async backupFolder(){if(isLocalStore()){toast('Backups em pasta só estão disponíveis no modo computador.','warn',4500);return}try{await backupToFolder();loadBackups()}catch(e){toast('Erro no backup: '+esc(e.message),'err')}},
   async bkDl(el){downloadBlob(await readFile('backups/'+el.dataset.n),el.dataset.n)},
   async bkRm(el){if(!await confirmBox('Excluir backup',`Excluir <b>${esc(el.dataset.n)}</b>?`,'Excluir',true)){renderMain();return}await removePath('backups/'+el.dataset.n);renderMain()},
   async bkRestore(el){if(!await confirmBox('Restaurar backup',`Restaurar <b>${esc(el.dataset.n)}</b>? Os dados atuais serão substituídos (um backup deles será criado antes).`,'Restaurar',true)){renderMain();return}
@@ -1633,6 +1649,7 @@ const A={
   async conflictReload(){$('#modalRoot').innerHTML='';S.openCard=null;await loadDb();renderAll();setSaveState('ok');toast('Dados recarregados da pasta.')},
   async conflictOverwrite(){$('#modalRoot').innerHTML='';try{const n=await backupToFolder(true,'backup',true);await flush(true);toast(`Suas alterações foram gravadas. A versão externa ficou salva em <b>backups/${esc(n)}</b>.`,'ok',6000)}catch(e){toast('Erro: '+esc(e.message),'err')}},
   async gateChoose(){const h=await pickFolder();if(h)await openDir(h)},
+  async useLocalStore(){await openLocalStore()},
   async gateReconnect(){const h=await kvGet('dir');if(h&&await verifyPerm(h,true))await openDir(h);else toast('Permissão não concedida.','warn')}
 };
 

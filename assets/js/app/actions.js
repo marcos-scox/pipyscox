@@ -81,8 +81,8 @@ const A={
   async trashEmpty(){if(!await confirmBox('Esvaziar lixeira',`Apagar definitivamente os ${S.db.trash.length} item(ns) da lixeira e seus anexos?`,'Esvaziar',true))return;for(const t of S.db.trash.slice())await purgeTrash(t);save();renderMain()},
   personAdd(){const n=$('#personIn').value.trim();if(!n)return;ensurePerson(n);renderMain()},
   personRm(el){S.db.settings.people=S.db.settings.people.filter(x=>x!==el.dataset.n);save();renderMain()},
-  async zipDownload(){toast('Gerando ZIP...','ok',1500);try{downloadBlob(await buildBackupZip(),`pipyscox-${stamp()}.zip`)}catch(e){toast('Erro ao gerar ZIP: '+esc(e.message),'err')}},
-  async backupFolder(){try{await backupToFolder();loadBackups()}catch(e){toast('Erro no backup: '+esc(e.message),'err')}},
+  async zipDownload(){if(isLocalStore()){toast('No modo celular, os dados ficam salvos neste navegador. Abra no computador para baixar um ZIP.','warn',5000);return}toast('Gerando ZIP...','ok',1500);try{downloadBlob(await buildBackupZip(),`pipyscox-${stamp()}.zip`)}catch(e){toast('Erro ao gerar ZIP: '+esc(e.message),'err')}},
+  async backupFolder(){if(isLocalStore()){toast('Backups em pasta só estão disponíveis no modo computador.','warn',4500);return}try{await backupToFolder();loadBackups()}catch(e){toast('Erro no backup: '+esc(e.message),'err')}},
   async bkDl(el){downloadBlob(await readFile('backups/'+el.dataset.n),el.dataset.n)},
   async bkRm(el){if(!await confirmBox('Excluir backup',`Excluir <b>${esc(el.dataset.n)}</b>?`,'Excluir',true)){renderMain();return}await removePath('backups/'+el.dataset.n);renderMain()},
   async bkRestore(el){if(!await confirmBox('Restaurar backup',`Restaurar <b>${esc(el.dataset.n)}</b>? Os dados atuais serão substituídos (um backup deles será criado antes).`,'Restaurar',true)){renderMain();return}
@@ -97,5 +97,6 @@ const A={
   async conflictReload(){$('#modalRoot').innerHTML='';S.openCard=null;await loadDb();renderAll();setSaveState('ok');toast('Dados recarregados da pasta.')},
   async conflictOverwrite(){$('#modalRoot').innerHTML='';try{const n=await backupToFolder(true,'backup',true);await flush(true);toast(`Suas alterações foram gravadas. A versão externa ficou salva em <b>backups/${esc(n)}</b>.`,'ok',6000)}catch(e){toast('Erro: '+esc(e.message),'err')}},
   async gateChoose(){const h=await pickFolder();if(h)await openDir(h)},
+  async useLocalStore(){await openLocalStore()},
   async gateReconnect(){const h=await kvGet('dir');if(h&&await verifyPerm(h,true))await openDir(h);else toast('Permissão não concedida.','warn')}
 };

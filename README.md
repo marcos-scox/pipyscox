@@ -2,18 +2,18 @@
 
 Sistema de gestão de fluxos no estilo kanban, inspirado no Pipefy, para equipes que cuidam de dados de pessoas.
 
-**Demonstração online:** [abrir o pipyscox](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/main/index.html)
+**Demonstração online:** [abrir o pipyscox](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/main/index.html?v=mobile-20261001)
 
-O sistema roda diretamente no navegador, sem servidor e sem instalação. Os dados ficam na pasta local escolhida pelo usuário.
+O sistema roda diretamente no navegador, sem servidor e sem instalação. No computador, os dados ficam na pasta local escolhida pelo usuário. Em celulares sem suporte à seleção de pastas, o sistema oferece um modo local que salva os dados no armazenamento do navegador.
 
 > **Compatibilidade:** use uma versão atual do Google Chrome ou Microsoft Edge. O armazenamento em pasta usa a File System Access API; Firefox e Safari ainda não oferecem suporte suficiente para esse fluxo.
 
 ## Como usar
 
-1. Abra a [demonstração online](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/main/index.html) ou descompacte o projeto e abra `index.html`.
+1. Abra a [demonstração online](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/main/index.html?v=mobile-20261001) ou descompacte o projeto e abra `index.html`.
 2. Na primeira execução, escolha uma pasta para os dados e informe seu nome.
 3. Use o menu lateral para criar pipys, configurar fases, cadastrar cards e acompanhar relatórios.
-4. Para compartilhar ou mover os dados, use **Configurações → Baixar ZIP** ou envie a pasta inteira.
+4. No computador, para compartilhar ou mover os dados, use **Configurações → Baixar ZIP** ou envie a pasta inteira. No celular, os dados ficam neste navegador; para exportar, abra o sistema no computador.
 
 A versão [standalone](dist/pipyscox-standalone.html) reúne HTML, CSS e JavaScript em um único arquivo para distribuição offline. Para regenerá-la depois de editar o código:
 

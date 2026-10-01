@@ -6,6 +6,20 @@ function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('pipyscox',
 async function kvGet(k){try{const d=await idb();return await new Promise(res=>{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(undefined)})}catch(e){return undefined}}
 async function kvSet(k,v){try{const d=await idb();await new Promise(res=>{const tx=d.transaction('kv','readwrite');tx.objectStore('kv').put(v,k);tx.oncomplete=res;tx.onerror=res})}catch(e){}}
 
+/* ===================== Armazenamento local (celular) ===================== */
+const LOCAL_DB_KEY='pipyscox-local-db';
+function isLocalStore(){return !!S.dir?.local}
+async function openLocalStore(){
+  S.dir={name:'Armazenamento deste celular',local:true};
+  try{
+    const raw=localStorage.getItem(LOCAL_DB_KEY);
+    S.db=normalize(raw?JSON.parse(raw):{});
+  }catch(e){S.db=normalize({});}
+  S.lastMod=0;S.conflict=false;hideGate();renderAll();setSaveState('ok');
+  if(!S.user)await askUser();else ensurePerson(S.user);
+  await autoPurge();return true;
+}
+
 /* ===================== Sistema de arquivos ===================== */
 async function dirAt(parts,create,root=S.dir){let d=root;for(const p of parts){if(!p)continue;d=await d.getDirectoryHandle(p,{create})}return d}
 async function writeFile(path,data,root=S.dir){const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,true,root);const fh=await d.getFileHandle(name,{create:true});const w=await fh.createWritable();await w.write(data);await w.close()}
@@ -34,6 +48,7 @@ function normCard(c){c.values=c.values||{};c.createdAt=c.createdAt||nowISO();c.p
 
 /* ===================== Leitura / gravação com detecção de alteração externa ===================== */
 async function loadDb(){
+  if(isLocalStore()){try{S.db=normalize(JSON.parse(localStorage.getItem(LOCAL_DB_KEY)||'{}'))}catch(e){S.db=normalize({})}S.lastMod=0;S.conflict=false;return}
   try{const f=await readFile(DBFILE);S.db=normalize(JSON.parse(await f.text()));S.lastMod=f.lastModified}
   catch(e){
     if(e.name==='NotFoundError'||e.name==='TypeMismatchError'){S.db=normalize({});await writeFile(DBFILE,JSON.stringify(S.db,null,2));S.lastMod=(await readFile(DBFILE)).lastModified}
@@ -45,10 +60,11 @@ async function loadDb(){
   }
   S.conflict=false;
 }
-function setSaveState(st){const el=$('#saveSt');el.className='save-st '+(st==='saving'?'saving':st==='err'?'err':'');el.querySelector('.tx').textContent=st==='saving'?'Salvando...':st==='err'?(S.conflict?'Conflito de versões':'Erro ao salvar'):'Salvo na pasta'}
+function setSaveState(st){const el=$('#saveSt');el.className='save-st '+(st==='saving'?'saving':st==='err'?'err':'');el.querySelector('.tx').textContent=st==='saving'?'Salvando...':st==='err'?(S.conflict?'Conflito de versões':'Erro ao salvar'):(isLocalStore()?'Salvo neste celular':'Salvo na pasta')}
 function save(){if(!S.db)return;clearTimeout(S.saveT);setSaveState('saving');S.saveT=setTimeout(()=>flush(),350)}
 async function flush(force){
   clearTimeout(S.saveT);S.saveT=null;if(!S.dir||!S.db)return;if(S.conflict&&!force)return;
+  if(isLocalStore()){try{S.db.updatedAt=nowISO();localStorage.setItem(LOCAL_DB_KEY,JSON.stringify(S.db));setSaveState('ok');S.changeCount++}catch(e){setSaveState('err');toast('Não foi possível salvar neste celular: '+esc(e.message),'err',6000)}return;}
   S.saving=true;
   try{
     if(!force&&S.lastMod){let ext=0;try{ext=(await readFile(DBFILE)).lastModified}catch(e){}
