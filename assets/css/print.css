@@ -1,0 +1,10 @@
+/* pipyscox · print.css
+   Impressão / exportação em PDF dos relatórios */
+@media print{
+  :root,:root[data-theme]{--bg:#fff;--surface:#fff;--surface-2:#f1f2f6;--surface-3:#e6e8ee;--border:#cfd4dc;--border-soft:#e5e7eb;--text:#111;--text-2:#333;--muted:#666;--chip-bg:rgba(0,0,0,.06);--s1:#5856d6;--s2:#12896f}
+  body{overflow:visible;background:#fff}
+  .sidebar,.header,.crumbs,.no-print,.toasts,#modalRoot,#popRoot{display:none!important}
+  .app{display:block;height:auto}.main{height:auto}.content{overflow:visible;padding:0}
+  .panel,.stat{break-inside:avoid}
+  .print-only{display:block}
+}

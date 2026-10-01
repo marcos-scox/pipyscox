@@ -1,0 +1,100 @@
+/* pipyscox · animations.css
+   Animações e microinterações. Desligadas automaticamente quando o sistema
+   pede "movimento reduzido" ou quando o usuário desativa em Configurações. */
+
+:root{
+  --ease-out:cubic-bezier(.2,.8,.2,1);
+  --ease-spring:cubic-bezier(.2,.9,.3,1.25);
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes riseIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeOut{to{opacity:0}}
+@keyframes modalIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes modalOut{to{opacity:0;transform:translateY(8px) scale(.98)}}
+@keyframes popIn{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes toastIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateX(24px)}}
+@keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes growY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+@keyframes softPulse{0%,100%{box-shadow:0 0 0 0 rgba(224,85,85,0)}50%{box-shadow:0 0 0 4px rgba(224,85,85,.18)}}
+@keyframes cardDrop{0%{transform:scale(.92);box-shadow:0 0 0 3px var(--primary-2)}60%{transform:scale(1.03)}100%{transform:none;box-shadow:0 0 0 0 transparent}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes zap{0%,100%{filter:none}50%{filter:drop-shadow(0 0 4px var(--warning))}}
+@keyframes outlinePulse{0%,100%{outline-color:var(--primary-2)}50%{outline-color:transparent}}
+
+/* ---------- Entrada de tela (aplicada só quando a rota muda) ---------- */
+.view-in>.page-head,.view-in>.filters,.view-in>p{animation:fadeIn .35s var(--ease-out) both}
+.view-in .widget,.view-in .pipe-card,.view-in .stat,.view-in .col,.view-in .kcard,
+.view-in .panel,.view-in .pal-item,.view-in .fb-item,.view-in .tbl tbody tr,.view-in .auto-item{
+  animation:riseIn .45s var(--ease-out) both;animation-delay:calc(var(--i,0) * 35ms)}
+.view-in .kcard{animation-delay:calc(120ms + var(--i,0) * 30ms)}
+.view-in .w-chart polyline{stroke-dasharray:700;stroke-dashoffset:700;animation:draw 1.1s .25s var(--ease-out) forwards}
+.view-in .w-chart circle{animation:fadeIn .4s 1s both}
+.view-in .w-chart rect,.view-in .w-chart path{transform-box:fill-box;transform-origin:bottom;animation:growY .7s var(--ease-out) both}
+.rbar .fi{transform-origin:left center}
+.view-in .rbar .fi{animation:growX .8s var(--ease-out) both;animation-delay:calc(150ms + var(--i,0) * 45ms)}
+.wchart g.wk path{transform-box:fill-box;transform-origin:bottom}
+.view-in .wchart g.wk path{animation:growY .7s var(--ease-out) both;animation-delay:calc(200ms + var(--i,0) * 60ms)}
+.view-in .wchart g.wk text{animation:fadeIn .4s both;animation-delay:calc(500ms + var(--i,0) * 60ms)}
+.view-in .empty .i{animation:float 3s ease-in-out infinite}
+
+/* ---------- Modais, popovers e toasts ---------- */
+.overlay{animation:fadeIn .18s ease-out both}
+.overlay .modal{animation:modalIn .28s var(--ease-spring) both}
+.overlay.closing{animation:fadeOut .15s ease-in forwards}
+.overlay.closing .modal{animation:modalOut .15s ease-in forwards}
+.pop{animation:popIn .16s var(--ease-out) both;transform-origin:top left}
+.toast{animation:toastIn .3s var(--ease-spring) both}
+.toast.out{animation:toastOut .25s ease-in forwards}
+.ctabs+*{animation:fadeIn .2s ease-out}
+
+/* ---------- Microinterações ---------- */
+.btn{transition:transform .12s,filter .15s,background-color .15s,border-color .15s,color .15s}
+.btn:active:not(:disabled){transform:scale(.96)}
+.icon-btn{transition:background-color .15s,color .15s,transform .12s}
+.icon-btn:active{transform:scale(.9)}
+.nav-item{transition:background-color .15s,color .15s,box-shadow .2s,padding-left .18s}
+.nav-item.active{box-shadow:inset 3px 0 0 var(--primary-2)}
+body:not(.collapsed) .nav-item:hover{padding-left:16px}
+.kcard{transition:box-shadow .18s,transform .18s,opacity .15s}
+.kcard:hover{transform:translateY(-2px)}
+.kcard.dragging{opacity:.45;transform:rotate(2deg) scale(.97)}
+.kcard.drop-pop{animation:cardDrop .55s var(--ease-out)}
+.kdel{transition:opacity .15s,color .15s}
+.col.drop-target{animation:outlinePulse 1s ease-in-out infinite}
+.col{transition:box-shadow .2s}
+.widget{transition:transform .2s var(--ease-out),box-shadow .2s}
+.widget:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.pipe-card{transition:transform .2s var(--ease-out),border-color .2s,box-shadow .2s}
+.pipe-card:hover{box-shadow:var(--shadow)}
+.pal-item{transition:border-color .15s,transform .15s,background-color .15s}
+.pal-item:hover{transform:translateX(3px)}
+.fb-item{transition:border-color .15s,box-shadow .2s,opacity .15s,transform .15s}
+.fb-item.dragging{transform:scale(.98)}
+.fb-ph{animation:fadeIn .15s}
+.tagsel button{transition:background-color .15s,color .15s,transform .1s,border-color .15s}
+.tagsel button:active{transform:scale(.92)}
+.ctab{transition:color .15s,border-color .2s}
+.input{transition:border-color .15s,box-shadow .15s}
+.chip{transition:transform .15s}
+.save-st.saving .d{animation:pulse .9s ease-in-out infinite}
+.time-b.late{animation:softPulse 2.4s ease-in-out infinite}
+.col-head [title*="automação"],.tab .i[style*="warning"]{animation:zap 2.5s ease-in-out infinite}
+.auto-item .zap{animation:zap 2.5s ease-in-out infinite}
+.gate .box{animation:modalIn .5s var(--ease-spring) both}
+.gate .box>div:first-child svg{animation:float 3.2s ease-in-out infinite}
+.sidebar,.app{transition:grid-template-columns .25s var(--ease-out),transform .25s var(--ease-out)}
+
+/* ---------- Troca de tema suave ---------- */
+.theming,.theming *,.theming *::before,.theming *::after{
+  transition:background-color .35s ease,color .35s ease,border-color .35s ease,fill .35s ease,stroke .35s ease!important}
+
+/* ---------- Acessibilidade: sem animação ---------- */
+.no-anim *,.no-anim *::before,.no-anim *::after{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}

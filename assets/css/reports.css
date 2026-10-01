@@ -1,0 +1,17 @@
+/* pipyscox · reports.css
+   Relatórios: barras e gráfico semanal */
+.rep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:20px;margin-bottom:20px}
+.rbar{display:grid;grid-template-columns:minmax(90px,150px) 1fr auto;gap:12px;align-items:center;margin-bottom:12px;font-size:13px}
+.rbar .lb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;gap:6px;align-items:center}
+.rbar .tr{height:14px;position:relative}
+.rbar .fi{height:100%;border-radius:0 4px 4px 0;min-width:2px}
+.rbar .vl{color:var(--text-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.legend{display:flex;gap:16px;font-size:12.5px;color:var(--text-2);margin-bottom:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.wchart{width:100%;height:auto;display:block}
+.wchart text{fill:var(--muted);font-size:11px}
+.wchart .vt{fill:var(--text-2)}
+.wchart .grid{stroke:var(--border-soft)}
+.wchart .base{stroke:var(--border)}
+.wchart rect.hit{fill:transparent}
+.wchart g.wk:hover rect.hit{fill:var(--chip-bg)}

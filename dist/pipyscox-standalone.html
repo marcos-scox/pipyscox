@@ -1,0 +1,1837 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pipyscox</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHBhdGggZD0iTTE2IDIuNSAyNy43IDkuMnYxMy42TDE2IDI5LjUgNC4zIDIyLjhWOS4yWiIgZmlsbD0iIzIxMjYzMSIgc3Ryb2tlPSIjZTRlNmVhIiBzdHJva2Utd2lkdGg9IjIiLz48cmVjdCB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzLjIiIGhlaWdodD0iMTIiIHJ4PSIxLjIiIGZpbGw9IiM1ODU2ZDYiLz48cmVjdCB4PSIxNC40IiB5PSIxMCIgd2lkdGg9IjMuMiIgaGVpZ2h0PSI4IiByeD0iMS4yIiBmaWxsPSIjMzM5OWZmIi8+PHJlY3QgeD0iMTguOCIgeT0iMTAiIHdpZHRoPSIzLjIiIGhlaWdodD0iMTAiIHJ4PSIxLjIiIGZpbGw9IiNmMGFkMWEiLz48L3N2Zz4=">
+<!-- Estilos (a ordem importa: base → telas → animações → responsivo → impressão) -->
+<style>
+/* pipyscox · base.css
+   Tokens de cor (tema escuro/claro), reset, botões, formulários e chips */
+:root{
+  --bg:#1b1f27;--surface:#212631;--surface-2:#2a303d;--surface-3:#323a49;--border:#323a49;--border-soft:#2b313d;
+  --text:#e4e6ea;--text-2:#b3b9c4;--muted:#7f8897;
+  --primary:#5856d6;--primary-2:#6b69e0;--info:#3399ff;--warning:#f0ad1a;--danger:#e05555;--success:#2eb85c;
+  --s1:#7d7bef;--s2:#1fa98f;
+  --shadow:0 8px 30px rgba(0,0,0,.35);--radius:8px;--chip-bg:rgba(255,255,255,.08);
+}
+:root[data-theme="light"]{
+  --bg:#f3f4f7;--surface:#ffffff;--surface-2:#f1f2f6;--surface-3:#e6e8ee;--border:#dbdfe6;--border-soft:#e8eaef;
+  --text:#252b36;--text-2:#4a5160;--muted:#768192;--shadow:0 8px 30px rgba(30,40,60,.12);--chip-bg:rgba(0,0,0,.06);
+  --s1:#5856d6;--s2:#12896f;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;overflow:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--primary-2)}
+svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.icon-btn{background:none;border:0;color:var(--text-2);padding:8px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.icon-btn:hover{background:var(--surface-2);color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;border-radius:6px;padding:8px 14px;cursor:pointer;font-weight:500;white-space:nowrap;background:var(--surface-2);color:var(--text)}
+.btn:hover{filter:brightness(1.1)}
+.btn.primary{background:var(--primary);color:#fff}
+.btn.info{background:var(--info);color:#fff}
+.btn.danger{background:var(--danger);color:#fff}
+.btn.ghost{background:none;border-color:var(--border);color:var(--text-2)}
+.btn.ghost:hover{background:var(--surface-2);color:var(--text)}
+.btn.sm{padding:5px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.muted{color:var(--muted)}
+.row{display:flex;align-items:center;gap:10px}
+.wrap{flex-wrap:wrap}
+h1.page{font-size:24px;margin:0;font-weight:600}
+.page-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.page-head .sp{flex:1}
+.input,select.input,textarea.input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 10px;outline:0;color:var(--text)}
+.input:focus{border-color:var(--primary-2);box-shadow:0 0 0 3px rgba(88,86,214,.25)}
+.input.bad{border-color:var(--danger)}
+.ferr{display:block;color:var(--danger);font-size:12px;margin-top:4px}
+.ferr:empty{display:none}
+textarea.input{resize:vertical;min-height:80px}
+label.f{display:block;margin-bottom:14px}
+.fl,label.f>span{display:block;font-size:12.5px;color:var(--text-2);margin-bottom:6px;font-weight:500}
+.chk{display:flex;align-items:center;gap:10px;margin-bottom:12px;cursor:pointer;font-size:13.5px}
+.chk input{width:16px;height:16px;accent-color:var(--primary);flex:none}
+.money{display:flex}
+.money span{padding:8px 10px;border:1px solid var(--border);border-right:0;border-radius:6px 0 0 6px;background:var(--surface-2);color:var(--muted)}
+.money .input{border-radius:0 6px 6px 0}
+
+</style>
+<style>
+/* pipyscox · layout.css
+   Estrutura: menu lateral, cabeçalho, breadcrumbs e responsivo */
+.app{display:grid;grid-template-columns:250px 1fr;height:100vh;transition:grid-template-columns .2s}
+body.collapsed .app{grid-template-columns:64px 1fr}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.brand{height:64px;display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid var(--border);white-space:nowrap}
+.brand-logo{width:32px;height:32px;flex:none}
+.brand b{font-size:19px;letter-spacing:.5px;font-weight:700}
+.brand span{font-size:19px;color:var(--info);font-weight:300;letter-spacing:.5px}
+.nav{flex:1;overflow-y:auto;padding:8px 0}
+.nav-title{font-size:11.5px;font-weight:700;text-transform:uppercase;color:var(--muted);padding:18px 20px 8px;letter-spacing:.6px;white-space:nowrap}
+.nav-item{display:flex;align-items:center;gap:14px;margin:2px 8px;padding:10px 12px;border-radius:6px;color:var(--text-2);cursor:pointer;text-decoration:none;white-space:nowrap;border:0;background:none;width:calc(100% - 16px);text-align:left}
+.nav-item:hover,.nav-item.active{background:var(--surface-2);color:var(--text)}
+.nav-item .lbl{flex:1;overflow:hidden;text-overflow:ellipsis}
+.nav-item .dot{width:10px;height:10px;border-radius:3px;flex:none;margin:0 4px}
+.badge{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:5px;background:var(--surface-3);color:var(--text-2)}
+.badge.new{background:var(--info);color:#fff}
+.side-foot{border-top:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12.5px;white-space:nowrap;cursor:pointer}
+.side-foot:hover{color:var(--text)}
+.side-foot .st{width:8px;height:8px;border-radius:50%;background:var(--success);flex:none}
+body.collapsed .nav-title,body.collapsed .nav-item .lbl,body.collapsed .nav-item .badge,body.collapsed .brand b,body.collapsed .brand span,body.collapsed .side-foot .txt{display:none}
+body.collapsed .nav-item{justify-content:center;padding:10px 0}
+.main{display:flex;flex-direction:column;min-width:0;height:100vh}
+.header{height:64px;flex:none;display:flex;align-items:center;gap:14px;padding:0 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:6px;padding:6px 10px;width:300px;max-width:40vw;color:var(--muted);background:var(--bg)}
+.header .search{background:none}
+.search input{background:none;border:0;outline:0;flex:1;min-width:0;color:var(--text)}
+.kbd{font-size:11px;border:1px solid var(--border);border-radius:4px;padding:1px 6px;color:var(--muted);white-space:nowrap}
+.header .sp{flex:1}
+.save-st{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.save-st .d{width:7px;height:7px;border-radius:50%;background:var(--success)}
+.save-st.saving .d{background:var(--warning)}
+.save-st.err .d{background:var(--danger)}
+.vsep{width:1px;height:28px;background:var(--border)}
+.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--info));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;flex:none;border:0;cursor:pointer}
+.avatar.sm{width:28px;height:28px;font-size:11px;cursor:default}
+.avatar.xs{width:20px;height:20px;font-size:9px;cursor:default}
+.crumbs{height:48px;flex:none;display:flex;align-items:center;gap:8px;padding:0 24px;border-bottom:1px solid var(--border);color:var(--text-2);font-size:14.5px}
+.crumbs a{cursor:pointer;color:var(--primary-2);text-decoration:underline}
+.content{flex:1;overflow:auto;padding:24px}
+
+</style>
+<style>
+/* pipyscox · components.css
+   Painéis, modais, popovers, tabelas, toasts e tela de pasta */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+.panel-h{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.panel-h h3{margin:0;font-size:17px;font-weight:600}
+.panel-b{padding:20px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:20px;color:#fff;line-height:1.6}
+.chip.soft{background:var(--chip-bg);color:var(--text-2);font-weight:500}
+.pill{font-size:11px;padding:1px 8px;border-radius:10px;background:var(--primary);color:#fff;font-weight:600}
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty .i{width:42px;height:42px;stroke-width:1.3;margin-bottom:10px}
+.swatches{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.sw{width:24px;height:24px;border-radius:6px;border:2px solid transparent;cursor:pointer;padding:0}
+.sw.on{border-color:var(--text)}
+input[type=color].sw{background:none;border:1px dashed var(--muted);padding:0;overflow:hidden}
+input[type=color]::-webkit-color-swatch-wrapper{padding:2px}
+input[type=color]::-webkit-color-swatch{border:0;border-radius:4px}
+.pop{position:fixed;z-index:60;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow);padding:6px;min-width:230px}
+.pop button.it{display:flex;gap:10px;align-items:center;width:100%;background:none;border:0;padding:8px 10px;border-radius:5px;cursor:pointer;text-align:left;color:var(--text-2)}
+.pop button.it:hover,.pop label.it:hover{background:var(--surface-2);color:var(--text)}
+.pop button.it.danger{color:var(--danger)}
+.pop .sec{padding:8px 10px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:4px 0}
+.pop .sec small{display:block;color:var(--muted);margin-bottom:6px}
+.overlay{position:fixed;inset:0;background:rgba(5,8,14,.6);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:10px;width:100%;max-width:480px;box-shadow:var(--shadow)}
+.modal.lg{max-width:1000px}
+.modal.md{max-width:640px}
+.modal.draft{max-width:560px}
+.modal-h{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--border)}
+.modal-h h3{margin:0;font-size:17px;flex:1}
+.modal-b{padding:20px}
+.modal-f{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--border)}
+.tbl-wrap{overflow:auto}
+table.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{text-align:left;font-weight:600;color:var(--text-2);padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap;background:var(--surface-2)}
+.tbl td{padding:10px 14px;border-bottom:1px solid var(--border-soft);vertical-align:top}
+.tbl.click tbody tr{cursor:pointer}
+.tbl.click tbody tr:hover{background:var(--surface-2)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-bottom:20px}
+.stat{background:var(--surface);border:1px solid var(--border);border-left:4px solid;border-radius:8px;padding:14px 16px}
+.stat b{font-size:22px;display:block}
+.cfg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:20px;align-items:start}
+.tree{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px;color:var(--text-2);white-space:pre;overflow:auto}
+.gate{position:fixed;inset:0;z-index:80;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px}
+.gate .box{max-width:520px;width:100%;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:40px 32px;box-shadow:var(--shadow)}
+.gate h2{margin:16px 0 8px;font-size:24px}
+.gate p{color:var(--text-2);margin:0 0 22px}
+.toasts{position:fixed;right:20px;bottom:20px;z-index:90;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--success);box-shadow:var(--shadow);border-radius:8px;padding:12px 16px;max-width:380px;animation:tin .2s}
+.toast.err{border-left-color:var(--danger)}
+.toast.warn{border-left-color:var(--warning)}
+@keyframes tin{from{transform:translateY(10px);opacity:0}}
+.hidden{display:none!important}
+.print-only{display:none}
+
+</style>
+<style>
+/* pipyscox · dashboard.css
+   Dashboard: widgets e cards de pipys */
+.widgets{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-bottom:24px}
+.widget{border-radius:var(--radius);color:#fff;padding:18px 18px 0;overflow:hidden;min-height:162px;display:flex;flex-direction:column}
+.w-top{display:flex;justify-content:space-between;align-items:flex-start}
+.w-val{font-size:24px;font-weight:700}
+.w-val small{font-size:14px;font-weight:400;opacity:.9;margin-left:4px}
+.w-lbl{font-size:15px;opacity:.95;margin-top:2px}
+.w-chart{margin-top:auto;display:block;width:100%;height:80px}
+.pipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.pipe-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;cursor:pointer;position:relative;overflow:hidden;transition:transform .15s,border-color .15s}
+.pipe-card:hover{transform:translateY(-2px);border-color:var(--primary)}
+.pipe-card .bar{position:absolute;left:0;top:0;bottom:0;width:4px}
+.pipe-card h4{margin:0 0 6px;font-size:16px}
+.phase-strip{display:flex;gap:3px;margin-top:14px;height:6px}
+.phase-strip span{flex:1;border-radius:3px}
+
+</style>
+<style>
+/* pipyscox · board.css
+   Quadro kanban: filtros, colunas e cards */
+.filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.filters .input{width:auto;padding:6px 10px}
+.filters .search{width:260px;padding:5px 10px}
+.filters .chk{margin:0;font-size:13px;color:var(--text-2)}
+.board{display:flex;gap:16px;align-items:flex-start;overflow-x:auto;padding-bottom:16px;min-height:calc(100vh - 300px)}
+.col{width:290px;flex:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);display:flex;flex-direction:column;max-height:calc(100vh - 290px)}
+.col.drop-target{outline:2px dashed var(--primary-2);outline-offset:2px}
+.col.ph-target{box-shadow:-4px 0 0 var(--info)}
+.col-head{display:flex;align-items:center;gap:8px;padding:12px 12px 12px 14px;border-top:4px solid;border-radius:var(--radius) var(--radius) 0 0;cursor:grab;user-select:none}
+.col-name{font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.col-count{font-size:12px;background:var(--surface-2);color:var(--text-2);padding:1px 8px;border-radius:10px}
+.col-body{padding:4px 10px 10px;overflow-y:auto;flex:1;min-height:60px;display:flex;flex-direction:column;gap:10px}
+.col-foot{padding:8px 10px 12px}
+.add-card{width:100%;border:1px dashed var(--border);background:none;color:var(--muted);border-radius:6px;padding:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.add-card:hover{color:var(--text);border-color:var(--muted);background:var(--surface-2)}
+.col.ghost{background:none;border:2px dashed var(--border);align-items:center;justify-content:center;min-height:120px;cursor:pointer;color:var(--muted)}
+.col.ghost:hover{border-color:var(--primary-2);color:var(--text)}
+.kcard{position:relative;background:var(--surface-2);border:1px solid var(--border-soft);border-left:3px solid;border-radius:6px;padding:10px 12px;cursor:pointer;transition:box-shadow .15s}
+.kcard:hover{box-shadow:var(--shadow)}
+.kcard.dragging{opacity:.4}
+.kcard.flash{animation:flash 1.6s}
+@keyframes flash{0%,40%{box-shadow:0 0 0 3px var(--primary-2)}}
+.kcard .t{font-weight:600;margin-bottom:6px;word-break:break-word;padding-right:24px}
+.kdel{position:absolute;top:6px;right:6px;padding:5px;opacity:0;transition:opacity .15s;background:var(--surface-2)}
+.kcard:hover .kdel,.kdel:focus{opacity:1}
+.kdel:hover{color:var(--danger)!important}
+.mc-row{font-size:12.5px;color:var(--text-2);display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap;word-break:break-word}
+.mc-row .i{width:14px;height:14px}
+.mc-row .k{color:var(--muted)}
+.kfoot{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:10px;font-size:11.5px;color:var(--muted)}
+.kfoot .ic2{display:inline-flex;align-items:center;gap:3px}
+.kfoot .ic2 .i{width:12px;height:12px}
+.time-b{display:inline-flex;align-items:center;gap:4px;background:var(--chip-bg);padding:1px 7px;border-radius:10px;margin-left:auto}
+.time-b .i{width:12px;height:12px}
+.time-b.warn{background:rgba(240,173,26,.2);color:var(--warning)}
+.time-b.late{background:rgba(224,85,85,.2);color:var(--danger)}
+
+</style>
+<style>
+/* pipyscox · card.css
+   Modal do card: campos, abas, comentários e histórico */
+.card-modal{display:grid;grid-template-columns:1fr 290px;min-height:440px}
+.card-modal .l{padding:20px;border-right:1px solid var(--border);min-width:0}
+.card-modal .r{padding:20px;background:var(--bg);border-radius:0 0 10px 0}
+.title-in{font-size:20px;font-weight:600;background:none;border:1px solid transparent;border-radius:6px;padding:4px 8px;margin-left:-8px;width:100%;outline:0}
+.title-in:hover{border-color:var(--border)}
+.title-in:focus{border-color:var(--primary-2);background:var(--bg)}
+.ctabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin:10px 0 16px}
+.ctab{background:none;border:0;padding:8px 12px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;gap:6px;align-items:center}
+.ctab:hover{color:var(--text)}
+.ctab.on{color:var(--text);border-bottom-color:var(--primary-2)}
+.fsec{border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px}
+.fsec.cur{border-color:var(--primary)}
+.fsec-h{display:flex;align-items:center;gap:8px;font-weight:600;margin-bottom:14px}
+.fsec-h .dot{width:10px;height:10px;border-radius:3px}
+.req{color:var(--danger)}
+.tagsel{display:flex;gap:6px;flex-wrap:wrap}
+.tagsel button{border:1px solid var(--border);background:none;border-radius:20px;padding:3px 11px;cursor:pointer;font-size:12.5px;color:var(--text-2);display:inline-flex;gap:6px;align-items:center}
+.tagsel button .dt{width:8px;height:8px;border-radius:50%}
+.tagsel button.on{color:#fff;border-color:transparent}
+.files{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.file{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:13px}
+.file .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.timebox{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text-2);flex-wrap:wrap}
+.hist{list-style:none;padding:0;margin:0}
+.hist li{position:relative;padding:0 0 14px 20px;font-size:13px}
+.hist li:before{content:"";position:absolute;left:4px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--c,var(--primary))}
+.hist li:after{content:"";position:absolute;left:8px;top:16px;bottom:0;width:1px;background:var(--border)}
+.hist li:last-child:after{display:none}
+.kv{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border-soft)}
+.kv>span:first-child{color:var(--muted)}
+.cmt{display:flex;gap:10px;margin-bottom:14px}
+.cmt .bx{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;min-width:0}
+.cmt .meta{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.cmt .meta b{color:var(--text-2)}
+.cmt .tx{white-space:pre-wrap;word-break:break-word;margin-top:3px}
+.cmt.auto .bx{border-style:dashed}
+
+</style>
+<style>
+/* pipyscox · builder.css
+   Configuração de fase: construtor de campos e automações */
+.builder{display:grid;grid-template-columns:240px 1fr 320px;gap:20px;align-items:start}
+.palette{max-height:calc(100vh - 330px);overflow-y:auto}
+.pal-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--border);border-radius:7px;margin-bottom:6px;cursor:grab;background:var(--surface-2);user-select:none}
+.pal-item:hover{border-color:var(--primary-2)}
+.pal-item b{font-size:13px}
+.pal-item small{display:block;color:var(--muted);font-size:11px;line-height:1.3}
+.fic{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+.fic .i{width:16px;height:16px}
+.fb-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px}
+.fb-title{border:1px dashed var(--border);border-radius:7px;padding:10px 12px;color:var(--muted);margin-bottom:12px;font-size:13px;display:flex;gap:8px;align-items:center}
+.fb-list{min-height:160px;border-radius:8px;padding:2px;display:flex;flex-direction:column;gap:8px}
+.fb-list.over{background:rgba(88,86,214,.07)}
+.fb-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface-2);border:1px solid var(--border-soft);border-radius:7px;cursor:grab}
+.fb-item.sel{border-color:var(--primary-2);box-shadow:0 0 0 3px rgba(88,86,214,.2)}
+.fb-item.dragging{opacity:.35}
+.fb-item .grip{color:var(--muted)}
+.fb-item .nm{flex:1;min-width:0}
+.fb-item .nm b{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fb-item .nm small{color:var(--muted)}
+.fb-ph{height:4px;border-radius:2px;background:var(--primary-2)}
+.fb-empty{border:2px dashed var(--border);border-radius:8px;padding:40px 20px;text-align:center;color:var(--muted)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.tab{border:1px solid var(--border);background:none;border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--text-2);display:inline-flex;gap:8px;align-items:center}
+.tab .dot{width:9px;height:9px;border-radius:3px}
+.tab.on{background:var(--surface-2);color:var(--text);border-color:var(--muted)}
+.opt-row{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.opt-row input[type=color]{width:30px;height:30px;flex:none}
+.auto-item{display:flex;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:7px;margin-bottom:8px;background:var(--surface-2);font-size:13.5px}
+.auto-item .zap{color:var(--warning)}
+.auto-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;align-items:end;border:1px dashed var(--border);border-radius:8px;padding:14px;margin-top:12px}
+.auto-form label.f{margin:0}
+
+</style>
+<style>
+/* pipyscox · reports.css
+   Relatórios: barras e gráfico semanal */
+.rep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:20px;margin-bottom:20px}
+.rbar{display:grid;grid-template-columns:minmax(90px,150px) 1fr auto;gap:12px;align-items:center;margin-bottom:12px;font-size:13px}
+.rbar .lb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;gap:6px;align-items:center}
+.rbar .tr{height:14px;position:relative}
+.rbar .fi{height:100%;border-radius:0 4px 4px 0;min-width:2px}
+.rbar .vl{color:var(--text-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.legend{display:flex;gap:16px;font-size:12.5px;color:var(--text-2);margin-bottom:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.wchart{width:100%;height:auto;display:block}
+.wchart text{fill:var(--muted);font-size:11px}
+.wchart .vt{fill:var(--text-2)}
+.wchart .grid{stroke:var(--border-soft)}
+.wchart .base{stroke:var(--border)}
+.wchart rect.hit{fill:transparent}
+.wchart g.wk:hover rect.hit{fill:var(--chip-bg)}
+
+</style>
+<style>
+/* pipyscox · animations.css
+   Animações e microinterações. Desligadas automaticamente quando o sistema
+   pede "movimento reduzido" ou quando o usuário desativa em Configurações. */
+
+:root{
+  --ease-out:cubic-bezier(.2,.8,.2,1);
+  --ease-spring:cubic-bezier(.2,.9,.3,1.25);
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes riseIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeOut{to{opacity:0}}
+@keyframes modalIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes modalOut{to{opacity:0;transform:translateY(8px) scale(.98)}}
+@keyframes popIn{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes toastIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateX(24px)}}
+@keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes growY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+@keyframes softPulse{0%,100%{box-shadow:0 0 0 0 rgba(224,85,85,0)}50%{box-shadow:0 0 0 4px rgba(224,85,85,.18)}}
+@keyframes cardDrop{0%{transform:scale(.92);box-shadow:0 0 0 3px var(--primary-2)}60%{transform:scale(1.03)}100%{transform:none;box-shadow:0 0 0 0 transparent}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes zap{0%,100%{filter:none}50%{filter:drop-shadow(0 0 4px var(--warning))}}
+@keyframes outlinePulse{0%,100%{outline-color:var(--primary-2)}50%{outline-color:transparent}}
+
+/* ---------- Entrada de tela (aplicada só quando a rota muda) ---------- */
+.view-in>.page-head,.view-in>.filters,.view-in>p{animation:fadeIn .35s var(--ease-out) both}
+.view-in .widget,.view-in .pipe-card,.view-in .stat,.view-in .col,.view-in .kcard,
+.view-in .panel,.view-in .pal-item,.view-in .fb-item,.view-in .tbl tbody tr,.view-in .auto-item{
+  animation:riseIn .45s var(--ease-out) both;animation-delay:calc(var(--i,0) * 35ms)}
+.view-in .kcard{animation-delay:calc(120ms + var(--i,0) * 30ms)}
+.view-in .w-chart polyline{stroke-dasharray:700;stroke-dashoffset:700;animation:draw 1.1s .25s var(--ease-out) forwards}
+.view-in .w-chart circle{animation:fadeIn .4s 1s both}
+.view-in .w-chart rect,.view-in .w-chart path{transform-box:fill-box;transform-origin:bottom;animation:growY .7s var(--ease-out) both}
+.rbar .fi{transform-origin:left center}
+.view-in .rbar .fi{animation:growX .8s var(--ease-out) both;animation-delay:calc(150ms + var(--i,0) * 45ms)}
+.wchart g.wk path{transform-box:fill-box;transform-origin:bottom}
+.view-in .wchart g.wk path{animation:growY .7s var(--ease-out) both;animation-delay:calc(200ms + var(--i,0) * 60ms)}
+.view-in .wchart g.wk text{animation:fadeIn .4s both;animation-delay:calc(500ms + var(--i,0) * 60ms)}
+.view-in .empty .i{animation:float 3s ease-in-out infinite}
+
+/* ---------- Modais, popovers e toasts ---------- */
+.overlay{animation:fadeIn .18s ease-out both}
+.overlay .modal{animation:modalIn .28s var(--ease-spring) both}
+.overlay.closing{animation:fadeOut .15s ease-in forwards}
+.overlay.closing .modal{animation:modalOut .15s ease-in forwards}
+.pop{animation:popIn .16s var(--ease-out) both;transform-origin:top left}
+.toast{animation:toastIn .3s var(--ease-spring) both}
+.toast.out{animation:toastOut .25s ease-in forwards}
+.ctabs+*{animation:fadeIn .2s ease-out}
+
+/* ---------- Microinterações ---------- */
+.btn{transition:transform .12s,filter .15s,background-color .15s,border-color .15s,color .15s}
+.btn:active:not(:disabled){transform:scale(.96)}
+.icon-btn{transition:background-color .15s,color .15s,transform .12s}
+.icon-btn:active{transform:scale(.9)}
+.nav-item{transition:background-color .15s,color .15s,box-shadow .2s,padding-left .18s}
+.nav-item.active{box-shadow:inset 3px 0 0 var(--primary-2)}
+body:not(.collapsed) .nav-item:hover{padding-left:16px}
+.kcard{transition:box-shadow .18s,transform .18s,opacity .15s}
+.kcard:hover{transform:translateY(-2px)}
+.kcard.dragging{opacity:.45;transform:rotate(2deg) scale(.97)}
+.kcard.drop-pop{animation:cardDrop .55s var(--ease-out)}
+.kdel{transition:opacity .15s,color .15s}
+.col.drop-target{animation:outlinePulse 1s ease-in-out infinite}
+.col{transition:box-shadow .2s}
+.widget{transition:transform .2s var(--ease-out),box-shadow .2s}
+.widget:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.pipe-card{transition:transform .2s var(--ease-out),border-color .2s,box-shadow .2s}
+.pipe-card:hover{box-shadow:var(--shadow)}
+.pal-item{transition:border-color .15s,transform .15s,background-color .15s}
+.pal-item:hover{transform:translateX(3px)}
+.fb-item{transition:border-color .15s,box-shadow .2s,opacity .15s,transform .15s}
+.fb-item.dragging{transform:scale(.98)}
+.fb-ph{animation:fadeIn .15s}
+.tagsel button{transition:background-color .15s,color .15s,transform .1s,border-color .15s}
+.tagsel button:active{transform:scale(.92)}
+.ctab{transition:color .15s,border-color .2s}
+.input{transition:border-color .15s,box-shadow .15s}
+.chip{transition:transform .15s}
+.save-st.saving .d{animation:pulse .9s ease-in-out infinite}
+.time-b.late{animation:softPulse 2.4s ease-in-out infinite}
+.col-head [title*="automação"],.tab .i[style*="warning"]{animation:zap 2.5s ease-in-out infinite}
+.auto-item .zap{animation:zap 2.5s ease-in-out infinite}
+.gate .box{animation:modalIn .5s var(--ease-spring) both}
+.gate .box>div:first-child svg{animation:float 3.2s ease-in-out infinite}
+.sidebar,.app{transition:grid-template-columns .25s var(--ease-out),transform .25s var(--ease-out)}
+
+/* ---------- Troca de tema suave ---------- */
+.theming,.theming *,.theming *::before,.theming *::after{
+  transition:background-color .35s ease,color .35s ease,border-color .35s ease,fill .35s ease,stroke .35s ease!important}
+
+/* ---------- Acessibilidade: sem animação ---------- */
+.no-anim *,.no-anim *::before,.no-anim *::after{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+
+</style>
+<style>
+/* pipyscox · responsive.css
+   Ajustes para telas menores (carregado por último para ter prioridade) */
+
+/* Tablets e janelas menores */
+@media (max-width:1100px){
+  .builder{grid-template-columns:1fr}
+  .palette{max-height:none}
+  .card-modal{grid-template-columns:1fr}
+  .card-modal .l{border-right:0}
+  .rep-grid{grid-template-columns:1fr}
+  .cfg-grid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+}
+
+@media (max-width:900px){
+  .app,body.collapsed .app{grid-template-columns:0 1fr}
+  .sidebar{position:fixed;z-index:70;left:0;top:0;bottom:0;width:min(250px,86vw);transform:translateX(-100%);transition:transform .2s;box-shadow:10px 0 30px rgba(0,0,0,.18)}
+  body.mnav .sidebar{transform:none}
+  .search{width:auto;flex:1;max-width:none}.search .kbd{display:none}
+  .content{padding:16px;min-width:0}.crumbs{padding:0 16px}.header{padding:0 12px;gap:8px}
+  .save-st .tx,.vsep{display:none}
+  .cfg-grid{grid-template-columns:1fr}
+  .content > *{max-width:100%}
+  .modal.lg{max-width:calc(100vw - 32px)}
+}
+
+/* Celulares: prioriza leitura, toque e rolagem horizontal apenas onde faz sentido */
+@media (max-width:640px){
+  body{font-size:13px}
+  .header{height:56px;padding:0 8px}
+  .header .icon-btn{padding:8px 6px}
+  .avatar{width:32px;height:32px}
+  .search{padding:5px 8px;gap:5px}
+  .search .i{width:16px;height:16px}
+  .crumbs{padding:0 12px;min-height:34px;gap:5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .content{padding:12px}
+  .content h1{font-size:22px;line-height:1.2}
+  .content h2{font-size:18px}
+  .page-head,.toolbar,.filters,.modal-f,.cmt{flex-wrap:wrap}
+  .page-head{gap:10px}
+  .page-head > :last-child{width:100%}
+  .filters{align-items:stretch;gap:8px}
+  .filters > *{min-width:0;max-width:100%}
+  .filters .search,.filters .input,.filters select{width:100%}
+  .stat-row,.widgets{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+  .widget{min-height:130px;padding:14px 14px 0}
+  .pipe-grid{grid-template-columns:1fr;gap:12px}
+  .rep-grid{gap:12px;margin-bottom:12px}
+  .rbar{grid-template-columns:minmax(70px,105px) 1fr auto;gap:7px;font-size:12px}
+  .board{gap:10px;margin-right:-12px;padding-right:12px;min-height:calc(100vh - 230px)}
+  .col{width:min(82vw,290px);max-height:calc(100vh - 245px)}
+  .tbl-wrap{margin-right:-12px;padding-right:12px}
+  table.tbl{min-width:560px}
+  .modal{border-radius:8px}
+  .overlay{padding:16px 8px}
+  .modal.lg,.modal.md,.modal.draft{max-width:100%;width:100%}
+  .modal-h{padding:14px 16px}
+  .modal-b{padding:16px}
+  .modal-f{padding:12px 16px;justify-content:stretch}
+  .modal-f > *{flex:1;min-width:120px}
+  .card-modal .l{padding:16px}
+  .card-modal .r{padding:16px}
+  .gate .box{padding:28px 20px}
+  .toast{max-width:calc(100vw - 24px)}
+}
+
+@media (max-width:420px){
+  .stat-row,.widgets{grid-template-columns:1fr}
+  .save-st{display:none}
+  .content h1{font-size:20px}
+  .btn{padding:8px 10px}
+  .auto-form{grid-template-columns:1fr}
+}
+
+</style>
+<style>
+/* pipyscox · print.css
+   Impressão / exportação em PDF dos relatórios */
+@media print{
+  :root,:root[data-theme]{--bg:#fff;--surface:#fff;--surface-2:#f1f2f6;--surface-3:#e6e8ee;--border:#cfd4dc;--border-soft:#e5e7eb;--text:#111;--text-2:#333;--muted:#666;--chip-bg:rgba(0,0,0,.06);--s1:#5856d6;--s2:#12896f}
+  body{overflow:visible;background:#fff}
+  .sidebar,.header,.crumbs,.no-print,.toasts,#modalRoot,#popRoot{display:none!important}
+  .app{display:block;height:auto}.main{height:auto}.content{overflow:visible;padding:0}
+  .panel,.stat{break-inside:avoid}
+  .print-only{display:block}
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="main">
+    <header class="header">
+      <button class="icon-btn" data-act="toggleSide" title="Menu"><svg class="i" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <label class="search"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input id="gsearch" placeholder="Buscar cards em todos os pipys..." autocomplete="off"><span class="kbd">Ctrl /</span></label>
+      <div class="sp"></div>
+      <div class="save-st" id="saveSt"><span class="d"></span><span class="tx">Salvo</span></div>
+      <div class="vsep"></div>
+      <button class="icon-btn" data-act="toggleTheme" title="Alternar tema" id="themeBtn"></button>
+      <div class="vsep"></div>
+      <button class="avatar" id="avatar" data-act="changeUser" title="Trocar usuário">?</button>
+    </header>
+    <div class="crumbs" id="crumbs"></div>
+    <main class="content" id="content"></main>
+  </div>
+</div>
+<div id="gate" class="gate hidden"></div>
+<div id="modalRoot"></div>
+<div id="popRoot"></div>
+<div class="toasts" id="toasts"></div>
+
+<noscript><div style="padding:40px;text-align:center">O pipyscox precisa de JavaScript ativado.</div></noscript>
+
+<!-- Scripts (ordem de carregamento: núcleo → interface → telas → recursos → app) -->
+<script>
+/* pipyscox · core/config.js
+   Constantes, tipos de campo, estado global e utilitários */
+'use strict';
+/* =====================================================================
+   pipyscox — gestão de fluxos estilo kanban com dados numa pasta local
+   ===================================================================== */
+const DBFILE='pipyscox.json';
+const TRASH_DAYS=30;
+const COLORS=['#5856d6','#3399ff','#2eb85c','#f0ad1a','#e05555','#e83e8c','#8b5cf6','#20c997','#fd7e14','#64748b'];
+const FT={
+  text:{label:'Texto',desc:'Texto curto ou longo',icon:'text',color:'#5856d6'},
+  number:{label:'Número',desc:'Valor numérico',icon:'hash',color:'#6366f1'},
+  currency:{label:'Moeda (R$)',desc:'Valor em reais',icon:'money',color:'#16a34a'},
+  email:{label:'E-mail',desc:'Com validação',icon:'mail',color:'#0ea5e9'},
+  phone:{label:'Telefone',desc:'(DD) 99999-9999',icon:'phone',color:'#14b8a6'},
+  cpf:{label:'CPF',desc:'Com máscara e validação',icon:'idc',color:'#64748b'},
+  date:{label:'Data',desc:'Data',icon:'cal',color:'#f0ad1a'},
+  select:{label:'Lista de seleção',desc:'Escolha uma opção',icon:'list',color:'#a855f7'},
+  checkbox:{label:'Checkbox',desc:'Sim / não',icon:'chkb',color:'#22c55e'},
+  resp:{label:'Responsável',desc:'Pessoa da equipe',icon:'user',color:'#ec4899'},
+  file:{label:'Arquivos',desc:'Anexos salvos na pasta',icon:'clip',color:'#3399ff'},
+  tag:{label:'Tag',desc:'Etiquetas escolhidas no card',icon:'tag',color:'#e05555'},
+  phasetag:{label:'Tag de fase',desc:'Automática: fases percorridas',icon:'board',color:'#8b5cf6'},
+  time:{label:'Tempo na fase',desc:'Calculado automaticamente',icon:'clock',color:'#2eb85c'}
+};
+const PALETTE=[
+  {k:'text',t:'text'},{k:'longtext',t:'text',label:'Texto longo',desc:'Várias linhas',preset:{multiline:true,label:'Observações'}},
+  {k:'number',t:'number'},{k:'currency',t:'currency'},{k:'email',t:'email'},{k:'phone',t:'phone'},{k:'cpf',t:'cpf'},
+  {k:'entry',t:'date',label:'Data de entrada',desc:'Preenchida ao entrar na fase',preset:{autoFill:true,label:'Data de entrada'}},
+  {k:'date',t:'date',preset:{autoFill:false}},
+  {k:'select',t:'select'},{k:'checkbox',t:'checkbox'},{k:'resp',t:'resp'},{k:'file',t:'file'},
+  {k:'tag',t:'tag'},{k:'phasetag',t:'phasetag'},{k:'time',t:'time'}
+];
+const S={db:null,dir:null,route:{v:'home'},selField:null,drag:null,openCard:null,draftCard:null,cardTab:'fields',pop:null,theme:'dark',user:'',
+  dataF:{pipe:'',q:'',phase:''},boardF:{},saveT:null,saving:false,lastMod:0,conflict:false,changeCount:0,backingUp:false,ad:null};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s);
+const nowISO=()=>new Date().toISOString();
+const todayLocal=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const norm=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();
+function fmtDate(v){if(!v)return'';if(/^\d{4}-\d{2}-\d{2}$/.test(v)){const[y,m,d]=v.split('-');return`${d}/${m}/${y}`}const d=new Date(v);return isNaN(d)?v:d.toLocaleDateString('pt-BR')}
+function fmtDateTime(v){const d=new Date(v);return isNaN(d)?'':d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+function fmtDur(ms){ms=Math.max(0,ms);const sec=Math.floor(ms/1000),m=Math.floor(sec/60),h=Math.floor(m/60),d=Math.floor(h/24);if(d>0)return`${d}d ${h%24}h ${m%60}min`;if(h>0)return`${h}h ${m%60}min`;if(m>0)return`${m}min ${sec%60}s`;return`${sec}s`}
+function fmtDurShort(ms){const h=ms/36e5;if(h>=48)return(h/24).toFixed(1).replace('.',',')+' dias';if(h>=1)return h.toFixed(1).replace('.',',')+' h';return Math.round(ms/60000)+' min'}
+function fmtSize(b){if(b<1024)return b+' B';if(b<1048576)return(b/1024).toFixed(1)+' KB';return(b/1048576).toFixed(1)+' MB'}
+const fmtMoney=v=>{const n=parseFloat(v);return isNaN(n)?'':n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})};
+const initials=n=>String(n||'?').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'?';
+const tick=(since)=>`<span class="tick" data-since="${since}">${fmtDur(Date.now()-new Date(since))}</span>`;
+const digits=s=>String(s||'').replace(/\D/g,'');
+function maskCPF(v){const d=digits(v).slice(0,11);return d.replace(/^(\d{3})(\d)/,'$1.$2').replace(/^(\d{3})\.(\d{3})(\d)/,'$1.$2.$3').replace(/\.(\d{3})(\d)/,'.$1-$2')}
+function maskPhone(v){const d=digits(v).slice(0,11);if(d.length<=2)return d.length?'('+d:'';if(d.length<=6)return`(${d.slice(0,2)}) ${d.slice(2)}`;if(d.length<=10)return`(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;return`(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`}
+function validCPF(v){const c=digits(v);if(c.length!==11||/^(\d)\1+$/.test(c))return false;let s=0;for(let i=0;i<9;i++)s+=+c[i]*(10-i);let r=(s*10)%11%10;if(r!==+c[9])return false;s=0;for(let i=0;i<10;i++)s+=+c[i]*(11-i);r=(s*10)%11%10;return r===+c[10]}
+const ic=(n,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24">${ICONS[n]||''}</svg>`;
+const fic=t=>`<span class="fic" style="background:${FT[t].color}">${ic(FT[t].icon)}</span>`;
+const LOGO=`<svg class="brand-logo" viewBox="0 0 32 32"><path d="M16 2.5 27.7 9.2v13.6L16 29.5 4.3 22.8V9.2Z" fill="none" stroke="currentColor" stroke-width="2"/><rect x="10" y="10" width="3.2" height="12" rx="1.2" fill="#5856d6"/><rect x="14.4" y="10" width="3.2" height="8" rx="1.2" fill="#3399ff"/><rect x="18.8" y="10" width="3.2" height="10" rx="1.2" fill="#f0ad1a"/></svg>`;
+function toast(msg,type='ok',ms=3400){const t=document.createElement('div');t.className='toast '+(type==='ok'?'':type);t.innerHTML=msg;$('#toasts').appendChild(t);setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),260)},ms)}
+
+</script>
+<script>
+/* pipyscox · core/icons.js
+   Ícones SVG (traço) usados na interface */
+'use strict';
+const ICONS={
+  dash:'<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>',plus:'<path d="M12 5v14M5 12h14"/>',
+  db:'<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>',
+  cog:'<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
+  moon:'<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  folder:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/>',text:'<path d="M4 7V4h16v3M9 20h6M12 4v16"/>',
+  clip:'<path d="m21.4 11.1-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 0 1-2.8-2.8l8.5-8.5"/>',
+  cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  tag:'<path d="M12 2H2v10l9.3 9.3a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4Z"/><circle cx="7" cy="7" r="1.5"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',dots:'<circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>',
+  x:'<path d="M18 6 6 18M6 6l12 12"/>',trash:'<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>',
+  grip:'<circle cx="9" cy="6" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="18" r="1"/>',
+  down:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',up:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>',
+  archive:'<rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"/>',
+  edit:'<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',refresh:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/>',
+  left:'<path d="m15 18-6-6 6-6"/>',right:'<path d="m9 18 6-6-6-6"/>',layout:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>',
+  csv:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/>',
+  board:'<rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="11" rx="1"/>',check:'<path d="M20 6 9 17l-5-5"/>',
+  hash:'<path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/>',money:'<path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>',
+  mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>',
+  phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/>',
+  idc:'<rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M14 10h4M14 14h4"/>',
+  list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',chkb:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="m9 12 2 2 4-4"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',zap:'<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>',
+  chat:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',act:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+  chart:'<path d="M3 3v18h18"/><path d="M7 16v-5M12 16V7M17 16v-3"/>',filter:'<path d="M22 3H2l8 9.5V19l4 2v-8.5z"/>',
+  form:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',print:'<path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',bin:'<path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/>'
+};
+
+</script>
+<script>
+/* pipyscox · core/storage.js
+   Pasta local: IndexedDB, File System Access, leitura/gravação e detecção de conflito */
+'use strict';
+/* ===================== IndexedDB (referência da pasta) ===================== */
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('pipyscox',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function kvGet(k){try{const d=await idb();return await new Promise(res=>{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(undefined)})}catch(e){return undefined}}
+async function kvSet(k,v){try{const d=await idb();await new Promise(res=>{const tx=d.transaction('kv','readwrite');tx.objectStore('kv').put(v,k);tx.oncomplete=res;tx.onerror=res})}catch(e){}}
+
+/* ===================== Sistema de arquivos ===================== */
+async function dirAt(parts,create,root=S.dir){let d=root;for(const p of parts){if(!p)continue;d=await d.getDirectoryHandle(p,{create})}return d}
+async function writeFile(path,data,root=S.dir){const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,true,root);const fh=await d.getFileHandle(name,{create:true});const w=await fh.createWritable();await w.write(data);await w.close()}
+async function readFile(path,root=S.dir){const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,false,root);const fh=await d.getFileHandle(name);return fh.getFile()}
+async function removePath(path,root=S.dir){try{const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,false,root);await d.removeEntry(name,{recursive:true})}catch(e){}}
+async function walk(dir,prefix='',out=[]){for await(const[name,h]of dir.entries()){const p=prefix+name;if(h.kind==='file')out.push({path:p,handle:h});else await walk(h,p+'/',out)}return out}
+async function verifyPerm(h,ask){if(!h.queryPermission)return true;const o={mode:'readwrite'};if(await h.queryPermission(o)==='granted')return true;if(ask&&await h.requestPermission(o)==='granted')return true;return false}
+
+function normalize(db){
+  db=db&&typeof db==='object'?db:{};
+  db.app='pipyscox';db.version=2;db.createdAt=db.createdAt||nowISO();
+  db.pipes=Array.isArray(db.pipes)?db.pipes:[];db.trash=Array.isArray(db.trash)?db.trash:[];
+  db.settings=db.settings||{};db.settings.people=Array.isArray(db.settings.people)?db.settings.people:[];
+  db.settings.autoBackup=Object.assign({enabled:true,mode:'daily',changes:30,keep:10},db.settings.autoBackup||{});
+  db.pipes.forEach(normPipe);return db;
+}
+function normPipe(p){p.id=p.id||uid();p.color=p.color||COLORS[0];p.phases=Array.isArray(p.phases)?p.phases:[];p.cards=Array.isArray(p.cards)?p.cards:[];
+  p.form=Object.assign({enabled:false,phaseId:'',title:'',desc:'',titleLabel:'Nome completo',consent:true,consentText:'Autorizo o uso dos dados informados exclusivamente para esta finalidade, conforme a LGPD (Lei 13.709/2018).'},p.form||{});
+  p.imported=Array.isArray(p.imported)?p.imported:[];
+  p.phases.forEach(ph=>{ph.id=ph.id||uid();ph.color=ph.color||COLORS[1];ph.fields=Array.isArray(ph.fields)?ph.fields:[];ph.automations=Array.isArray(ph.automations)?ph.automations:[];
+    ph.fields.forEach(f=>{f.id=f.id||uid();if(f.type==='tag'||f.type==='select')f.options=f.options||[]})});
+  p.cards.forEach(normCard);return p}
+function normCard(c){c.values=c.values||{};c.createdAt=c.createdAt||nowISO();c.phaseEnteredAt=c.phaseEnteredAt||c.createdAt;
+  c.history=Array.isArray(c.history)&&c.history.length?c.history:[{phaseId:c.phaseId,enteredAt:c.phaseEnteredAt,leftAt:null}];
+  c.comments=Array.isArray(c.comments)?c.comments:[];c.log=Array.isArray(c.log)?c.log:[];return c}
+
+/* ===================== Leitura / gravação com detecção de alteração externa ===================== */
+async function loadDb(){
+  try{const f=await readFile(DBFILE);S.db=normalize(JSON.parse(await f.text()));S.lastMod=f.lastModified}
+  catch(e){
+    if(e.name==='NotFoundError'||e.name==='TypeMismatchError'){S.db=normalize({});await writeFile(DBFILE,JSON.stringify(S.db,null,2));S.lastMod=(await readFile(DBFILE)).lastModified}
+    else if(e instanceof SyntaxError){
+      try{const f=await readFile(DBFILE);await writeFile(`pipyscox.corrompido-${Date.now()}.json`,await f.text())}catch(_){}
+      S.db=normalize({});await writeFile(DBFILE,JSON.stringify(S.db,null,2));S.lastMod=(await readFile(DBFILE)).lastModified;
+      toast('O arquivo de dados estava corrompido. Uma cópia foi guardada e um novo foi criado.','warn',6000)
+    } else throw e;
+  }
+  S.conflict=false;
+}
+function setSaveState(st){const el=$('#saveSt');el.className='save-st '+(st==='saving'?'saving':st==='err'?'err':'');el.querySelector('.tx').textContent=st==='saving'?'Salvando...':st==='err'?(S.conflict?'Conflito de versões':'Erro ao salvar'):'Salvo na pasta'}
+function save(){if(!S.db)return;clearTimeout(S.saveT);setSaveState('saving');S.saveT=setTimeout(()=>flush(),350)}
+async function flush(force){
+  clearTimeout(S.saveT);S.saveT=null;if(!S.dir||!S.db)return;if(S.conflict&&!force)return;
+  S.saving=true;
+  try{
+    if(!force&&S.lastMod){let ext=0;try{ext=(await readFile(DBFILE)).lastModified}catch(e){}
+      if(ext&&ext!==S.lastMod){S.conflict=true;setSaveState('err');showConflict();return}}
+    S.db.updatedAt=nowISO();await writeFile(DBFILE,JSON.stringify(S.db,null,2));
+    S.lastMod=(await readFile(DBFILE)).lastModified;S.conflict=false;setSaveState('ok');S.changeCount++;
+    setTimeout(maybeAutoBackup,50);
+  }catch(e){console.error(e);setSaveState('err');toast('Não foi possível salvar na pasta: '+esc(e.message),'err',6000)}
+  finally{S.saving=false}
+}
+function showConflict(){
+  openModal(`<div class="modal-h"><h3>Os dados da pasta foram alterados</h3></div><div class="modal-b" style="color:var(--text-2)">
+  O arquivo <b>pipyscox.json</b> foi modificado fora desta janela (outro computador, outra aba ou sincronização da pasta) depois da sua última gravação.<br><br>
+  Para não perder nada, escolha o que fazer:</div>
+  <div class="modal-f" style="flex-wrap:wrap"><button class="btn ghost" data-act="conflictReload">${ic('refresh')} Recarregar da pasta (descartar as minhas alterações)</button>
+  <button class="btn primary" data-act="conflictOverwrite">${ic('archive')} Manter as minhas (com backup da outra versão)</button></div>`,'md');
+}
+window.addEventListener('beforeunload',e=>{if(S.saveT||S.saving){flush();e.preventDefault();e.returnValue=''}});
+
+</script>
+<script>
+/* pipyscox · core/zip.js
+   Geração e leitura de ZIP sem dependências + backups automáticos */
+'use strict';
+/* ===================== ZIP (sem dependências) ===================== */
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+function crc32(u8){let c=0xFFFFFFFF;for(let i=0;i<u8.length;i++)c=CRC[(c^u8[i])&0xFF]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+function makeZip(files){
+  const enc=new TextEncoder();const chunks=[],central=[];let offset=0;
+  for(const f of files){
+    const name=enc.encode(f.path),crc=crc32(f.data),d=f.date||new Date();
+    const time=(d.getHours()<<11)|(d.getMinutes()<<5)|Math.floor(d.getSeconds()/2);
+    const date=((Math.max(1980,d.getFullYear())-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate();
+    const lh=new DataView(new ArrayBuffer(30));
+    lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);lh.setUint16(6,0x0800,true);lh.setUint16(8,0,true);lh.setUint16(10,time,true);lh.setUint16(12,date,true);
+    lh.setUint32(14,crc,true);lh.setUint32(18,f.data.length,true);lh.setUint32(22,f.data.length,true);lh.setUint16(26,name.length,true);lh.setUint16(28,0,true);
+    chunks.push(new Uint8Array(lh.buffer),name,f.data);
+    const ch=new DataView(new ArrayBuffer(46));
+    ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);ch.setUint16(8,0x0800,true);ch.setUint16(10,0,true);ch.setUint16(12,time,true);ch.setUint16(14,date,true);
+    ch.setUint32(16,crc,true);ch.setUint32(20,f.data.length,true);ch.setUint32(24,f.data.length,true);ch.setUint16(28,name.length,true);ch.setUint32(42,offset,true);
+    central.push(new Uint8Array(ch.buffer),name);offset+=30+name.length+f.data.length;
+  }
+  const cdSize=central.reduce((a,b)=>a+b.length,0);const end=new DataView(new ArrayBuffer(22));
+  end.setUint32(0,0x06054b50,true);end.setUint16(8,files.length,true);end.setUint16(10,files.length,true);end.setUint32(12,cdSize,true);end.setUint32(16,offset,true);
+  return new Blob([...chunks,...central,new Uint8Array(end.buffer)],{type:'application/zip'});
+}
+async function readZip(buf){
+  const u8=new Uint8Array(buf),dv=new DataView(buf);let e=-1;
+  for(let i=u8.length-22;i>=Math.max(0,u8.length-65558);i--){if(dv.getUint32(i,true)===0x06054b50){e=i;break}}
+  if(e<0)throw new Error('Arquivo ZIP inválido');
+  const count=dv.getUint16(e+10,true);let p=dv.getUint32(e+16,true);const dec=new TextDecoder();const out=[];
+  for(let i=0;i<count;i++){
+    if(dv.getUint32(p,true)!==0x02014b50)throw new Error('ZIP corrompido');
+    const method=dv.getUint16(p+10,true),csize=dv.getUint32(p+20,true),nl=dv.getUint16(p+28,true),xl=dv.getUint16(p+30,true),cl=dv.getUint16(p+32,true),off=dv.getUint32(p+42,true);
+    const name=dec.decode(u8.subarray(p+46,p+46+nl)).replace(/\\/g,'/');p+=46+nl+xl+cl;
+    if(name.endsWith('/'))continue;
+    const lnl=dv.getUint16(off+26,true),lxl=dv.getUint16(off+28,true),start=off+30+lnl+lxl;let data=u8.slice(start,start+csize);
+    if(method===8)data=new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+    else if(method!==0)throw new Error('Tipo de compressão não suportado');
+    out.push({path:name,data});
+  }
+  if(!out.some(f=>f.path===DBFILE)){const hit=out.find(f=>f.path.endsWith('/'+DBFILE));if(hit){const pre=hit.path.slice(0,-DBFILE.length);out.forEach(f=>{if(f.path.startsWith(pre))f.path=f.path.slice(pre.length)})}}
+  return out;
+}
+async function buildBackupZip(skipFlush){
+  if(!skipFlush)await flush();const all=await walk(S.dir);const files=[];
+  for(const e of all){if(e.path.startsWith('backups/'))continue;const f=await e.handle.getFile();files.push({path:e.path,data:new Uint8Array(await f.arrayBuffer()),date:new Date(f.lastModified)})}
+  return makeZip(files);
+}
+function stamp(){const d=new Date(),z=n=>String(n).padStart(2,'0');return`${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}_${z(d.getHours())}${z(d.getMinutes())}${z(d.getSeconds())}`}
+function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+async function backupToFolder(silent,kind='manual',skipFlush=false){const blob=await buildBackupZip(skipFlush);const name=`pipyscox-${kind==='auto'?'auto':'backup'}-${stamp()}.zip`;await writeFile('backups/'+name,blob);if(!silent)toast('Backup salvo em <b>backups/'+esc(name)+'</b>');return name}
+async function maybeAutoBackup(){
+  const ab=S.db?.settings.autoBackup;if(!ab||!ab.enabled||S.backingUp||S.conflict)return;
+  const last=S.db.settings.lastAutoBackup?new Date(S.db.settings.lastAutoBackup).getTime():0;
+  const due=ab.mode==='daily'?Date.now()-last>=864e5:S.changeCount>=Math.max(1,+ab.changes||30);
+  if(!due)return;S.backingUp=true;
+  try{await backupToFolder(true,'auto',true);S.changeCount=0;S.db.settings.lastAutoBackup=nowISO();
+    const d=await dirAt(['backups'],false);const list=[];for await(const[n,h]of d.entries())if(h.kind==='file'&&n.startsWith('pipyscox-auto-'))list.push(n);
+    list.sort().reverse().slice(Math.max(1,+ab.keep||10)).forEach(n=>removePath('backups/'+n));save();
+  }catch(e){console.warn('backup automático falhou',e)}finally{S.backingUp=false}
+}
+
+</script>
+<script>
+/* pipyscox · core/model.js
+   Modelo de dados: pipys, fases, campos, cards e validações */
+'use strict';
+/* ===================== Modelo ===================== */
+const pipeById=id=>S.db.pipes.find(p=>p.id===id);
+const phaseOf=(pipe,id)=>pipe.phases.find(p=>p.id===id);
+const allFields=pipe=>pipe.phases.flatMap(ph=>ph.fields.map(f=>({ph,f})));
+function findField(pipe,fid){for(const ph of pipe.phases)for(const f of ph.fields)if(f.id===fid)return{ph,f};return{}}
+function people(){return[...new Set(S.db.settings.people.filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'))}
+function cardFiles(pipe,c){let n=0;pipe.phases.forEach(ph=>ph.fields.forEach(f=>{if(f.type==='file'&&Array.isArray(c.values[f.id]))n+=c.values[f.id].length}));return n}
+function timeInPhase(card,phaseId){let t=0;card.history.forEach(h=>{if(h.phaseId===phaseId)t+=(h.leftAt?new Date(h.leftAt):new Date())-new Date(h.enteredAt)});return t}
+function passedPhaseIds(card){const seen=[];card.history.forEach(h=>{if(!seen.includes(h.phaseId))seen.push(h.phaseId)});if(!seen.includes(card.phaseId))seen.push(card.phaseId);return seen}
+function phaseTagChips(pipe,card,f){return passedPhaseIds(card).filter(id=>f.includeCurrent!==false||id!==card.phaseId).map(id=>phaseOf(pipe,id)).filter(Boolean).map(ph=>`<span class="chip" style="background:${ph.color}">${esc(ph.name)}</span>`).join('')}
+function isEmptyVal(f,v){if(f.type==='time'||f.type==='phasetag')return false;if(f.type==='tag'||f.type==='file')return!Array.isArray(v)||!v.length;if(f.type==='checkbox')return!v;return v==null||String(v).trim()===''}
+function validField(f,v){if(v==null||String(v).trim()==='')return'';
+  if(f.type==='email'&&!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v).trim()))return'E-mail inválido';
+  if(f.type==='cpf'&&!validCPF(v))return'CPF inválido';
+  if(f.type==='phone'){const n=digits(v).length;if(n<10||n>11)return'Telefone incompleto'}
+  if((f.type==='number'||f.type==='currency')&&isNaN(parseFloat(v)))return'Número inválido';return''}
+function optLabel(f,id){return(f.options||[]).find(o=>o.id===id)?.label||''}
+function textVal(pipe,card,f){const v=card.values[f.id];if(f.type==='phasetag')return passedPhaseIds(card).map(id=>phaseOf(pipe,id)?.name).filter(Boolean).join(', ');if(f.type==='time')return'';if(isEmptyVal(f,v))return'';
+  switch(f.type){case'date':return fmtDate(v);case'currency':return fmtMoney(v);case'checkbox':return'Sim';case'select':return optLabel(f,v);
+    case'tag':return v.map(id=>optLabel(f,id)).filter(Boolean).join(', ');case'file':return v.map(x=>x.name).join(', ');default:return String(v)}}
+function tagChips(f,v){if(!Array.isArray(v))return'';return v.map(id=>{const o=(f.options||[]).find(x=>x.id===id);return o?`<span class="chip" style="background:${o.color}">${esc(o.label)}</span>`:''}).join('')}
+function newField(type,preset){const f={id:uid(),type,label:FT[type].label,required:false,showOnCard:!['file','cpf','email','phone'].includes(type)};
+  if(type==='text'){f.multiline=false;f.placeholder=''}if(type==='date')f.autoFill=true;
+  if(type==='tag'){f.multiple=true;f.options=[{id:uid(),label:'Prioridade',color:'#e05555'},{id:uid(),label:'Normal',color:'#3399ff'}]}
+  if(type==='select'){f.options=[{id:uid(),label:'Opção 1'},{id:uid(),label:'Opção 2'}]}
+  if(type==='checkbox')f.label='Confirmado';if(type==='file')f.accept='';if(type==='phasetag'){f.includeCurrent=true;f.label='Fases percorridas'}
+  return Object.assign(f,preset||{})}
+function autoFill(pipe,card,phaseId){const ph=phaseOf(pipe,phaseId);if(!ph)return;ph.fields.forEach(f=>{if(f.type==='date'&&f.autoFill&&!card.values[f.id])card.values[f.id]=todayLocal()})}
+function blockers(pipe,card){const ph=phaseOf(pipe,card.phaseId);if(!ph)return[];const out=[];ph.fields.forEach(f=>{const v=card.values[f.id];if(f.required&&isEmptyVal(f,v))out.push(f.label);else{const e=validField(f,v);if(e)out.push(f.label+' ('+e.toLowerCase()+')')}});return out}
+function logCard(card,action,detail='',by){card.log=card.log||[];const at=nowISO();by=by||S.user||'Usuário';
+  const last=card.log[card.log.length-1];
+  if(last&&last.action===action&&last.detail===detail&&last.by===by&&Date.now()-new Date(last.at)<120000){last.at=at;return}
+  card.log.push({at,by,action,detail});if(card.log.length>500)card.log.splice(0,card.log.length-500)}
+function moveCard(pipe,card,toId,opt={}){
+  if(card.phaseId===toId||!phaseOf(pipe,toId))return false;
+  const bl=blockers(pipe,card);
+  if(bl.length){if(opt.auto)logCard(card,'Automação não moveu o card',`Pendências: ${bl.join(', ')}`,'Automação');else toast(`Resolva antes de mover: <b>${bl.map(esc).join(', ')}</b>`,'warn',5000);return false}
+  const from=card.phaseId,depth=opt.depth||0;
+  runAuto(pipe,card,from,'leave',depth);
+  const now=nowISO();const cur=card.history.find(h=>!h.leftAt);if(cur)cur.leftAt=now;
+  card.history.push({phaseId:toId,enteredAt:now,leftAt:null});card.phaseId=toId;card.phaseEnteredAt=now;card.updatedAt=now;
+  logCard(card,'Moveu o card',`${phaseOf(pipe,from)?.name||'?'} → ${phaseOf(pipe,toId).name}`,opt.auto?'Automação':undefined);
+  autoFill(pipe,card,toId);runAuto(pipe,card,toId,'enter',depth);save();return true;
+}
+
+</script>
+<script>
+/* pipyscox · core/automations.js
+   Motor de automações por fase */
+'use strict';
+/* ===================== Automações ===================== */
+const TRIG={enter:'Quando o card entrar nesta fase',leave:'Quando o card sair desta fase',complete:'Quando os campos obrigatórios desta fase forem preenchidos'};
+const ACTS={addTag:'Aplicar tag',removeTag:'Remover tag',setField:'Preencher campo',move:'Mover para a fase',comment:'Adicionar comentário'};
+function convertVal(f,raw){raw=raw==null?'':String(raw).trim();if(raw==='')return undefined;
+  switch(f.type){
+    case'date':{if(/^hoje$/i.test(raw))return todayLocal();const m=raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);if(m)return`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;if(/^\d{4}-\d{2}-\d{2}/.test(raw))return raw.slice(0,10);return undefined}
+    case'checkbox':return/^(sim|s|true|1|x|marcado|ok)$/i.test(raw);
+    case'number':case'currency':{const n=parseFloat(raw.replace(/[R$\s]/g,'').replace(/\.(?=\d{3}(\D|$))/g,'').replace(',','.'));return isNaN(n)?undefined:String(n)}
+    case'select':return(f.options||[]).find(o=>norm(o.label)===norm(raw))?.id;
+    case'tag':{const ids=raw.split(/[,;|]/).map(x=>(f.options||[]).find(o=>norm(o.label)===norm(x))?.id).filter(Boolean);return ids.length?ids:undefined}
+    case'cpf':return maskCPF(raw);case'phone':return maskPhone(raw);
+    case'file':case'time':case'phasetag':return undefined;
+    default:return raw}}
+function runAuto(pipe,card,phaseId,trigger,depth=0){
+  if(depth>6)return;const ph=phaseOf(pipe,phaseId);if(!ph)return;
+  ph.automations.filter(a=>a.trigger===trigger).forEach(a=>applyAuto(pipe,card,a,depth));
+}
+function applyAuto(pipe,card,a,depth){
+  const{f}=a.fieldId?findField(pipe,a.fieldId):{};
+  if(a.action==='addTag'&&f){let v=Array.isArray(card.values[f.id])?card.values[f.id]:[];if(!v.includes(a.optId)){v=f.multiple?[...v,a.optId]:[a.optId];card.values[f.id]=v;logCard(card,'Automação aplicou tag',`${f.label}: ${optLabel(f,a.optId)}`,'Automação')}}
+  else if(a.action==='removeTag'&&f){const v=Array.isArray(card.values[f.id])?card.values[f.id]:[];if(v.includes(a.optId)){card.values[f.id]=v.filter(x=>x!==a.optId);logCard(card,'Automação removeu tag',`${f.label}: ${optLabel(f,a.optId)}`,'Automação')}}
+  else if(a.action==='setField'&&f){const val=f.type==='resp'?a.value:convertVal(f,a.value);if(val!==undefined){card.values[f.id]=val;logCard(card,'Automação preencheu campo',`${f.label}: ${textVal(pipe,card,f)}`,'Automação')}}
+  else if(a.action==='comment'&&a.text){card.comments.push({id:uid(),by:'Automação',at:nowISO(),text:a.text,auto:true})}
+  else if(a.action==='move'&&a.phaseId){setTimeout(()=>{if(moveCard(pipe,card,a.phaseId,{auto:true,depth:depth+1})){refreshAfterChange()}},0)}
+}
+function checkComplete(pipe,card){
+  if(S.openCard?.draft)return;const ph=phaseOf(pipe,card.phaseId);if(!ph)return;
+  const rules=ph.automations.filter(a=>a.trigger==='complete');if(!rules.length)return;
+  const req=ph.fields.filter(f=>f.required);if(!req.length)return;
+  if(blockers(pipe,card).length)return;
+  const key=ph.id+'@'+card.phaseEnteredAt;if(card._done===key)return;card._done=key;
+  rules.forEach(a=>applyAuto(pipe,card,a,0));save();
+}
+function describeAuto(pipe,a){
+  const{f}=a.fieldId?findField(pipe,a.fieldId):{};const miss='<span class="req">(campo removido)</span>';let act='';
+  if(a.action==='addTag'||a.action==='removeTag')act=`${ACTS[a.action]} <b>${f?esc(optLabel(f,a.optId)||'?'):miss}</b>${f?` em ${esc(f.label)}`:''}`;
+  else if(a.action==='setField')act=`Preencher <b>${f?esc(f.label):miss}</b> com <b>${esc(f&&f.type==='select'?optLabel(f,a.value):a.value)}</b>`;
+  else if(a.action==='move')act=`Mover para <b>${esc(phaseOf(pipe,a.phaseId)?.name||'(fase removida)')}</b>`;
+  else if(a.action==='comment')act=`Comentar: <i>${esc(a.text)}</i>`;
+  return`<span class="muted">${esc(TRIG[a.trigger])}</span> → ${act}`;
+}
+
+</script>
+<script>
+/* pipyscox · core/trash.js
+   Lixeira com retenção de 30 dias */
+'use strict';
+/* ===================== Lixeira ===================== */
+function trashCard(pipe,card){pipe.cards=pipe.cards.filter(c=>c!==card);logCard(card,'Enviou para a lixeira');
+  S.db.trash.push({id:uid(),kind:'card',pipeId:pipe.id,pipeName:pipe.name,item:card,deletedAt:nowISO(),by:S.user});save()}
+function trashPipe(pipe){S.db.pipes=S.db.pipes.filter(p=>p!==pipe);S.db.trash.push({id:uid(),kind:'pipe',pipeId:pipe.id,pipeName:pipe.name,item:pipe,deletedAt:nowISO(),by:S.user});save()}
+function restoreTrash(t){
+  if(t.kind==='pipe'){if(pipeById(t.item.id)){toast('Esse pipy já existe.','warn');return false}S.db.pipes.push(normPipe(t.item))}
+  else{const p=pipeById(t.pipeId);if(!p){toast(`O pipy <b>${esc(t.pipeName)}</b> também está na lixeira ou foi apagado. Restaure o pipy primeiro.`,'warn',5000);return false}
+    const c=normCard(t.item);if(!phaseOf(p,c.phaseId)&&p.phases[0]){const now=nowISO();const cur=c.history.find(h=>!h.leftAt);if(cur)cur.leftAt=now;c.phaseId=p.phases[0].id;c.phaseEnteredAt=now;c.history.push({phaseId:c.phaseId,enteredAt:now,leftAt:null})}
+    logCard(c,'Restaurou da lixeira');p.cards.push(c)}
+  S.db.trash=S.db.trash.filter(x=>x!==t);save();return true}
+async function purgeTrash(t){await removePath(t.kind==='pipe'?`arquivos/${t.item.id}`:`arquivos/${t.pipeId}/${t.item.id}`);S.db.trash=S.db.trash.filter(x=>x!==t)}
+async function autoPurge(){const lim=Date.now()-TRASH_DAYS*864e5;const old=S.db.trash.filter(t=>new Date(t.deletedAt)<lim);for(const t of old)await purgeTrash(t);if(old.length){save();toast(`${old.length} item(ns) com mais de ${TRASH_DAYS} dias foram removidos da lixeira.`,'ok',4000)}}
+const daysLeft=t=>Math.max(0,Math.ceil(TRASH_DAYS-(Date.now()-new Date(t.deletedAt))/864e5));
+
+</script>
+<script>
+/* pipyscox · core/sample.js
+   Criação de pipy e pipy de exemplo */
+'use strict';
+/* ===================== Criar pipy / exemplo ===================== */
+function createPipe(name,example){
+  const ph=(n,c,fields=[],automations=[])=>({id:uid(),name:n,color:c,fields,automations});
+  const p={id:uid(),name,color:COLORS[S.db.pipes.length%COLORS.length],createdAt:nowISO(),phases:[],cards:[]};
+  if(example){
+    const fNome={...newField('text'),label:'Nome do colaborador',required:true};
+    const fCargo={...newField('text'),label:'Cargo'};
+    const fEnt=newField('date',{label:'Data de entrada'});
+    const fSet={...newField('tag'),label:'Setor',multiple:false,options:[{id:uid(),label:'Administrativo',color:'#3399ff'},{id:uid(),label:'Operacional',color:'#f0ad1a'},{id:uid(),label:'Comercial',color:'#2eb85c'}]};
+    const fResp=newField('resp');const fMail={...newField('email'),label:'E-mail'};
+    const fDocs={...newField('file'),label:'Documentos'};const fOk={...newField('checkbox'),label:'Documentação conferida',required:true};
+    const fPT=newField('phasetag');const fT1=newField('time');const fT2=newField('time');
+    const fSal={...newField('currency'),label:'Salário proposto',showOnCard:false};
+    const fObs={...newField('text'),label:'Observações',multiline:true,showOnCard:false};
+    const fSt={...newField('tag'),label:'Status',options:[{id:uid(),label:'Pendente',color:'#e05555'},{id:uid(),label:'Validado',color:'#2eb85c'}]};
+    const phases=[ph('Triagem','#5856d6',[fNome,fCargo,fSet,fResp,fMail,fPT,fEnt,fT1]),ph('Documentação','#3399ff',[fDocs,fOk,fSt,fT2,fObs]),ph('Em análise','#f0ad1a',[fSal]),ph('Concluído','#2eb85c',[])];
+    phases[1].automations=[{id:uid(),trigger:'enter',action:'addTag',fieldId:fSt.id,optId:fSt.options[0].id},{id:uid(),trigger:'complete',action:'move',phaseId:phases[2].id}];
+    phases[2].automations=[{id:uid(),trigger:'enter',action:'comment',text:'Card entrou em análise. Conferir proposta salarial.'}];
+    p.phases=phases;
+    const mk=(t,phi,daysAgo,vals)=>{const d=new Date(Date.now()-daysAgo*864e5).toISOString();
+      const hist=[...p.phases.slice(0,phi).map((x,i)=>({phaseId:x.id,enteredAt:new Date(Date.now()-(daysAgo+phi-i)*864e5).toISOString(),leftAt:new Date(Date.now()-(daysAgo+phi-i-1)*864e5).toISOString()})),{phaseId:p.phases[phi].id,enteredAt:d,leftAt:null}];
+      return normCard({id:uid(),title:t,phaseId:p.phases[phi].id,createdAt:hist[0].enteredAt,phaseEnteredAt:d,history:hist,values:vals,log:[{at:hist[0].enteredAt,by:S.user||'Exemplo',action:'Criou o card',detail:''}]})};
+    p.cards=[mk('Colaborador exemplo A',0,1,{[fNome.id]:'Colaborador A',[fCargo.id]:'Assistente',[fSet.id]:[fSet.options[0].id],[fEnt.id]:todayLocal(),[fResp.id]:S.user}),
+             mk('Colaborador exemplo B',0,4,{[fNome.id]:'Colaborador B',[fCargo.id]:'Técnico',[fSet.id]:[fSet.options[1].id],[fEnt.id]:todayLocal()}),
+             mk('Colaborador exemplo C',1,9,{[fNome.id]:'Colaborador C',[fSet.id]:[fSet.options[2].id],[fSt.id]:[fSt.options[0].id]}),
+             mk('Colaborador exemplo D',3,2,{[fNome.id]:'Colaborador D',[fSet.id]:[fSet.options[0].id],[fOk.id]:true,[fSt.id]:[fSt.options[1].id]})];
+  } else p.phases=[ph('Caixa de entrada','#5856d6',[newField('date',{label:'Data de entrada'}),newField('resp')]),ph('Em andamento','#3399ff'),ph('Concluído','#2eb85c')];
+  normPipe(p);S.db.pipes.push(p);save();return p;
+}
+
+</script>
+<script>
+/* pipyscox · ui/modals.js
+   Modais, confirmações e popovers */
+'use strict';
+/* ===================== Modais ===================== */
+function openModal(html,cls='',closable=false){$('#modalRoot').innerHTML=`<div class="overlay" ${closable?'data-overlay':''}><div class="modal ${cls}">${html}</div></div>`;return $('#modalRoot .modal')}
+function closeModal(){const o=S.openCard;$('#modalRoot').innerHTML='';S.openCard=null;if(o?.draft){removePath(`arquivos/${o.pipeId}/${o.cardId}`);S.draftCard=null;return}if(o)renderMain()}
+function promptBox(title,label,value='',opts={}){return new Promise(res=>{openModal(`<div class="modal-h"><h3>${esc(title)}</h3>${opts.noCancel?'':`<button class="icon-btn" data-pb="0">${ic('x')}</button>`}</div><div class="modal-b">${opts.html||''}<label class="f"><span>${esc(label)}</span><input class="input" id="pbIn" value="${esc(value)}" placeholder="${esc(opts.placeholder||'')}"></label></div><div class="modal-f">${opts.noCancel?'':'<button class="btn ghost" data-pb="0">Cancelar</button>'}<button class="btn primary" data-pb="1">Confirmar</button></div>`);
+  const inp=$('#pbIn');inp.focus();inp.select();const done=v=>{if(opts.noCancel&&!v)return inp.focus();$('#modalRoot').innerHTML='';res(v)};
+  $('#modalRoot').querySelectorAll('[data-pb]').forEach(b=>b.onclick=()=>done(b.dataset.pb==='1'?(inp.value.trim()||null):null));
+  inp.onkeydown=e=>{if(e.key==='Enter')done(inp.value.trim()||null);if(e.key==='Escape'&&!opts.noCancel)done(null)}})}
+function confirmBox(title,msg,ok='Confirmar',danger=false){return new Promise(res=>{openModal(`<div class="modal-h"><h3>${esc(title)}</h3></div><div class="modal-b" style="color:var(--text-2)">${msg}</div><div class="modal-f"><button class="btn ghost" data-cb="0">Cancelar</button><button class="btn ${danger?'danger':'primary'}" data-cb="1">${esc(ok)}</button></div>`);
+  $('#modalRoot').querySelectorAll('[data-cb]').forEach(b=>b.onclick=()=>{$('#modalRoot').innerHTML='';res(b.dataset.cb==='1')})})}
+function closePop(){$('#popRoot').innerHTML='';S.pop=null}
+function openPop(anchor,html){closePop();const r=anchor.getBoundingClientRect();const el=document.createElement('div');el.className='pop';el.innerHTML=html;$('#popRoot').appendChild(el);
+  const w=el.offsetWidth,h=el.offsetHeight;let x=Math.min(r.left,innerWidth-w-10),y=r.bottom+6;if(y+h>innerHeight-10)y=Math.max(10,r.top-h-6);el.style.left=Math.max(10,x)+'px';el.style.top=y+'px'}
+
+</script>
+<script>
+/* pipyscox · ui/shell.js
+   Tela da pasta, usuário, menu lateral e roteamento */
+'use strict';
+/* ===================== Pasta / usuário ===================== */
+function showGate(mode,name){
+  const g=$('#gate');g.classList.remove('hidden');let body='';
+  if(mode==='unsupported')body=`<h2>Navegador não suportado</h2><p>O pipyscox salva os dados direto numa pasta do seu computador. Abra este arquivo no <b>Google Chrome</b> ou <b>Microsoft Edge</b> (versão atual).</p>`;
+  else if(mode==='reconnect')body=`<h2>Bem-vindo de volta</h2><p>Por segurança, o navegador pede confirmação para acessar a pasta <b>${esc(name)}</b> novamente.</p><div class="row" style="justify-content:center;flex-wrap:wrap"><button class="btn primary" data-act="gateReconnect">${ic('folder')} Reconectar à pasta</button><button class="btn ghost" data-act="gateChoose">Escolher outra pasta</button></div>`;
+  else body=`<h2>Escolha a pasta de dados</h2><p>Todos os pipys, cards e arquivos ficam salvos nessa pasta. Você escolhe uma vez e pode trocar depois em Configurações. Se a pasta já tiver dados do pipyscox, eles são carregados automaticamente.</p><button class="btn primary" data-act="gateChoose">${ic('folder')} Escolher pasta</button>`;
+  g.innerHTML=`<div class="box"><div style="color:var(--text);display:flex;justify-content:center">${LOGO.replace('class="brand-logo"','style="width:64px;height:64px"')}</div><div style="font-size:15px;margin-top:6px"><b>pipy</b><span style="color:var(--info)">scox</span></div>${body}</div>`;
+}
+const hideGate=()=>$('#gate').classList.add('hidden');
+async function pickFolder(){try{return await window.showDirectoryPicker({mode:'readwrite',id:'pipyscox'})}catch(e){if(e.name!=='AbortError')toast('Erro ao abrir a pasta: '+esc(e.message),'err');return null}}
+async function openDir(h){
+  if(!await verifyPerm(h,true)){toast('Permissão de escrita negada para a pasta.','err');return false}
+  S.dir=h;await loadDb();await kvSet('dir',h);hideGate();renderAll();setSaveState('ok');
+  if(!S.user)await askUser();else ensurePerson(S.user);
+  await autoPurge();maybeAutoBackup();return true;
+}
+function ensurePerson(n){if(n&&!S.db.settings.people.includes(n)){S.db.settings.people.push(n);save()}}
+async function askUser(cur){const n=await promptBox('Quem está usando?','Seu nome',cur||'',{noCancel:!cur,placeholder:'Ex.: Marcos',html:'<p class="muted" style="margin:0 0 14px;font-size:13px">O nome aparece no histórico de atividades e nos comentários dos cards. Fica salvo só neste navegador.</p>'});
+  if(!n)return;S.user=n;try{localStorage.setItem('pipyscox-user',n)}catch(e){}ensurePerson(n);renderAvatar();if(S.route.v==='config')renderMain()}
+function renderAvatar(){const a=$('#avatar');a.textContent=initials(S.user);a.title=(S.user||'Usuário')+' · clique para trocar'}
+
+/* ===================== Sidebar / cabeçalho ===================== */
+function renderAll(){renderSidebar();renderMain();renderTheme();renderAvatar()}
+function renderSidebar(){
+  const r=S.route;const act=v=>r.v===v?'active':'';
+  const pipes=S.db.pipes.map(p=>`<button class="nav-item ${['pipe','phase','report'].includes(r.v)&&r.id===p.id?'active':''}" data-act="go" data-v="pipe" data-id="${p.id}" title="${esc(p.name)}"><span class="dot" style="background:${p.color}"></span><span class="lbl">${esc(p.name)}</span><span class="badge">${p.cards.length}</span></button>`).join('');
+  $('#sidebar').innerHTML=`<div class="brand">${LOGO}<div><b>pipy</b><span>scox</span></div></div>
+  <nav class="nav">
+    <button class="nav-item ${act('home')}" data-act="go" data-v="home" title="Dashboard">${ic('dash')}<span class="lbl">Dashboard</span></button>
+    <div class="nav-title">Fluxos criados</div>${pipes}
+    <button class="nav-item" data-act="newPipe" title="Novo pipy">${ic('plus')}<span class="lbl">Novo pipy</span><span class="badge new">NOVO</span></button>
+    <div class="nav-title">Dados</div>
+    <button class="nav-item ${act('data')}" data-act="go" data-v="data" title="Dados salvos">${ic('db')}<span class="lbl">Dados salvos</span></button>
+    <button class="nav-item ${act('trash')}" data-act="go" data-v="trash" title="Lixeira">${ic('bin')}<span class="lbl">Lixeira</span>${S.db.trash.length?`<span class="badge">${S.db.trash.length}</span>`:''}</button>
+    <div class="nav-title">Sistema</div>
+    <button class="nav-item ${act('config')}" data-act="go" data-v="config" title="Configurações">${ic('cog')}<span class="lbl">Configurações</span></button>
+  </nav>
+  <div class="side-foot" data-act="go" data-v="config" title="Pasta: ${esc(S.dir?.name)}"><span class="st"></span>${ic('folder')}<span class="txt">${esc(S.dir?.name||'')}</span></div>`;
+}
+function renderTheme(){document.documentElement.dataset.theme=S.theme;$('#themeBtn').innerHTML=ic(S.theme==='dark'?'moon':'sun')}
+function crumbs(items){$('#crumbs').innerHTML=items.map((it,i)=>i<items.length-1?`<a data-act="go" ${it.attrs}>${esc(it.t)}</a><span>/</span>`:`<span>${esc(it.t)}</span>`).join('')}
+function renderMain(){
+  closePop();const v=S.route.v;
+  if(['pipe','phase','report'].includes(v)&&!pipeById(S.route.id))S.route={v:'home'};
+  if(S.route.v==='phase'){const p=pipeById(S.route.id);if(!phaseOf(p,S.route.ph))S.route={v:'pipe',id:p.id}}
+  ({home:viewHome,pipe:viewPipe,phase:viewPhase,report:viewReport,data:viewData,trash:viewTrash,config:viewConfig})[S.route.v]();
+  renderSidebar();
+}
+function go(route){S.route=route;S.selField=null;S.ad=null;document.body.classList.remove('mnav');renderMain();$('#content').scrollTop=0}
+function refreshAfterChange(){if(S.openCard&&!S.openCard.draft)renderCardModal();else if(!S.openCard)renderMain()}
+
+</script>
+<script>
+/* pipyscox · views/dashboard.js
+   Tela inicial (dashboard) */
+'use strict';
+/* ===================== Dashboard ===================== */
+function lastDays(n,fn){const out=[];for(let i=n-1;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i);const e=new Date(d);e.setDate(e.getDate()+1);out.push(fn(d,e))}return out}
+function chartLine(vals,area){const w=300,h=80,pad=12;const max=Math.max(1,...vals),min=Math.min(...vals);const span=Math.max(1,max-min);const pts=vals.map((v,i)=>[pad+i*(w-2*pad)/(vals.length-1||1),h-14-(v-min)/span*(h-36)]);
+  if(area){const d='M0,'+pts[0][1]+pts.map(p=>' L'+p[0]+','+p[1]).join('')+` L${w},${pts[pts.length-1][1]} L${w},${h} L0,${h}Z`;return`<svg class="w-chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><path d="${d}" fill="rgba(255,255,255,.22)" stroke="rgba(255,255,255,.55)" stroke-width="2"/></svg>`}
+  return`<svg class="w-chart" viewBox="0 0 ${w} ${h}"><polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.5"/>${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="none" stroke="#fff" stroke-width="1.2"/>`).join('')}</svg>`}
+function chartBars(vals){const w=300,h=80,n=vals.length,bw=(w-20)/n*.55,max=Math.max(1,...vals);return`<svg class="w-chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">${vals.map((v,i)=>{const bh=Math.max(4,v/max*(h-18));return`<rect x="${10+i*(w-20)/n}" y="${h-bh}" width="${bw}" height="${bh}" fill="rgba(255,255,255,.28)"/>`}).join('')}</svg>`}
+function viewHome(){
+  crumbs([{t:'Home',attrs:'data-v="home"'},{t:'Dashboard'}]);
+  const cards=S.db.pipes.flatMap(p=>p.cards.map(c=>({p,c})));
+  const files=cards.reduce((a,{p,c})=>a+cardFiles(p,c),0);
+  const stale=cards.filter(({p,c})=>c.phaseId!==p.phases[p.phases.length-1]?.id&&Date.now()-new Date(c.phaseEnteredAt)>7*864e5).length;
+  const created=lastDays(12,(a,b)=>cards.filter(({c})=>{const d=new Date(c.createdAt);return d>=a&&d<b}).length);
+  const moves=lastDays(12,(a,b)=>cards.reduce((s,{c})=>s+c.history.filter(h=>{const d=new Date(h.enteredAt);return d>=a&&d<b}).length,0));
+  let acc=0;const cum=created.map(v=>acc+=v);const today=created[created.length-1];
+  const pipeCards=S.db.pipes.map(p=>`<div class="pipe-card" data-act="go" data-v="pipe" data-id="${p.id}"><span class="bar" style="background:${p.color}"></span>
+    <h4>${esc(p.name)}</h4><div class="muted">${p.phases.length} fases · ${p.cards.length} cards</div>
+    <div class="phase-strip">${p.phases.map(ph=>{const n=p.cards.filter(c=>c.phaseId===ph.id).length;return`<span title="${esc(ph.name)}: ${n}" style="background:${ph.color};opacity:${n?1:.3}"></span>`}).join('')}</div></div>`).join('');
+  $('#content').innerHTML=`
+  <div class="widgets">
+    <div class="widget" style="background:#5856d6"><div class="w-top"><div><div class="w-val">${cards.length}<small>(+${today} hoje)</small></div><div class="w-lbl">Cards</div></div></div>${chartLine(created)}</div>
+    <div class="widget" style="background:#3399ff"><div class="w-top"><div><div class="w-val">${S.db.pipes.length}<small>(${S.db.pipes.reduce((a,p)=>a+p.phases.length,0)} fases)</small></div><div class="w-lbl">Pipys</div></div></div>${chartLine(moves)}</div>
+    <div class="widget" style="background:#f0ad1a"><div class="w-top"><div><div class="w-val">${files}</div><div class="w-lbl">Arquivos anexados</div></div></div>${chartLine(cum.length>1?cum:[0,0],true)}</div>
+    <div class="widget" style="background:#e05555"><div class="w-top"><div><div class="w-val">${stale}<small>(+7 dias)</small></div><div class="w-lbl">Cards parados na fase</div></div></div>${chartBars(moves)}</div>
+  </div>
+  <div class="panel"><div class="panel-h"><div style="flex:1"><h3>Fluxos criados</h3><div class="muted" style="font-size:13px">Clique para abrir o quadro</div></div><button class="btn primary" data-act="newPipe">${ic('plus')} Novo pipy</button></div>
+  <div class="panel-b">${S.db.pipes.length?`<div class="pipe-grid">${pipeCards}</div>`:`<div class="empty">${ic('board')}<div style="font-size:16px;color:var(--text);margin-bottom:6px">Nenhum pipy ainda</div><div style="margin-bottom:18px">Crie seu primeiro fluxo ou carregue um exemplo para explorar.</div><div class="row" style="justify-content:center"><button class="btn primary" data-act="newPipe">${ic('plus')} Criar pipy</button><button class="btn ghost" data-act="examplePipe">Carregar exemplo</button></div></div>`}</div></div>`;
+}
+
+</script>
+<script>
+/* pipyscox · views/board.js
+   Quadro kanban e filtros */
+'use strict';
+/* ===================== Quadro (kanban) + filtros ===================== */
+function timeBadge(since){const ms=Date.now()-new Date(since),d=ms/864e5;return`<span class="time-b ${d>7?'late':d>3?'warn':''}" data-since="${since}" title="Tempo na fase atual">${ic('clock')}<span class="tv">${fmtDur(ms)}</span></span>`}
+function miniCard(pipe,c,preview){
+  const ph=phaseOf(pipe,c.phaseId);let rows='';const passed=passedPhaseIds(c);let resp='';
+  pipe.phases.filter(p=>passed.includes(p.id)).forEach(p=>p.fields.forEach(f=>{const v=c.values[f.id];
+    if(f.type==='resp'&&v){resp=v}
+    if(!f.showOnCard||f.type==='time')return;
+    if(f.type==='phasetag'){const ch=phaseTagChips(pipe,c,f);if(ch)rows+=`<div class="mc-row">${ch}</div>`;return}
+    if(isEmptyVal(f,v))return;
+    const row=(icon,txt)=>rows+=`<div class="mc-row">${icon?ic(icon):''}<span class="k">${esc(f.label)}:</span> ${txt}</div>`;
+    switch(f.type){
+      case'text':row('',esc(String(v).slice(0,80))+(String(v).length>80?'…':''));break;
+      case'date':row('cal',fmtDate(v));break;
+      case'tag':rows+=`<div class="mc-row">${tagChips(f,v)}</div>`;break;
+      case'file':rows+=`<div class="mc-row">${ic('clip')} ${v.length} arquivo${v.length>1?'s':''}</div>`;break;
+      case'checkbox':rows+=`<div class="mc-row" style="color:var(--success)">${ic('chkb')} ${esc(f.label)}</div>`;break;
+      case'select':rows+=`<div class="mc-row"><span class="k">${esc(f.label)}:</span> <span class="chip soft">${esc(optLabel(f,v))}</span></div>`;break;
+      case'currency':row('',fmtMoney(v));break;
+      case'cpf':{const d=digits(v);row('',`***.${d.slice(3,6)}.${d.slice(6,9)}-**`);break}
+      case'resp':break;
+      default:row('',esc(String(v)))}
+  }));
+  const nC=c.comments.length,nF=cardFiles(pipe,c);
+  return`<div class="kcard" ${preview?'':`draggable="true" data-card="${c.id}" data-act="openCard" data-id="${c.id}"`} style="border-left-color:${ph?.color||'var(--border)'}">${preview?'':`<button class="icon-btn kdel" data-act="cardDel" data-p="${pipe.id}" data-id="${c.id}" title="Excluir card">${ic('trash')}</button>`}<div class="t">${esc(c.title)}</div>${rows}
+  <div class="kfoot">${resp?`<span class="avatar xs" title="Responsável: ${esc(resp)}">${esc(initials(resp))}</span>`:''}<span>${fmtDate(c.createdAt)}</span>${nC?`<span class="ic2" title="${nC} comentário(s)">${ic('chat')}${nC}</span>`:''}${nF?`<span class="ic2" title="${nF} arquivo(s)">${ic('clip')}${nF}</span>`:''}${timeBadge(c.phaseEnteredAt)}</div></div>`;
+}
+const bf=()=>S.boardF[S.route.id]||(S.boardF[S.route.id]={q:'',tag:'',resp:'',stale:false});
+function cardMatch(pipe,c,F){
+  if(F.stale&&Date.now()-new Date(c.phaseEnteredAt)<=7*864e5)return false;
+  if(F.resp){const rf=allFields(pipe).filter(({f})=>f.type==='resp');
+    if(F.resp==='__none'){if(rf.some(({f})=>c.values[f.id]))return false}else if(!rf.some(({f})=>c.values[f.id]===F.resp))return false}
+  if(F.tag){const[a,b]=F.tag.split(':');if(a==='ph'){if(!passedPhaseIds(c).includes(b))return false}else{const v=c.values[a];if(!Array.isArray(v)||!v.includes(b))return false}}
+  if(F.q){const q=norm(F.q);const hay=norm([c.title,...allFields(pipe).map(({f})=>textVal(pipe,c,f)),...c.comments.map(x=>x.text)].join(' '));if(!hay.includes(q))return false}
+  return true}
+function viewPipe(){
+  const p=pipeById(S.route.id);const F=bf();
+  crumbs([{t:'Home',attrs:'data-v="home"'},{t:p.name}]);
+  const tagOpts=allFields(p).filter(({f})=>f.type==='tag').flatMap(({f})=>f.options.map(o=>`<option value="${f.id}:${o.id}" ${F.tag===f.id+':'+o.id?'selected':''}>${esc(f.label)}: ${esc(o.label)}</option>`)).join('')+p.phases.map(ph=>`<option value="ph:${ph.id}" ${F.tag==='ph:'+ph.id?'selected':''}>Passou por: ${esc(ph.name)}</option>`).join('');
+  const hasResp=allFields(p).some(({f})=>f.type==='resp');
+  const respNames=[...new Set([...people(),...p.cards.flatMap(c=>allFields(p).filter(({f})=>f.type==='resp').map(({f})=>c.values[f.id]).filter(Boolean))])];
+  $('#content').innerHTML=`<div class="page-head">
+    <span style="width:14px;height:14px;border-radius:4px;background:${p.color}"></span>
+    <input class="title-in" style="width:auto;max-width:100%;flex:0 1 auto" size="${Math.max(8,p.name.length+2)}" data-in="pipeName" value="${esc(p.name)}" title="Clique para renomear">
+    <div class="sp"></div>
+    <button class="btn ghost" data-act="pipeMenu">${ic('dots')} Opções</button>
+    <button class="btn ghost" data-act="go" data-v="report" data-id="${p.id}">${ic('chart')} Relatórios</button>
+    ${p.form.enabled?`<label class="btn ghost" style="cursor:pointer" title="Importar arquivos de resposta do formulário externo">${ic('form')} Importar respostas<input type="file" accept=".json" multiple hidden data-ch="formImport"></label>`:''}
+    <button class="btn ghost" data-act="go" data-v="phase" data-id="${p.id}" data-ph="${p.phases[0]?.id||''}" ${p.phases.length?'':'disabled'}>${ic('layout')} Configurar cards</button>
+    <button class="btn ghost" data-act="newPhase">${ic('plus')} Nova fase</button>
+    <button class="btn primary" data-act="newCard" data-ph="${p.phases[0]?.id||''}" ${p.phases.length?'':'disabled'}>${ic('plus')} Novo card</button></div>
+  <div class="filters">
+    <label class="search">${ic('search')}<input data-in="bfQ" value="${esc(F.q)}" placeholder="Filtrar cards deste quadro..." id="bfQ"></label>
+    <select class="input" data-ch="bfTag"><option value="">Todas as tags</option>${tagOpts}</select>
+    ${hasResp?`<select class="input" data-ch="bfResp"><option value="">Todos os responsáveis</option><option value="__none" ${F.resp==='__none'?'selected':''}>Sem responsável</option>${respNames.map(n=>`<option ${F.resp===n?'selected':''}>${esc(n)}</option>`).join('')}</select>`:''}
+    <label class="chk"><input type="checkbox" data-ch="bfStale" ${F.stale?'checked':''}> Parados há +7 dias</label>
+    <button class="btn ghost sm" data-act="bfClear">${ic('x')} Limpar</button>
+    <span class="muted" id="bfCount" style="font-size:13px"></span>
+  </div>
+  <div class="board" id="board"></div>`;
+  renderBoard();
+}
+function renderBoard(){
+  const p=pipeById(S.route.id);const F=bf();const el=$('#board');if(!el)return;
+  const active=F.q||F.tag||F.resp||F.stale;let shown=0;
+  const cols=p.phases.map(ph=>{const all=p.cards.filter(c=>c.phaseId===ph.id);const cs=all.filter(c=>cardMatch(p,c,F));shown+=cs.length;return`<div class="col" data-col="${ph.id}">
+    <div class="col-head" draggable="true" data-phdrag="${ph.id}" style="border-top-color:${ph.color}"><span class="col-name" title="${esc(ph.name)}">${esc(ph.name)}</span>${ph.automations.length?`<span title="${ph.automations.length} automação(ões)" style="color:var(--warning);display:flex">${ic('zap')}</span>`:''}<span class="col-count">${active?cs.length+'/':''}${all.length}</span>
+      <button class="icon-btn" data-act="phaseMenu" data-ph="${ph.id}" title="Opções da fase">${ic('dots')}</button></div>
+    <div class="col-body">${cs.map(c=>miniCard(p,c)).join('')}</div>
+    <div class="col-foot"><button class="add-card" data-act="newCard" data-ph="${ph.id}">${ic('plus')} Novo card</button></div></div>`}).join('');
+  el.innerHTML=cols+`<div class="col ghost" data-act="newPhase">${ic('plus')}<div style="margin-top:6px">Nova fase</div></div>`;
+  const cnt=$('#bfCount');if(cnt)cnt.textContent=active?`${shown} de ${p.cards.length} cards`:'';
+}
+function phaseMenuHtml(ph){return`<button class="it" data-act="phRename" data-ph="${ph.id}">${ic('edit')} Renomear fase</button>
+  <div class="sec"><small>Cor da fase</small><div class="swatches">${COLORS.map(c=>`<button class="sw ${c===ph.color?'on':''}" style="background:${c}" data-act="phColor" data-ph="${ph.id}" data-c="${c}"></button>`).join('')}<input type="color" class="sw" value="${ph.color}" data-ch="phColorCustom" data-ph="${ph.id}" title="Cor personalizada"></div></div>
+  <button class="it" data-act="go" data-v="phase" data-id="${S.route.id}" data-ph="${ph.id}">${ic('layout')} Configurar card e automações</button>
+  <button class="it" data-act="phMove" data-ph="${ph.id}" data-d="-1">${ic('left')} Mover para a esquerda</button>
+  <button class="it" data-act="phMove" data-ph="${ph.id}" data-d="1">${ic('right')} Mover para a direita</button>
+  <button class="it danger" data-act="phDelete" data-ph="${ph.id}">${ic('trash')} Excluir fase</button>`}
+
+</script>
+<script>
+/* pipyscox · views/card.js
+   Modal do card: campos, comentários e atividades */
+'use strict';
+/* ===================== Card: campos, comentários, atividades ===================== */
+function fieldInput(pipe,card,ph,f){
+  const v=card.values[f.id];const d=`data-f="${f.id}"`;const req=f.required?' <b class="req">*</b>':'';
+  const lab=`<span class="fl">${esc(f.label)}${req}</span>`;const err=validField(f,v);const bad=err?' bad':'';const errH=`<small class="ferr" data-err="${f.id}">${esc(err)}</small>`;
+  const inp=(type,extra='')=>`<label class="f">${lab}<input type="${type}" class="input${bad}" data-in="fv" ${d} value="${esc(v??'')}" ${extra}>${errH}</label>`;
+  switch(f.type){
+    case'text':return`<label class="f">${lab}${f.multiline?`<textarea class="input" data-in="fv" ${d} placeholder="${esc(f.placeholder||'')}">${esc(v||'')}</textarea>`:`<input class="input" data-in="fv" ${d} value="${esc(v||'')}" placeholder="${esc(f.placeholder||'')}">`}</label>`;
+    case'number':return inp('number','step="any"');
+    case'currency':return`<label class="f">${lab}<div class="money"><span>R$</span><input type="number" step="0.01" min="0" class="input${bad}" data-in="fv" ${d} value="${esc(v??'')}" placeholder="0,00"></div>${errH}</label>`;
+    case'email':return inp('email','placeholder="nome@empresa.com.br"');
+    case'phone':return inp('tel','placeholder="(98) 99999-9999"');
+    case'cpf':return inp('text','inputmode="numeric" placeholder="000.000.000-00"');
+    case'date':return`<label class="f">${lab}<input type="date" class="input" data-in="fv" ${d} value="${esc(v||'')}"></label>`;
+    case'select':return`<label class="f">${lab}<select class="input" data-ch="fsel" ${d}><option value="">Selecione...</option>${(f.options||[]).map(o=>`<option value="${o.id}" ${v===o.id?'selected':''}>${esc(o.label)}</option>`).join('')}</select></label>`;
+    case'resp':{const list=people();if(v&&!list.includes(v))list.push(v);return`<label class="f">${lab}<select class="input" data-ch="fsel" ${d}><option value="">Sem responsável</option>${list.map(n=>`<option ${v===n?'selected':''}>${esc(n)}</option>`).join('')}</select></label>`}
+    case'checkbox':return`<label class="chk" style="margin-bottom:16px"><input type="checkbox" data-ch="fchk" ${d} ${v?'checked':''}> ${esc(f.label)}${req}</label>`;
+    case'tag':{const sel=Array.isArray(v)?v:[];return`<div style="margin-bottom:14px">${lab}<div class="tagsel">${(f.options||[]).map(o=>`<button class="${sel.includes(o.id)?'on':''}" style="${sel.includes(o.id)?'background:'+o.color:''}" data-act="tagToggle" ${d} data-o="${o.id}"><span class="dt" style="background:${o.color}"></span>${esc(o.label)}</button>`).join('')||'<span class="muted">Sem opções — configure na fase.</span>'}</div></div>`}
+    case'file':{const list=Array.isArray(v)?v:[];return`<div style="margin-bottom:14px">${lab}
+      <div class="files">${list.map((x,i)=>`<div class="file">${ic('clip')}<span class="nm" title="${esc(x.path)}">${esc(x.name)}</span><span class="muted">${fmtSize(x.size||0)}</span><button class="icon-btn" data-act="fileDl" ${d} data-i="${i}" title="Baixar">${ic('down')}</button><button class="icon-btn" data-act="fileRm" ${d} data-i="${i}" title="Remover">${ic('trash')}</button></div>`).join('')}</div>
+      <label class="btn ghost sm" style="cursor:pointer">${ic('up')} Anexar arquivo<input type="file" multiple hidden data-ch="fileAdd" ${d} ${f.accept?`accept="${esc(f.accept)}"`:''}></label></div>`}
+    case'time':{const ms=timeInPhase(card,ph.id);const prev=ms-(ph.id===card.phaseId?Date.now()-new Date(card.phaseEnteredAt):0);return`<div style="margin-bottom:14px"><span class="fl">${esc(f.label)}</span><div class="timebox">${ic('clock')} ${ph.id===card.phaseId?'Há <b>'+tick(card.phaseEnteredAt)+'</b> nesta fase'+(prev>1000?` <span class="muted">(+ ${fmtDur(prev)} em passagens anteriores)</span>`:''):ms?'Ficou <b>'+fmtDur(ms)+'</b> nesta fase':'Ainda não passou por esta fase'}</div></div>`}
+    case'phasetag':return`<div style="margin-bottom:14px"><span class="fl">${esc(f.label)} <span class="muted" style="font-weight:400">· automático</span></span><div class="tagsel">${phaseTagChips(pipe,card,f)||'<span class="muted">Nenhuma fase ainda.</span>'}</div></div>`;
+  }return'';
+}
+function renderCardModal(){
+  if(!S.openCard)return;const{pipe,card}=curCard();if(!pipe||!card){$('#modalRoot').innerHTML='';S.openCard=null;renderMain();return}
+  const scroll=$('#modalRoot .overlay')?.scrollTop||0;
+  if(S.openCard.draft){const ph=phaseOf(pipe,card.phaseId);const fl=ph.fields.filter(f=>f.type!=='time'&&f.type!=='phasetag');
+    const html=`<div class="modal-h"><h3>Novo card</h3><span class="chip" style="background:${ph.color}">${esc(ph.name)}</span><button class="icon-btn" data-act="closeModal">${ic('x')}</button></div>
+    <div class="modal-b"><label class="f"><span>Título do card <b class="req">*</b></span><input class="input" data-in="cardTitle" id="draftTitle" value="${esc(card.title)}" placeholder="Ex.: nome da pessoa ou do processo"></label>
+    ${fl.map(f=>fieldInput(pipe,card,ph,f)).join('')||`<div class="muted" style="font-size:13px">Esta fase não tem campos configurados. <a data-act="cfgFromCard" data-ph="${ph.id}" style="cursor:pointer">Configurar campos</a></div>`}</div>
+    <div class="modal-f"><button class="btn ghost" data-act="closeModal">Cancelar</button><button class="btn primary" data-act="createCard">${ic('check')} Criar card</button></div>`;
+    if($('#modalRoot .modal.draft'))$('#modalRoot .modal').innerHTML=html;else{openModal(html,'draft',true);$('#draftTitle').focus()}
+    $('#modalRoot .overlay').scrollTop=scroll;return}
+  const passed=passedPhaseIds(card);const tab=S.cardTab;
+  let body='';
+  if(tab==='fields'){body=pipe.phases.filter(p=>p.fields.length&&passed.includes(p.id)).map(p=>`<section class="fsec ${p.id===card.phaseId?'cur':''}"><div class="fsec-h"><span class="dot" style="background:${p.color}"></span>${esc(p.name)} ${p.id===card.phaseId?'<span class="pill">fase atual</span>':''}<span style="flex:1"></span><button class="icon-btn" title="Configurar campos" data-act="cfgFromCard" data-ph="${p.id}">${ic('layout')}</button></div>${p.fields.map(f=>fieldInput(pipe,card,p,f)).join('')}</section>`).join('')
+    ||`<div class="empty">${ic('layout')}<div>Nenhum campo configurado nesta fase.</div><button class="btn ghost" style="margin-top:12px" data-act="cfgFromCard" data-ph="${card.phaseId}">Configurar campos</button></div>`}
+  else if(tab==='comments'){body=`<div style="margin-bottom:18px"><textarea class="input" id="cmIn" placeholder="Escreva um comentário... (Ctrl+Enter para enviar)" style="min-height:70px"></textarea><div class="row" style="justify-content:flex-end;margin-top:8px"><button class="btn primary sm" data-act="addComment">${ic('chat')} Comentar</button></div></div>`+
+    (card.comments.slice().reverse().map(c=>`<div class="cmt ${c.auto?'auto':''}"><span class="avatar sm" style="${c.auto?'background:var(--warning)':''}">${c.auto?ic('zap'):esc(initials(c.by))}</span><div class="bx"><div class="meta"><b>${esc(c.by)}</b><span>${fmtDateTime(c.at)}</span><span style="flex:1"></span>${c.by===S.user&&!c.auto?`<button class="icon-btn" style="padding:2px" data-act="rmComment" data-id="${c.id}" title="Apagar comentário">${ic('trash')}</button>`:''}</div><div class="tx">${esc(c.text)}</div></div></div>`).join('')||'<div class="muted">Nenhum comentário ainda.</div>')}
+  else{body=card.log.length?`<ul class="hist">${card.log.slice().reverse().map(l=>`<li style="--c:${l.by==='Automação'?'var(--warning)':'var(--primary-2)'}"><b>${esc(l.action)}</b>${l.detail?` <span style="color:var(--text-2)">· ${esc(l.detail)}</span>`:''}<div class="muted">${esc(l.by)} · ${fmtDateTime(l.at)}</div></li>`).join('')}</ul>`:'<div class="muted">Sem atividades registradas.</div>'}
+  const hist=card.history.slice().reverse().map(h=>{const ph=phaseOf(pipe,h.phaseId);const dur=(h.leftAt?new Date(h.leftAt):new Date())-new Date(h.enteredAt);return`<li style="--c:${ph?.color||'#888'}"><b>${esc(ph?.name||'Fase removida')}</b><div class="muted">${fmtDateTime(h.enteredAt)} · ${h.leftAt?fmtDur(dur):tick(h.enteredAt)+' (atual)'}</div></li>`}).join('');
+  const html=`<div class="modal-h"><span class="muted" style="font-size:13px">${esc(pipe.name)}</span><span style="flex:1"></span><button class="icon-btn" data-act="cardDelete" title="Excluir card" style="color:var(--danger)">${ic('trash')}</button><button class="icon-btn" data-act="closeModal">${ic('x')}</button></div>
+  <div class="card-modal"><div class="l"><input class="title-in" data-in="cardTitle" value="${esc(card.title)}">
+    <div class="ctabs"><button class="ctab ${tab==='fields'?'on':''}" data-act="cardTab" data-t="fields">${ic('layout')} Campos</button><button class="ctab ${tab==='comments'?'on':''}" data-act="cardTab" data-t="comments">${ic('chat')} Comentários ${card.comments.length?`<span class="badge">${card.comments.length}</span>`:''}</button><button class="ctab ${tab==='log'?'on':''}" data-act="cardTab" data-t="log">${ic('act')} Atividades</button></div>${body}</div>
+  <div class="r"><label class="f"><span>Mover para a fase</span><select class="input" data-ch="cardMove">${pipe.phases.map(p=>`<option value="${p.id}" ${p.id===card.phaseId?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label>
+    <div class="kv"><span>Criado em</span><span>${fmtDateTime(card.createdAt)}</span></div>
+    <div class="kv"><span>Na fase atual há</span>${tick(card.phaseEnteredAt)}</div>
+    <div class="kv"><span>Tempo total</span>${tick(card.createdAt)}</div>
+    <div class="kv" style="border:0;margin-bottom:14px"><span>Arquivos</span><span>${cardFiles(pipe,card)}</span></div>
+    <div style="font-weight:600;margin-bottom:10px">Histórico de fases</div><ul class="hist">${hist}</ul>
+    <button class="btn ghost sm" style="margin-top:16px;color:var(--danger)" data-act="cardDelete">${ic('trash')} Excluir card</button></div></div>`;
+  if($('#modalRoot .card-modal'))$('#modalRoot .modal').innerHTML=html;else openModal(html,'lg',true);
+  $('#modalRoot .overlay').scrollTop=scroll;
+}
+function openCard(pipeId,cardId){S.openCard={pipeId,cardId};S.cardTab='fields';$('#modalRoot').innerHTML='';renderCardModal()}
+const curCard=()=>{const p=pipeById(S.openCard.pipeId);return{pipe:p,card:S.openCard.draft?S.draftCard:p?.cards.find(c=>c.id===S.openCard.cardId)}};
+async function deleteCardFlow(pipe,card){
+  if(!await confirmBox('Excluir card',`Enviar o card <b>${esc(card.title)}</b> para a <b>Lixeira</b>?<br><br>Ele pode ser restaurado em até ${TRASH_DAYS} dias. Depois disso, ele e seus anexos são apagados da pasta.`,'Enviar para a lixeira',true))return false;
+  trashCard(pipe,card);toast(`Card <b>${esc(card.title)}</b> enviado para a lixeira. <a data-act="undoTrash" style="cursor:pointer">Desfazer</a>`,'ok',6000);renderSidebar();return true}
+
+</script>
+<script>
+/* pipyscox · views/phase-config.js
+   Construtor de campos e automações da fase */
+'use strict';
+/* ===================== Configuração da fase (construtor + automações) ===================== */
+function viewPhase(){
+  const p=pipeById(S.route.id),ph=phaseOf(p,S.route.ph);
+  crumbs([{t:'Home',attrs:'data-v="home"'},{t:p.name,attrs:`data-v="pipe" data-id="${p.id}"`},{t:'Configurar card: '+ph.name}]);
+  $('#content').innerHTML=`<div class="page-head"><h1 class="page">Configuração do card</h1><div class="sp"></div><button class="btn primary" data-act="go" data-v="pipe" data-id="${p.id}">${ic('check')} Concluir e voltar ao quadro</button></div>
+  <div class="tabs" id="phTabs"></div>
+  <div class="panel" style="margin-bottom:20px"><div class="panel-b row wrap" style="gap:24px">
+    <label class="f" style="margin:0;flex:1;min-width:220px"><span>Nome da fase</span><input class="input" data-in="phName" value="${esc(ph.name)}"></label>
+    <div><span class="fl">Cor da fase</span><div class="swatches">${COLORS.map(c=>`<button class="sw ${c===ph.color?'on':''}" style="background:${c}" data-act="phColor" data-ph="${ph.id}" data-c="${c}"></button>`).join('')}<input type="color" class="sw" value="${ph.color}" data-ch="phColorCustom" data-ph="${ph.id}"></div></div>
+  </div></div>
+  <div class="builder">
+    <div class="panel"><div class="panel-h"><h3 style="font-size:15px">Campos disponíveis</h3></div><div class="panel-b palette" style="padding:12px">
+      ${PALETTE.map(it=>{const t=FT[it.t];return`<div class="pal-item" draggable="true" data-ftype="${it.k}" data-act="addField" data-t="${it.k}" title="Arraste para o card ou clique para adicionar">${fic(it.t)}<div><b>${esc(it.label||t.label)}</b><small>${esc(it.desc||t.desc)}</small></div></div>`}).join('')}
+      <div class="muted" style="font-size:12px;margin-top:8px">Arraste para o card ao lado ou clique para adicionar no final.</div></div></div>
+    <div><div class="fb-card"><div class="row" style="margin-bottom:12px"><b style="flex:1">Campos do card nesta fase</b><span class="muted" style="font-size:12px">arraste para reordenar</span></div>
+      <div class="fb-title">${ic('text')} Título do card <span class="muted">(sempre presente)</span></div>
+      <div class="fb-list" id="fbList"></div></div>
+      <div style="margin-top:20px"><div class="muted" style="font-size:12.5px;margin-bottom:8px">Prévia no quadro</div><div id="fbMini" style="max-width:290px"></div></div></div>
+    <div class="panel" id="fbProps"></div>
+  </div>
+  <div class="panel" style="margin-top:20px"><div class="panel-h"><span style="color:var(--warning);display:flex">${ic('zap')}</span><h3>Automações da fase</h3><span class="muted" style="font-size:13px">regras executadas automaticamente</span></div><div class="panel-b" id="autoPanel"></div></div>`;
+  renderFbAll();renderAutoPanel();
+}
+function phaseCtx(){const p=pipeById(S.route.id);return{p,ph:phaseOf(p,S.route.ph)}}
+function renderFbAll(){renderFbList();renderFbMini();renderFbProps();const{p,ph}=phaseCtx();const t=$('#phTabs');if(t)t.innerHTML=p.phases.map(x=>`<button class="tab ${x.id===ph.id?'on':''}" data-act="go" data-v="phase" data-id="${p.id}" data-ph="${x.id}"><span class="dot" style="background:${x.color}"></span><span class="tn">${esc(x.name)}</span> <span class="muted">${x.fields.length}</span>${x.automations.length?`<span style="color:var(--warning);display:flex">${ic('zap')}</span>`:''}</button>`).join('')}
+function renderFbList(){const{ph}=phaseCtx();const el=$('#fbList');if(!el)return;
+  el.innerHTML=ph.fields.length?ph.fields.map(f=>`<div class="fb-item ${S.selField===f.id?'sel':''}" draggable="true" data-fid="${f.id}" data-act="selField" data-id="${f.id}"><span class="grip">${ic('grip')}</span>${fic(f.type)}<span class="nm"><b>${esc(f.label)}${f.required?' <span class="req">*</span>':''}</b><small>${FT[f.type].label}${f.type==='date'&&f.autoFill?' (auto)':''}${f.showOnCard?' · aparece no quadro':''}</small></span><button class="icon-btn" data-act="rmField" data-id="${f.id}" title="Remover campo">${ic('trash')}</button></div>`).join('')
+  :`<div class="fb-empty">${ic('layout')}<div style="margin-top:8px">Arraste campos aqui para montar o card desta fase</div></div>`}
+function renderFbMini(){const{p,ph}=phaseCtx();const el=$('#fbMini');if(!el)return;
+  const ent=new Date(Date.now()-26*36e5).toISOString();const idx=p.phases.indexOf(ph);
+  const fake=normCard({id:'preview',title:'Exemplo de card',phaseId:ph.id,createdAt:new Date(Date.now()-2*864e5).toISOString(),phaseEnteredAt:ent,history:[...p.phases.slice(0,idx).map(x=>({phaseId:x.id,enteredAt:ent,leftAt:ent})),{phaseId:ph.id,enteredAt:ent,leftAt:null}],values:{}});
+  const sample={text:'Texto de exemplo',number:'42',currency:'2500',email:'nome@empresa.com.br',phone:'(98) 99999-0000',cpf:'529.982.247-25',date:todayLocal(),checkbox:true,resp:S.user||'Fulano'};
+  ph.fields.forEach(f=>{fake.values[f.id]=f.type==='tag'?(f.options||[]).slice(0,1).map(o=>o.id):f.type==='select'?(f.options||[])[0]?.id:f.type==='file'?[{name:'documento.pdf'}]:sample[f.type]});
+  el.innerHTML=miniCard({...p,phases:p.phases.map(x=>x===ph?x:{...x,fields:[]})},fake,true)}
+function optEditor(f,withColor){return`<div class="fl" style="margin:6px 0 8px">Opções</div>${(f.options||[]).map(o=>`<div class="opt-row">${withColor?`<input type="color" class="sw" value="${o.color}" data-ch="optColor" data-o="${o.id}">`:''}<input class="input" data-in="optName" data-o="${o.id}" value="${esc(o.label)}"><button class="icon-btn" data-act="optRm" data-o="${o.id}">${ic('trash')}</button></div>`).join('')}<button class="btn ghost sm" data-act="optAdd" style="margin-top:4px">${ic('plus')} Adicionar opção</button>`}
+function renderFbProps(){const{ph}=phaseCtx();const el=$('#fbProps');if(!el)return;const f=ph.fields.find(x=>x.id===S.selField);
+  if(!f){el.innerHTML=`<div class="panel-h"><h3 style="font-size:15px">Propriedades</h3></div><div class="panel-b muted">Selecione um campo no card para editar nome, obrigatoriedade e opções.</div>`;return}
+  const b=(k,l)=>`<label class="chk"><input type="checkbox" data-ch="fPropB" data-k="${k}" ${f[k]?'checked':''}> ${l}</label>`;
+  const note=t=>`<div class="muted" style="font-size:12.5px">${t}</div>`;let extra='';
+  switch(f.type){
+    case'text':extra=b('multiline','Texto longo (várias linhas)')+`<label class="f"><span>Texto de ajuda (placeholder)</span><input class="input" data-in="fProp" data-k="placeholder" value="${esc(f.placeholder||'')}"></label>`;break;
+    case'date':extra=b('autoFill','Preencher automaticamente com a data em que o card entra nesta fase');break;
+    case'file':extra=`<label class="f"><span>Tipos aceitos (opcional)</span><input class="input" data-in="fProp" data-k="accept" value="${esc(f.accept||'')}" placeholder="ex.: .pdf,.jpg,.png"></label>`+note('Os arquivos são gravados em <code>arquivos/</code> dentro da pasta de dados.');break;
+    case'time':extra=note('Calculado automaticamente: mostra há quanto tempo o card está nesta fase (e quanto tempo ficou, depois que sair).');break;
+    case'phasetag':extra=b('includeCurrent','Incluir a fase atual')+note('Automático: o card recebe uma tag com o nome e a cor de cada fase por onde passou, sem repetir.');break;
+    case'tag':extra=b('multiple','Permitir várias tags')+optEditor(f,true);break;
+    case'select':extra=optEditor(f,false);break;
+    case'cpf':extra=note('Valida os dígitos verificadores. No quadro, o CPF aparece mascarado (***.456.789-**). CPF é dado pessoal: use apenas quando necessário (LGPD).');break;
+    case'email':extra=note('Valida o formato do e-mail.');break;
+    case'phone':extra=note('Aplica a máscara (DD) 99999-9999 automaticamente.');break;
+    case'resp':extra=note('As pessoas da lista vêm de <b>Configurações → Equipe</b>. Use o filtro do quadro para ver os cards de cada responsável.');break;
+    case'checkbox':extra=note('Se for obrigatório, o card só sai da fase com a caixa marcada (bom para checklists).');break;
+  }
+  el.innerHTML=`<div class="panel-h">${fic(f.type)}<h3 style="font-size:15px;flex:1">${FT[f.type].label}</h3></div><div class="panel-b">
+  <label class="f"><span>Nome do campo</span><input class="input" data-in="fProp" data-k="label" value="${esc(f.label)}"></label>
+  ${!['time','phasetag'].includes(f.type)?b('required','Obrigatório para sair da fase'):''}${b('showOnCard','Mostrar no card do quadro')}<div style="height:6px"></div>${extra}
+  <button class="btn ghost sm" style="margin-top:16px;color:var(--danger)" data-act="rmField" data-id="${f.id}">${ic('trash')} Remover campo</button></div>`}
+const selF=()=>{const{ph}=phaseCtx();return ph.fields.find(x=>x.id===S.selField)};
+function renderAutoPanel(){
+  const{p,ph}=phaseCtx();const el=$('#autoPanel');if(!el)return;
+  const A0=S.ad||(S.ad={trigger:'enter',action:'addTag',fieldId:'',optId:'',value:'',phaseId:'',text:''});
+  const tagFields=allFields(p).filter(({f})=>f.type==='tag').map(x=>x.f);
+  const setFields=allFields(p).filter(({f})=>!['file','time','phasetag','tag'].includes(f.type)).map(x=>x.f);
+  const sel=(k,opts,ph2='Selecione...')=>`<select class="input" data-ch="adSet" data-k="${k}">${ph2?`<option value="">${ph2}</option>`:''}${opts.map(o=>`<option value="${o.v}" ${String(A0[k])===String(o.v)?'selected':''}>${esc(o.l)}</option>`).join('')}</select>`;
+  let params='';
+  if(A0.action==='addTag'||A0.action==='removeTag'){const f=tagFields.find(x=>x.id===A0.fieldId);
+    params=`<label class="f"><span>Campo de tag</span>${sel('fieldId',tagFields.map(x=>({v:x.id,l:x.label})))}</label>`+(f?`<label class="f"><span>Tag</span>${sel('optId',f.options.map(o=>({v:o.id,l:o.label})))}</label>`:'');
+    if(!tagFields.length)params=`<div class="muted" style="font-size:13px">Adicione um campo do tipo <b>Tag</b> em alguma fase para usar esta ação.</div>`}
+  else if(A0.action==='setField'){const f=setFields.find(x=>x.id===A0.fieldId);let val='';
+    if(f){if(f.type==='select')val=sel('value',f.options.map(o=>({v:o.id,l:o.label})));
+      else if(f.type==='resp')val=sel('value',people().map(n=>({v:n,l:n})));
+      else if(f.type==='checkbox')val=sel('value',[{v:'sim',l:'Marcado'},{v:'não',l:'Desmarcado'}]);
+      else val=`<input class="input" data-in="adSet" data-k="value" value="${esc(A0.value)}" placeholder="${f.type==='date'?'hoje ou dd/mm/aaaa':'Valor'}">`}
+    params=`<label class="f"><span>Campo</span>${sel('fieldId',setFields.map(x=>({v:x.id,l:x.label+' ('+FT[x.type].label+')'})))}</label>`+(f?`<label class="f"><span>Valor</span>${val}</label>`:'')}
+  else if(A0.action==='move')params=`<label class="f"><span>Fase de destino</span>${sel('phaseId',p.phases.filter(x=>x.id!==ph.id).map(x=>({v:x.id,l:x.name})))}</label>`;
+  else if(A0.action==='comment')params=`<label class="f" style="grid-column:span 2"><span>Texto do comentário</span><input class="input" data-in="adSet" data-k="text" value="${esc(A0.text)}" placeholder="Ex.: Lembrar de conferir os documentos"></label>`;
+  const noReq=A0.trigger==='complete'&&!ph.fields.some(f=>f.required);
+  el.innerHTML=(ph.automations.length?ph.automations.map(a=>`<div class="auto-item"><span class="zap">${ic('zap')}</span><div style="flex:1">${describeAuto(p,a)}</div><button class="icon-btn" data-act="adRm" data-id="${a.id}" title="Remover automação">${ic('trash')}</button></div>`).join(''):'<div class="muted" style="margin-bottom:4px">Nenhuma automação nesta fase.</div>')+
+  `<div class="auto-form"><label class="f"><span>Quando</span>${sel('trigger',Object.entries(TRIG).map(([v,l])=>({v,l})),'')}</label>
+   <label class="f"><span>Fazer</span>${sel('action',Object.entries(ACTS).map(([v,l])=>({v,l})),'')}</label>${params}
+   <button class="btn primary" data-act="adAdd">${ic('plus')} Adicionar automação</button></div>
+   ${noReq?'<div style="font-size:12.5px;margin-top:8px;color:var(--warning)">Esta fase não tem campos obrigatórios: o gatilho "campos obrigatórios preenchidos" só funciona quando houver pelo menos um.</div>':''}
+   <div class="muted" style="font-size:12.5px;margin-top:10px">Dica: para checklists, crie campos <b>Checkbox</b> obrigatórios e a regra "campos obrigatórios preenchidos → mover para a fase".</div>`;
+}
+
+</script>
+<script>
+/* pipyscox · views/reports.js
+   Relatórios por pipy */
+'use strict';
+/* ===================== Relatórios ===================== */
+function weekStart(d){const x=new Date(d);x.setHours(0,0,0,0);const wd=(x.getDay()+6)%7;x.setDate(x.getDate()-wd);return x}
+function viewReport(){
+  const p=pipeById(S.route.id);const now=Date.now();
+  crumbs([{t:'Home',attrs:'data-v="home"'},{t:p.name,attrs:`data-v="pipe" data-id="${p.id}"`},{t:'Relatórios'}]);
+  const last=p.phases[p.phases.length-1];
+  const enteredLast=c=>last&&c.history.find(h=>h.phaseId===last.id);
+  const concluded=p.cards.filter(c=>last&&c.phaseId===last.id);
+  const doneTimes=concluded.map(c=>new Date(enteredLast(c)?.enteredAt||c.phaseEnteredAt)-new Date(c.createdAt));
+  const avgDone=doneTimes.length?doneTimes.reduce((a,b)=>a+b,0)/doneTimes.length:0;
+  const open=p.cards.filter(c=>!last||c.phaseId!==last.id);
+  const stale=open.filter(c=>now-new Date(c.phaseEnteredAt)>7*864e5).length;
+  const per=p.phases.map(ph=>{const ds=[];p.cards.forEach(c=>c.history.forEach(h=>{if(h.phaseId===ph.id)ds.push((h.leftAt?new Date(h.leftAt):now)-new Date(h.enteredAt))}));return{ph,now:p.cards.filter(c=>c.phaseId===ph.id).length,avg:ds.length?ds.reduce((a,b)=>a+b,0)/ds.length:0,visits:ds.length}});
+  const work=per.filter(x=>x.ph!==last);const bott=work.reduce((m,x)=>x.avg>(m?m.avg:0)?x:m,null);
+  const maxAvg=Math.max(1,...per.map(x=>x.avg)),maxNow=Math.max(1,...per.map(x=>x.now));
+  const W=8,w0=weekStart(new Date(now-7*(W-1)*864e5));const weeks=[...Array(W)].map((_,i)=>{const a=new Date(w0);a.setDate(a.getDate()+7*i);const b=new Date(a);b.setDate(b.getDate()+7);
+    return{a,cr:p.cards.filter(c=>{const d=new Date(c.createdAt);return d>=a&&d<b}).length,dn:p.cards.filter(c=>{const h=enteredLast(c);if(!h)return false;const d=new Date(h.enteredAt);return d>=a&&d<b}).length}});
+  const bar=(lb,color,val,max,txt,title)=>`<div class="rbar" title="${esc(title||'')}"><span class="lb"><span style="width:9px;height:9px;border-radius:3px;background:${color};flex:none"></span>${esc(lb)}</span><div class="tr"><div class="fi" style="width:${Math.max(.5,val/max*100)}%;background:${color}"></div></div><span class="vl">${txt}</span></div>`;
+  const tagFields=allFields(p).filter(({f})=>f.type==='tag'||f.type==='select');
+  const tagBlocks=tagFields.map(({f})=>{const counts=(f.options||[]).map(o=>({o,n:p.cards.filter(c=>f.type==='tag'?(c.values[f.id]||[]).includes(o.id):c.values[f.id]===o.id).length}));const mx=Math.max(1,...counts.map(x=>x.n));
+    return`<div class="panel"><div class="panel-h"><h3 style="font-size:15px">${esc(f.label)}</h3><span class="muted" style="font-size:13px">cards por ${f.type==='tag'?'tag':'opção'}</span></div><div class="panel-b">${counts.map(x=>bar(x.o.label,x.o.color||'var(--s1)',x.n,mx,x.n)).join('')||'<span class="muted">Sem opções.</span>'}</div></div>`}).join('');
+  $('#content').innerHTML=`<div class="page-head"><h1 class="page">Relatório · ${esc(p.name)}</h1><div class="sp"></div><button class="btn ghost no-print" data-act="go" data-v="pipe" data-id="${p.id}">${ic('board')} Voltar ao quadro</button><button class="btn primary no-print" data-act="printReport">${ic('print')} Exportar PDF</button></div>
+  <p class="print-only muted">Gerado em ${fmtDateTime(nowISO())} por ${esc(S.user)} · pipyscox</p>
+  <div class="stat-row">
+    <div class="stat" style="border-left-color:var(--primary)"><b>${p.cards.length}</b><span class="muted">cards no total</span></div>
+    <div class="stat" style="border-left-color:var(--info)"><b>${open.length}</b><span class="muted">em andamento</span></div>
+    <div class="stat" style="border-left-color:var(--success)"><b>${concluded.length}</b><span class="muted">concluídos${last?` (fase “${esc(last.name)}”)`:''}</span></div>
+    <div class="stat" style="border-left-color:var(--warning)"><b>${doneTimes.length?fmtDurShort(avgDone):'—'}</b><span class="muted">tempo médio até concluir</span></div>
+    <div class="stat" style="border-left-color:var(--danger)"><b>${stale}</b><span class="muted">parados há +7 dias</span></div>
+  </div>
+  <div class="rep-grid">
+    <div class="panel"><div class="panel-h"><h3 style="font-size:15px">Tempo médio por fase</h3>${bott&&bott.avg?`<span class="chip" style="background:var(--danger)">Gargalo: ${esc(bott.ph.name)}</span>`:''}</div><div class="panel-b">${per.map(x=>bar(x.ph.name,x.ph.color,x.avg,maxAvg,x.visits?fmtDurShort(x.avg):'—',`${x.visits} passagem(ns)`)).join('')}</div></div>
+    <div class="panel"><div class="panel-h"><h3 style="font-size:15px">Cards em cada fase agora</h3></div><div class="panel-b">${per.map(x=>bar(x.ph.name,x.ph.color,x.now,maxNow,x.now)).join('')}</div></div>
+  </div>
+  <div class="panel" style="margin-bottom:20px"><div class="panel-h"><h3 style="font-size:15px">Criados × concluídos por semana</h3><span class="muted" style="font-size:13px">últimas ${W} semanas</span></div><div class="panel-b">
+    <div class="legend"><span><i style="background:var(--s1)"></i>Criados</span><span><i style="background:var(--s2)"></i>Concluídos</span></div>${weekChart(weeks)}</div></div>
+  ${tagBlocks?`<div class="rep-grid">${tagBlocks}</div>`:''}
+  <div class="panel"><div class="panel-h"><h3 style="font-size:15px">Detalhe por fase</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Fase</th><th class="num">Cards agora</th><th class="num">Passagens</th><th class="num">Tempo médio</th></tr></thead><tbody>
+  ${per.map(x=>`<tr><td><span class="chip" style="background:${x.ph.color}">${esc(x.ph.name)}</span></td><td class="num">${x.now}</td><td class="num">${x.visits}</td><td class="num">${x.visits?fmtDurShort(x.avg):'—'}</td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function weekChart(weeks){
+  const w=720,h=220,pl=34,pr=8,pt=18,pb=28,iw=w-pl-pr,ih=h-pt-pb;const max=Math.max(1,...weeks.flatMap(x=>[x.cr,x.dn]));
+  const step=Math.ceil(max/4)||1,top=step*4;const gw=iw/weeks.length,bw=Math.min(22,gw*.32);const y=v=>pt+ih-v/top*ih;
+  const rb=(x,v,cls)=>{if(!v)return'';const yy=y(v),hh=pt+ih-yy,r=Math.min(4,hh);return`<path d="M${x},${pt+ih} V${yy+r} Q${x},${yy} ${x+r},${yy} H${x+bw-r} Q${x+bw},${yy} ${x+bw},${yy+r} V${pt+ih} Z" fill="var(${cls})"/>`};
+  let g='';for(let i=0;i<=4;i++){const yy=y(step*i);g+=`<line class="${i?'grid':'base'}" x1="${pl}" x2="${w-pr}" y1="${yy}" y2="${yy}"/><text x="${pl-6}" y="${yy+4}" text-anchor="end">${step*i}</text>`}
+  const bars=weeks.map((k,i)=>{const cx=pl+gw*i+gw/2,x1=cx-bw-1,x2=cx+1;const lbl=`${String(k.a.getDate()).padStart(2,'0')}/${String(k.a.getMonth()+1).padStart(2,'0')}`;
+    return`<g class="wk"><title>Semana de ${lbl}: ${k.cr} criado(s), ${k.dn} concluído(s)</title><rect class="hit" x="${pl+gw*i}" y="${pt}" width="${gw}" height="${ih}"/>${rb(x1,k.cr,'--s1')}${rb(x2,k.dn,'--s2')}
+    ${k.cr?`<text class="vt" x="${x1+bw/2}" y="${y(k.cr)-4}" text-anchor="middle">${k.cr}</text>`:''}${k.dn?`<text class="vt" x="${x2+bw/2}" y="${y(k.dn)-4}" text-anchor="middle">${k.dn}</text>`:''}<text x="${cx}" y="${h-8}" text-anchor="middle">${lbl}</text></g>`}).join('');
+  return`<svg class="wchart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Cards criados e concluídos por semana">${g}${bars}</svg>`;
+}
+
+</script>
+<script>
+/* pipyscox · views/data.js
+   Dados salvos e exportação CSV */
+'use strict';
+/* ===================== Dados salvos ===================== */
+function dataRows(){const F=S.dataF;const rows=[];
+  S.db.pipes.forEach(p=>{if(F.pipe&&p.id!==F.pipe)return;p.cards.forEach(c=>{if(F.phase&&c.phaseId!==F.phase)return;if(F.q&&!cardMatch(p,c,{q:F.q}))return;rows.push({p,c})})});return rows}
+const dataFields=pipe=>pipe?pipe.phases.flatMap(ph=>ph.fields.filter(f=>!['time','phasetag'].includes(f.type))):[];
+function viewData(){
+  crumbs([{t:'Home',attrs:'data-v="home"'},{t:'Dados salvos'}]);
+  const F=S.dataF;const rows=dataRows();const pipe=F.pipe?pipeById(F.pipe):null;
+  const allCards=S.db.pipes.reduce((a,p)=>a+p.cards.length,0);const allFiles=S.db.pipes.reduce((a,p)=>a+p.cards.reduce((b,c)=>b+cardFiles(p,c),0),0);
+  $('#content').innerHTML=`<div class="page-head"><h1 class="page">Dados salvos</h1><div class="sp"></div><button class="btn ghost" data-act="exportCsv">${ic('csv')} Exportar CSV</button><button class="btn primary" data-act="zipDownload">${ic('down')} Baixar tudo (ZIP)</button></div>
+  <div class="stat-row"><div class="stat" style="border-left-color:var(--primary)"><b>${S.db.pipes.length}</b><span class="muted">pipys</span></div><div class="stat" style="border-left-color:var(--info)"><b>${allCards}</b><span class="muted">cards</span></div><div class="stat" style="border-left-color:var(--warning)"><b>${allFiles}</b><span class="muted">arquivos</span></div><div class="stat" style="border-left-color:var(--success)"><b style="font-size:15px;padding:5px 0">${esc(S.dir.name)}</b><span class="muted">pasta de dados</span></div></div>
+  <div class="panel"><div class="panel-h wrap">
+    <select class="input" style="width:auto" data-ch="dfPipe"><option value="">Todos os pipys</option>${S.db.pipes.map(p=>`<option value="${p.id}" ${p.id===F.pipe?'selected':''}>${esc(p.name)}</option>`).join('')}</select>
+    ${pipe?`<select class="input" style="width:auto" data-ch="dfPhase"><option value="">Todas as fases</option>${pipe.phases.map(p=>`<option value="${p.id}" ${p.id===F.phase?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`:''}
+    <input class="input" style="flex:1;min-width:180px" placeholder="Filtrar por título, valor, tag ou comentário..." data-in="dfQ" value="${esc(F.q)}" id="dfQ">
+    <span class="muted" id="dfCount">${rows.length} registro${rows.length===1?'':'s'}</span></div>
+    <div class="tbl-wrap" id="dataTbl">${dataTable(rows,pipe)}</div></div>`;
+}
+function cellVal(pipe,c,f){const v=c.values[f.id];if(isEmptyVal(f,v))return'';if(f.type==='tag')return tagChips(f,v);if(f.type==='file')return v.length+' arq.';if(f.type==='checkbox')return'✓';return esc(textVal(pipe,c,f).slice(0,60))}
+function dataTable(rows,pipe){if(!rows.length)return`<div class="empty">${ic('db')}<div>Nenhum registro encontrado.</div></div>`;
+  const fields=dataFields(pipe);
+  return`<table class="tbl click"><thead><tr><th>Título</th>${pipe?'':'<th>Pipy</th>'}<th>Fase</th><th>Criado em</th><th>Tempo na fase</th>${fields.map(f=>`<th>${esc(f.label)}</th>`).join('')}${pipe?'':'<th>Arquivos</th>'}<th></th></tr></thead><tbody>
+  ${rows.map(({p,c})=>{const ph=phaseOf(p,c.phaseId);return`<tr data-act="openCardAny" data-p="${p.id}" data-id="${c.id}"><td><b>${esc(c.title)}</b></td>${pipe?'':`<td>${esc(p.name)}</td>`}<td><span class="chip" style="background:${ph?.color}">${esc(ph?.name||'-')}</span></td><td>${fmtDate(c.createdAt)}</td><td>${tick(c.phaseEnteredAt)}</td>${fields.map(f=>`<td>${cellVal(p,c,f)}</td>`).join('')}${pipe?'':`<td>${cardFiles(p,c)||''}</td>`}<td style="width:1%"><button class="icon-btn" data-act="cardDel" data-p="${p.id}" data-id="${c.id}" title="Excluir card">${ic('trash')}</button></td></tr>`}).join('')}</tbody></table>`}
+function exportCsv(){const F=S.dataF;const rows=dataRows();const pipe=F.pipe?pipeById(F.pipe):null;const fields=dataFields(pipe);
+  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const head=['Título','Pipy','Fase','Criado em','Entrou na fase em','Tempo na fase','Fases percorridas',...fields.map(f=>f.label),'Arquivos','Comentários'];
+  const lines=[head.map(q).join(';')];
+  rows.forEach(({p,c})=>{const ph=phaseOf(p,c.phaseId);lines.push([c.title,p.name,ph?.name,fmtDateTime(c.createdAt),fmtDateTime(c.phaseEnteredAt),fmtDur(Date.now()-new Date(c.phaseEnteredAt)),passedPhaseIds(c).map(id=>phaseOf(p,id)?.name).filter(Boolean).join(' > '),...fields.map(f=>textVal(p,c,f)),cardFiles(p,c),c.comments.length].map(q).join(';'))});
+  downloadBlob(new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}),`pipyscox-dados-${stamp()}.csv`)}
+
+</script>
+<script>
+/* pipyscox · views/trash.js
+   Tela da lixeira */
+'use strict';
+/* ===================== Lixeira ===================== */
+function viewTrash(){
+  crumbs([{t:'Home',attrs:'data-v="home"'},{t:'Lixeira'}]);const T=S.db.trash.slice().sort((a,b)=>new Date(b.deletedAt)-new Date(a.deletedAt));
+  $('#content').innerHTML=`<div class="page-head"><h1 class="page">Lixeira</h1><div class="sp"></div>${T.length?`<button class="btn ghost" style="color:var(--danger)" data-act="trashEmpty">${ic('trash')} Esvaziar lixeira</button>`:''}</div>
+  <p class="muted" style="margin:-6px 0 16px">Cards e pipys excluídos ficam aqui por ${TRASH_DAYS} dias e podem ser restaurados. Depois disso, eles e seus anexos são apagados da pasta definitivamente.</p>
+  <div class="panel">${T.length?`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Item</th><th>Tipo</th><th>Pipy</th><th>Excluído em</th><th>Por</th><th>Expira em</th><th></th></tr></thead><tbody>
+  ${T.map(t=>`<tr><td><b>${esc(t.kind==='pipe'?t.item.name:t.item.title)}</b>${t.kind==='pipe'?` <span class="muted">(${t.item.cards.length} cards)</span>`:''}</td><td><span class="chip soft">${t.kind==='pipe'?'Pipy':'Card'}</span></td><td>${esc(t.pipeName)}</td><td>${fmtDateTime(t.deletedAt)}</td><td>${esc(t.by||'-')}</td><td>${daysLeft(t)} dia(s)</td>
+  <td style="white-space:nowrap"><button class="btn ghost sm" data-act="trashRestore" data-id="${t.id}">${ic('refresh')} Restaurar</button> <button class="icon-btn" data-act="trashPurge" data-id="${t.id}" title="Excluir definitivamente" style="color:var(--danger)">${ic('trash')}</button></td></tr>`).join('')}</tbody></table></div>`:`<div class="empty">${ic('bin')}<div>A lixeira está vazia.</div></div>`}</div>`;
+}
+
+</script>
+<script>
+/* pipyscox · views/settings.js
+   Configurações */
+'use strict';
+/* ===================== Configurações ===================== */
+function viewConfig(){
+  crumbs([{t:'Home',attrs:'data-v="home"'},{t:'Configurações'}]);const ab=S.db.settings.autoBackup;
+  $('#content').innerHTML=`<div class="page-head"><h1 class="page">Configurações</h1></div><div class="cfg-grid">
+  <div class="panel"><div class="panel-h">${ic('folder')}<h3>Pasta de dados</h3></div><div class="panel-b">
+    <div class="kv"><span>Pasta atual</span><b>${esc(S.dir.name)}</b></div>
+    <div class="kv"><span>Última gravação</span><span>${S.db.updatedAt?fmtDateTime(S.db.updatedAt):'-'}</span></div>
+    <div class="kv" style="margin-bottom:16px"><span>Status</span><span style="color:var(--success)">● Conectada · verifica alterações externas a cada 4 s</span></div>
+    <div class="row wrap"><button class="btn primary" data-act="changeFolder">${ic('folder')} Trocar pasta</button><button class="btn ghost" data-act="reloadData">${ic('refresh')} Recarregar da pasta</button></div>
+    <p class="muted" style="font-size:12.5px;margin:14px 0 0">Se outra pessoa (ou outro computador sincronizado) alterar a mesma pasta, o pipyscox recarrega sozinho quando você não tem alterações pendentes. Se houver conflito, ele pergunta antes de gravar.</p></div></div>
+  <div class="panel"><div class="panel-h">${ic('user')}<h3>Usuário e equipe</h3></div><div class="panel-b">
+    <div class="kv" style="margin-bottom:14px"><span>Você está como</span><span class="row"><b>${esc(S.user)}</b><button class="btn ghost sm" data-act="changeUser">Trocar</button></span></div>
+    <div class="fl">Equipe (aparece no campo Responsável)</div>
+    <div class="files">${people().map(n=>`<div class="file"><span class="avatar xs">${esc(initials(n))}</span><span class="nm">${esc(n)}</span><button class="icon-btn" data-act="personRm" data-n="${esc(n)}" title="Remover">${ic('trash')}</button></div>`).join('')||'<span class="muted">Ninguém cadastrado.</span>'}</div>
+    <div class="row"><input class="input" id="personIn" placeholder="Nome da pessoa"><button class="btn ghost" data-act="personAdd">${ic('plus')} Adicionar</button></div></div></div>
+  <div class="panel"><div class="panel-h">${ic('archive')}<h3>Backup e compartilhamento</h3></div><div class="panel-b">
+    <div class="row wrap" style="margin-bottom:12px"><button class="btn info" data-act="backupFolder">${ic('archive')} Salvar backup agora</button><button class="btn ghost" data-act="zipDownload">${ic('down')} Baixar ZIP</button><label class="btn ghost" style="cursor:pointer">${ic('up')} Importar ZIP<input type="file" accept=".zip" hidden data-ch="zipImport"></label></div>
+    <p class="muted" style="font-size:12.5px;margin:0 0 14px">O ZIP contém tudo (dados e arquivos). Para compartilhar, envie o ZIP ou a própria pasta. Antes de importar ou restaurar, um backup automático é criado.</p>
+    <div class="fsec" style="margin-bottom:14px"><label class="chk"><input type="checkbox" data-ch="abSet" data-k="enabled" ${ab.enabled?'checked':''}> <b>Backup automático</b></label>
+      <div class="row wrap" style="gap:12px"><label class="f" style="margin:0;flex:1;min-width:150px"><span>Frequência</span><select class="input" data-ch="abSet" data-k="mode"><option value="daily" ${ab.mode==='daily'?'selected':''}>Uma vez por dia</option><option value="changes" ${ab.mode==='changes'?'selected':''}>A cada X alterações</option></select></label>
+      ${ab.mode==='changes'?`<label class="f" style="margin:0;width:120px"><span>Alterações</span><input type="number" min="1" class="input" data-ch="abSet" data-k="changes" value="${ab.changes}"></label>`:''}
+      <label class="f" style="margin:0;width:120px"><span>Manter últimos</span><input type="number" min="1" class="input" data-ch="abSet" data-k="keep" value="${ab.keep}"></label></div>
+      <div class="muted" style="font-size:12px;margin-top:8px">Último automático: ${S.db.settings.lastAutoBackup?fmtDateTime(S.db.settings.lastAutoBackup):'nenhum ainda'}</div></div>
+    <div class="fl">Backups na pasta <span class="muted" style="font-weight:400">(backups/)</span></div><div id="bkList" class="muted">Carregando...</div></div></div>
+  <div class="panel"><div class="panel-h">${ic(S.theme==='dark'?'moon':'sun')}<h3>Aparência</h3></div><div class="panel-b"><div class="row"><button class="btn ${S.theme==='dark'?'primary':'ghost'}" data-act="setTheme" data-t="dark">${ic('moon')} Escuro</button><button class="btn ${S.theme==='light'?'primary':'ghost'}" data-act="setTheme" data-t="light">${ic('sun')} Claro</button></div><label class="chk" style="margin:16px 0 0"><input type="checkbox" data-ch="animSet" ${ANIM.on?'checked':''}> Animações na interface</label>${reduceMotion.matches?'<div class="muted" style="font-size:12px;margin-top:6px">Seu sistema pede movimento reduzido, então as animações ficam desligadas.</div>':''}</div></div>
+  <div class="panel"><div class="panel-h">${ic('db')}<h3>Estrutura da pasta</h3></div><div class="panel-b"><div class="tree">${esc(S.dir.name)}/
+├── pipyscox.json        ← pipys, fases, campos, cards, lixeira
+├── arquivos/
+│   └── &lt;pipy&gt;/&lt;card&gt;/   ← anexos dos cards
+└── backups/             ← backups .zip (manuais e automáticos)</div></div></div>
+  </div>`;
+  loadBackups();
+}
+async function loadBackups(){const el=$('#bkList');if(!el)return;try{const d=await dirAt(['backups'],false);const list=[];for await(const[n,h]of d.entries())if(h.kind==='file'&&n.endsWith('.zip')){const f=await h.getFile();list.push({n,size:f.size,t:f.lastModified})}
+  list.sort((a,b)=>b.t-a.t);el.innerHTML=list.length?`<div class="files">${list.map(b=>`<div class="file">${ic('archive')}<span class="nm">${esc(b.n)}</span><span class="muted">${fmtSize(b.size)}</span><button class="icon-btn" title="Baixar" data-act="bkDl" data-n="${esc(b.n)}">${ic('down')}</button><button class="icon-btn" title="Restaurar" data-act="bkRestore" data-n="${esc(b.n)}">${ic('refresh')}</button><button class="icon-btn" title="Excluir" data-act="bkRm" data-n="${esc(b.n)}">${ic('trash')}</button></div>`).join('')}</div>`:'Nenhum backup ainda.'}catch(e){el.textContent='Nenhum backup ainda.'}}
+async function restoreZip(buf){
+  const entries=await readZip(buf);const dbE=entries.find(e=>e.path===DBFILE);if(!dbE)throw new Error('O ZIP não contém pipyscox.json');
+  JSON.parse(new TextDecoder().decode(dbE.data));
+  await backupToFolder(true);await removePath('arquivos');
+  for(const e of entries){if(e.path.startsWith('backups/')||e.path.includes('..'))continue;await writeFile(e.path,e.data)}
+  await loadDb();S.route={v:'home'};renderAll();toast('Dados importados com sucesso. Um backup do estado anterior foi salvo em backups/.');
+}
+
+</script>
+<script>
+/* pipyscox · features/external-form.js
+   Formulário externo (opcional por pipy) */
+'use strict';
+/* ===================== Formulário externo (opcional por pipy) ===================== */
+function formModal(){
+  const p=pipeById(S.route.id);const fm=p.form;const phId=fm.phaseId&&phaseOf(p,fm.phaseId)?fm.phaseId:p.phases[0]?.id;
+  const ph=phaseOf(p,phId);const flds=ph?ph.fields.filter(f=>!['time','phasetag','resp'].includes(f.type)):[];
+  openModal(`<div class="modal-h">${ic('form')}<h3>Formulário externo</h3><button class="icon-btn" data-act="closeForm">${ic('x')}</button></div><div class="modal-b">
+  <p class="muted" style="margin:0 0 14px;font-size:13px">Opcional, para usar caso a caso: gera um arquivo HTML de formulário que você envia para alguém preencher (por e-mail, WhatsApp...). A pessoa preenche no navegador e baixa um arquivo de resposta; você importa esse arquivo aqui e ele vira um card.</p>
+  <label class="chk"><input type="checkbox" data-ch="formSet" data-k="enabled" ${fm.enabled?'checked':''}> <b>Ativar formulário externo neste pipy</b></label>
+  ${fm.enabled?`<label class="f"><span>Fase onde o card será criado</span><select class="input" data-ch="formSet" data-k="phaseId">${p.phases.map(x=>`<option value="${x.id}" ${x.id===phId?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label>
+  <label class="f"><span>Título do formulário</span><input class="input" data-in="formSet" data-k="title" value="${esc(fm.title||p.name)}"></label>
+  <label class="f"><span>Descrição (opcional)</span><textarea class="input" data-in="formSet" data-k="desc" style="min-height:60px">${esc(fm.desc)}</textarea></label>
+  <label class="f"><span>Rótulo do campo de identificação (vira o título do card)</span><input class="input" data-in="formSet" data-k="titleLabel" value="${esc(fm.titleLabel)}"></label>
+  <label class="chk"><input type="checkbox" data-ch="formSet" data-k="consent" ${fm.consent?'checked':''}> Exigir aceite de uso dos dados (LGPD)</label>
+  ${fm.consent?`<label class="f"><span>Texto do aceite</span><textarea class="input" data-in="formSet" data-k="consentText" style="min-height:60px">${esc(fm.consentText)}</textarea></label>`:''}
+  <div class="fl">Campos incluídos (da fase “${esc(ph?.name||'')}”)</div><div class="tagsel" style="margin-bottom:6px">${flds.map(f=>`<span class="chip soft">${esc(f.label)}${f.required?' *':''}</span>`).join('')||'<span class="muted">Nenhum campo nesta fase — só a identificação será pedida.</span>'}</div>
+  <div class="muted" style="font-size:12px">Campos de responsável, tempo e tag de fase são internos e não aparecem no formulário. Sempre que mudar os campos, gere o formulário de novo.</div>`:''}
+  </div><div class="modal-f"><button class="btn ghost" data-act="closeForm">Fechar</button>${fm.enabled?`<button class="btn primary" data-act="formDownload">${ic('down')} Baixar formulário HTML</button>`:''}</div>`,'md');
+}
+function genFormHtml(p){
+  const fm=p.form;const ph=phaseOf(p,fm.phaseId)||p.phases[0];
+  const spec={pipeId:p.id,pipeName:p.name,phaseId:ph.id,title:fm.title||p.name,desc:fm.desc||'',titleLabel:fm.titleLabel||'Nome completo',consent:fm.consent?fm.consentText:'',
+    fields:ph.fields.filter(f=>!['time','phasetag','resp'].includes(f.type)).map(f=>({id:f.id,type:f.type,label:f.label,required:!!f.required,multiline:!!f.multiline,placeholder:f.placeholder||'',options:(f.options||[]).map(o=>({id:o.id,label:o.label})),multiple:!!f.multiple,accept:f.accept||''}))};
+  const json=JSON.stringify(spec).replace(/</g,'\\u003c');
+  const css='*{box-sizing:border-box}body{margin:0;background:#f3f4f7;font:15px/1.5 system-ui,Segoe UI,Roboto,Arial,sans-serif;color:#252b36}main{max-width:640px;margin:0 auto;padding:32px 16px}.card{background:#fff;border:1px solid #dbdfe6;border-radius:12px;padding:28px;box-shadow:0 8px 30px rgba(30,40,60,.08)}h1{margin:0 0 6px;font-size:24px}.desc{color:#4a5160;margin:0 0 20px;white-space:pre-wrap}.fld{margin-bottom:16px}label.l{display:block;font-weight:600;font-size:13.5px;margin-bottom:6px}b.r{color:#e05555}input,select,textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid #cfd4dc;border-radius:8px;background:#fff}textarea{min-height:90px}input:focus,select:focus,textarea:focus{outline:0;border-color:#5856d6;box-shadow:0 0 0 3px rgba(88,86,214,.2)}.ck{display:flex;gap:10px;align-items:flex-start;font-weight:400;margin:6px 0}.ck input{width:18px;height:18px;margin-top:2px;flex:none}.err{color:#c53030;font-size:13px;display:block;margin-top:4px}.err:empty{display:none}button{background:#5856d6;color:#fff;border:0;border-radius:8px;padding:12px 20px;font:inherit;font-weight:600;cursor:pointer;width:100%}button:hover{background:#4b49c4}.ok{text-align:center}.ok svg{width:56px;height:56px;color:#2eb85c}.foot{text-align:center;color:#768192;font-size:12px;margin-top:16px}';
+  const js="var S=JSON.parse(document.getElementById('spec').textContent);function e(s){return String(s==null?'':s).replace(/[&<>\"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c]})}"+
+  "function dg(s){return String(s||'').replace(/\\D/g,'')}function cpfOk(v){var c=dg(v);if(c.length!==11||/^(\\d)\\1+$/.test(c))return false;var s=0,i,r;for(i=0;i<9;i++)s+=+c[i]*(10-i);r=(s*10)%11%10;if(r!==+c[9])return false;s=0;for(i=0;i<10;i++)s+=+c[i]*(11-i);r=(s*10)%11%10;return r===+c[10]}"+
+  "function mCPF(v){var d=dg(v).slice(0,11);return d.replace(/^(\\d{3})(\\d)/,'$1.$2').replace(/^(\\d{3})\\.(\\d{3})(\\d)/,'$1.$2.$3').replace(/\\.(\\d{3})(\\d)/,'.$1-$2')}function mTel(v){var d=dg(v).slice(0,11);if(d.length<=2)return d.length?'('+d:'';if(d.length<=6)return'('+d.slice(0,2)+') '+d.slice(2);if(d.length<=10)return'('+d.slice(0,2)+') '+d.slice(2,6)+'-'+d.slice(6);return'('+d.slice(0,2)+') '+d.slice(2,7)+'-'+d.slice(7)}"+
+  "document.getElementById('ttl').textContent=S.title;document.title=S.title;document.getElementById('dsc').textContent=S.desc;"+
+  "var h='<div class=\"fld\"><label class=\"l\">'+e(S.titleLabel)+' <b class=\"r\">*</b></label><input id=\"f__title\"><small class=\"err\" id=\"e__title\"></small></div>';"+
+  "S.fields.forEach(function(f){var id='f_'+f.id,i='';var lab='<label class=\"l\">'+e(f.label)+(f.required?' <b class=\"r\">*</b>':'')+'</label>';"+
+  "if(f.type==='text')i=f.multiline?'<textarea id=\"'+id+'\" placeholder=\"'+e(f.placeholder)+'\"></textarea>':'<input id=\"'+id+'\" placeholder=\"'+e(f.placeholder)+'\">';"+
+  "else if(f.type==='number')i='<input type=\"number\" step=\"any\" id=\"'+id+'\">';else if(f.type==='currency')i='<input type=\"number\" step=\"0.01\" min=\"0\" id=\"'+id+'\" placeholder=\"R$ 0,00\">';"+
+  "else if(f.type==='email')i='<input type=\"email\" id=\"'+id+'\" placeholder=\"nome@email.com\">';else if(f.type==='phone')i='<input type=\"tel\" id=\"'+id+'\" placeholder=\"(DD) 99999-9999\" data-m=\"tel\">';"+
+  "else if(f.type==='cpf')i='<input inputmode=\"numeric\" id=\"'+id+'\" placeholder=\"000.000.000-00\" data-m=\"cpf\">';else if(f.type==='date')i='<input type=\"date\" id=\"'+id+'\">';"+
+  "else if(f.type==='select')i='<select id=\"'+id+'\"><option value=\"\">Selecione...</option>'+f.options.map(function(o){return'<option value=\"'+o.id+'\">'+e(o.label)+'</option>'}).join('')+'</select>';"+
+  "else if(f.type==='tag')i=f.options.map(function(o){return'<label class=\"ck\"><input type=\"'+(f.multiple?'checkbox':'radio')+'\" name=\"'+id+'\" value=\"'+o.id+'\"> '+e(o.label)+'</label>'}).join('');"+
+  "else if(f.type==='checkbox'){lab='';i='<label class=\"ck\"><input type=\"checkbox\" id=\"'+id+'\"> '+e(f.label)+(f.required?' <b class=\"r\">*</b>':'')+'</label>'}"+
+  "else if(f.type==='file')i='<input type=\"file\" multiple id=\"'+id+'\"'+(f.accept?' accept=\"'+e(f.accept)+'\"':'')+'><small style=\"color:#768192\">Até 10 MB por arquivo.</small>';"+
+  "h+='<div class=\"fld\">'+lab+i+'<small class=\"err\" id=\"e_'+f.id+'\"></small></div>'});"+
+  "if(S.consent)h+='<div class=\"fld\"><label class=\"ck\"><input type=\"checkbox\" id=\"f__consent\"> '+e(S.consent)+' <b class=\"r\">*</b></label><small class=\"err\" id=\"e__consent\"></small></div>';"+
+  "document.getElementById('fields').innerHTML=h;"+
+  "document.addEventListener('input',function(ev){var t=ev.target;if(t.dataset.m==='cpf')t.value=mCPF(t.value);if(t.dataset.m==='tel')t.value=mTel(t.value)});"+
+  "function rd(file){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(r.result)};r.onerror=rej;r.readAsDataURL(file)})}"+
+  "var last=null;document.getElementById('frm').addEventListener('submit',async function(ev){ev.preventDefault();var bad=0,vals={},files={};function er(k,m){var x=document.getElementById('e_'+k);if(x)x.textContent=m||'';if(m)bad++}"+
+  "var t=document.getElementById('f__title').value.trim();er('_title',t?'':'Campo obrigatório');"+
+  "for(var j=0;j<S.fields.length;j++){var f=S.fields[j],el=document.getElementById('f_'+f.id),v;er(f.id,'');"+
+  "if(f.type==='tag'){v=[].slice.call(document.querySelectorAll('input[name=\"f_'+f.id+'\"]:checked')).map(function(x){return x.value});if(f.required&&!v.length)er(f.id,'Selecione ao menos uma opção');vals[f.id]=v;continue}"+
+  "if(f.type==='checkbox'){v=el.checked;if(f.required&&!v)er(f.id,'Obrigatório');vals[f.id]=v;continue}"+
+  "if(f.type==='file'){var fl=[].slice.call(el.files);if(f.required&&!fl.length)er(f.id,'Anexe ao menos um arquivo');var big=fl.filter(function(x){return x.size>10485760});if(big.length)er(f.id,'Arquivo acima de 10 MB: '+big[0].name);files[f.id]=fl;continue}"+
+  "v=el.value.trim();if(f.required&&!v){er(f.id,'Campo obrigatório');continue}if(!v)continue;"+
+  "if(f.type==='email'&&!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(v))er(f.id,'E-mail inválido');if(f.type==='cpf'&&!cpfOk(v))er(f.id,'CPF inválido');if(f.type==='phone'&&(dg(v).length<10||dg(v).length>11))er(f.id,'Telefone incompleto');vals[f.id]=v}"+
+  "if(S.consent){var c=document.getElementById('f__consent').checked;er('_consent',c?'':'É necessário aceitar para enviar')}"+
+  "if(bad){var fe=document.querySelector('.err:not(:empty)');if(fe)fe.scrollIntoView({block:'center'});return}"+
+  "var out={pipyscoxForm:1,responseId:Date.now().toString(36)+Math.random().toString(36).slice(2,8),pipeId:S.pipeId,phaseId:S.phaseId,submittedAt:new Date().toISOString(),title:t,values:vals,files:{},consent:S.consent?{text:S.consent,acceptedAt:new Date().toISOString()}:null};"+
+  "for(var k in files){out.files[k]=[];for(var q=0;q<files[k].length;q++){var fx=files[k][q];out.files[k].push({name:fx.name,type:fx.type,size:fx.size,data:await rd(fx)})}}"+
+  "last=new Blob([JSON.stringify(out)],{type:'application/json'});dl();document.getElementById('frm').style.display='none';document.getElementById('done').style.display='block'});"+
+  "function dl(){var a=document.createElement('a');a.href=URL.createObjectURL(last);a.download='resposta-'+(document.getElementById('f__title').value.trim().replace(/[^\\w\\-]+/g,'_').slice(0,40)||'formulario')+'.pipyform.json';document.body.appendChild(a);a.click();a.remove()}"+
+  "document.getElementById('again').onclick=dl;";
+  return'<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Formulário</title><style>'+css+'</style></head><body><main><div class="card">'+
+  '<form id="frm" novalidate><h1 id="ttl"></h1><p class="desc" id="dsc"></p><div id="fields"></div><button type="submit">Enviar respostas</button></form>'+
+  '<div id="done" class="ok" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></svg><h1>Respostas salvas</h1><p class="desc">Um arquivo <b>.pipyform.json</b> foi baixado no seu computador. Envie esse arquivo para quem te mandou este formulário.</p><button type="button" id="again">Baixar o arquivo novamente</button></div>'+
+  '</div><div class="foot">Formulário gerado pelo pipyscox · seus dados ficam só no seu computador até você enviar o arquivo.</div></main>'+
+  '<script type="application/json" id="spec">'+json+'<'+'/script><script>'+js+'<'+'/script></body></html>';
+}
+async function importFormResponses(fileList){
+  const p=pipeById(S.route.id);let ok=0,skip=0,dup=0;
+  for(const file of fileList){
+    try{const o=JSON.parse(await file.text());
+      if(o.pipyscoxForm!==1||o.pipeId!==p.id){skip++;continue}
+      if(p.imported.includes(o.responseId)){dup++;continue}
+      const phId=phaseOf(p,o.phaseId)?o.phaseId:(phaseOf(p,p.form.phaseId)?p.form.phaseId:p.phases[0].id);
+      const at=nowISO();const c=normCard({id:uid(),title:String(o.title||'Resposta do formulário').slice(0,200),phaseId:phId,createdAt:at,phaseEnteredAt:at,history:[{phaseId:phId,enteredAt:at,leftAt:null}],values:{}});
+      for(const[fid,v]of Object.entries(o.values||{})){const{f}=findField(p,fid);if(!f||f.type==='file')continue;
+        if(f.type==='tag')c.values[fid]=(Array.isArray(v)?v:[]).filter(id=>f.options.some(x=>x.id===id));
+        else if(f.type==='select')c.values[fid]=f.options.some(x=>x.id===v)?v:'';
+        else if(f.type==='checkbox')c.values[fid]=!!v;else c.values[fid]=f.type==='cpf'?maskCPF(v):f.type==='phone'?maskPhone(v):String(v)}
+      for(const[fid,list]of Object.entries(o.files||{})){const{f}=findField(p,fid);if(!f||f.type!=='file')continue;c.values[fid]=[];
+        for(const x of list){const blob=await(await fetch(x.data)).blob();const safe=String(x.name).replace(/[\\/:*?"<>|]+/g,'_');const path=`arquivos/${p.id}/${c.id}/${Date.now()}-${safe}`;await writeFile(path,blob);c.values[fid].push({name:x.name,path,size:blob.size,type:x.type,addedAt:at})}}
+      logCard(c,'Criado via formulário externo',`Enviado em ${fmtDateTime(o.submittedAt)} · arquivo ${file.name}`);
+      if(o.consent)logCard(c,'Aceite LGPD registrado',`Aceito em ${fmtDateTime(o.consent.acceptedAt)}`);
+      autoFill(p,c,phId);p.cards.push(c);p.imported.push(o.responseId);runAuto(p,c,phId,'enter');ok++;
+    }catch(e){console.error(e);skip++}
+  }
+  save();renderMain();toast(`${ok} resposta(s) importada(s)${dup?`, ${dup} já importada(s) antes`:''}${skip?`, ${skip} arquivo(s) ignorado(s) (não pertencem a este pipy ou estão corrompidos)`:''}.`,ok?'ok':'warn',6000);
+}
+
+</script>
+<script>
+/* pipyscox · features/csv-import.js
+   Importação de cards via CSV */
+'use strict';
+/* ===================== Importar CSV ===================== */
+function parseCSV(txt){txt=txt.replace(/^﻿/,'');const first=txt.split(/\r?\n/)[0]||'';const del=first.split(';').length>first.split(',').length?';':(first.split('\t').length>first.split(',').length?'\t':',');
+  const rows=[];let row=[],cur='',q=false;for(let i=0;i<txt.length;i++){const ch=txt[i];
+    if(q){if(ch==='"'){if(txt[i+1]==='"'){cur+='"';i++}else q=false}else cur+=ch}
+    else if(ch==='"')q=true;else if(ch===del){row.push(cur);cur=''}else if(ch==='\n'){row.push(cur);rows.push(row);row=[];cur=''}else if(ch!=='\r')cur+=ch}
+  if(cur||row.length){row.push(cur);rows.push(row)}return rows.filter(r=>r.some(c=>c.trim()))}
+async function csvImportFlow(file){
+  const p=pipeById(S.route.id);const buf=await file.arrayBuffer();let txt=new TextDecoder('utf-8').decode(buf);if(txt.includes('�'))txt=new TextDecoder('windows-1252').decode(buf);
+  const rows=parseCSV(txt);if(rows.length<2){toast('O CSV precisa ter uma linha de cabeçalho e ao menos uma linha de dados.','warn');return}
+  const head=rows[0].map(h=>h.trim());const fields=allFields(p).map(x=>x.f).filter(f=>!['file','time','phasetag'].includes(f.type));
+  let tIdx=head.findIndex(h=>['titulo','title','nome','nome completo'].includes(norm(h)));if(tIdx<0)tIdx=0;
+  const map=head.map((h,i)=>i===tIdx?{t:'title'}:{f:fields.find(f=>norm(f.label)===norm(h))});
+  const data=rows.slice(1);
+  if(!await confirmBox('Importar CSV',`<b>${data.length}</b> linha(s) serão criadas como cards na fase <b>${esc(p.phases[0].name)}</b>.<br><br><div class="fl">Mapeamento das colunas</div><div class="files">${head.map((h,i)=>`<div class="file"><span class="nm">${esc(h)}</span><span>${map[i].t?'<b>Título do card</b>':map[i].f?`→ ${esc(map[i].f.label)}`:'<span class="muted">ignorada</span>'}</span></div>`).join('')}</div><div class="muted" style="font-size:12px;margin-top:8px">As colunas são ligadas aos campos pelo nome (sem diferenciar maiúsculas e acentos). Datas em dd/mm/aaaa, tags separadas por vírgula, checkbox com "sim".</div>`,`Importar ${data.length} card(s)`)){renderMain();return}
+  const ph=p.phases[0];let n=0;
+  data.forEach(r=>{const at=nowISO();const c=normCard({id:uid(),title:(r[tIdx]||'').trim()||'Sem título',phaseId:ph.id,createdAt:at,phaseEnteredAt:at,history:[{phaseId:ph.id,enteredAt:at,leftAt:null}],values:{}});
+    map.forEach((m,i)=>{if(m.f){const v=convertVal(m.f,r[i]);if(v!==undefined)c.values[m.f.id]=v}});
+    logCard(c,'Importado de CSV',file.name);autoFill(p,c,ph.id);p.cards.push(c);runAuto(p,c,ph.id,'enter');n++});
+  save();renderMain();toast(`${n} card(s) importado(s) do CSV.`);
+}
+
+</script>
+<script>
+/* pipyscox · app/actions.js
+   Ações de clique */
+'use strict';
+/* ===================== Ações (cliques) ===================== */
+let lastTrashed=null;
+const A={
+  toggleSide(){if(innerWidth<=900)document.body.classList.toggle('mnav');else document.body.classList.toggle('collapsed')},
+  toggleTheme(){A.setTheme({dataset:{t:S.theme==='dark'?'light':'dark'}})},
+  setTheme(el){S.theme=el.dataset.t;try{localStorage.setItem('pipyscox-theme',S.theme)}catch(e){}renderTheme();if(S.route.v==='config')renderMain()},
+  changeUser(){if(S.db)askUser(S.user)},
+  go(el){const d=el.dataset;go({v:d.v,id:d.id,ph:d.ph})},
+  async newPipe(){const n=await promptBox('Novo pipy','Nome do pipy','');if(!n)return;const p=createPipe(n);go({v:'pipe',id:p.id});toast('Pipy criado. Configure os campos dos cards em <b>Configurar cards</b>.')},
+  examplePipe(){const p=createPipe('Admissão de colaboradores (exemplo)',true);go({v:'pipe',id:p.id})},
+  pipeMenu(el){const p=pipeById(S.route.id);openPop(el,`<div class="sec" style="border-top:0;margin-top:0"><small>Cor do pipy</small><div class="swatches">${COLORS.map(c=>`<button class="sw ${c===p.color?'on':''}" style="background:${c}" data-act="pipeColor" data-c="${c}"></button>`).join('')}</div></div>
+    <button class="it" data-act="openForm">${ic('form')} Formulário externo ${p.form.enabled?'<span class="badge new">ATIVO</span>':'<span class="badge">opcional</span>'}</button>
+    <label class="it" style="display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:5px;cursor:pointer;color:var(--text-2)">${ic('csv')} Importar cards de CSV<input type="file" accept=".csv,.txt" hidden data-ch="csvImport"></label>
+    <button class="it" data-act="go" data-v="report" data-id="${p.id}">${ic('chart')} Relatórios</button>
+    <button class="it" data-act="pipeDup">${ic('layout')} Duplicar estrutura (sem cards)</button>
+    <button class="it danger" data-act="pipeDelete">${ic('trash')} Excluir pipy</button>`)},
+  pipeColor(el){pipeById(S.route.id).color=el.dataset.c;save();renderMain()},
+  pipeDup(){const p=pipeById(S.route.id);const n=JSON.parse(JSON.stringify(p));const map={};n.id=uid();n.name=p.name+' (cópia)';n.cards=[];n.imported=[];n.createdAt=nowISO();
+    n.phases.forEach(ph=>{const o=ph.id;ph.id=uid();map[o]=ph.id;ph.fields.forEach(f=>{const of=f.id;f.id=uid();map[of]=f.id})});
+    n.phases.forEach(ph=>ph.automations.forEach(a=>{a.id=uid();if(a.fieldId)a.fieldId=map[a.fieldId]||a.fieldId;if(a.phaseId)a.phaseId=map[a.phaseId]||a.phaseId}));n.form.phaseId=map[n.form.phaseId]||'';
+    S.db.pipes.push(n);save();go({v:'pipe',id:n.id})},
+  async pipeDelete(){closePop();const p=pipeById(S.route.id);if(!await confirmBox('Excluir pipy',`Enviar <b>${esc(p.name)}</b> (com ${p.cards.length} card(s)) para a <b>Lixeira</b>? Você pode restaurá-lo em até ${TRASH_DAYS} dias.`,'Enviar para a lixeira',true))return;
+    trashPipe(p);go({v:'home'});toast(`Pipy <b>${esc(p.name)}</b> enviado para a lixeira.`)},
+  openForm(){closePop();formModal()},
+  closeForm(){$('#modalRoot').innerHTML='';renderMain()},
+  formDownload(){const p=pipeById(S.route.id);if(!p.form.phaseId)p.form.phaseId=p.phases[0]?.id;save();downloadBlob(new Blob([genFormHtml(p)],{type:'text/html'}),`formulario-${norm(p.name).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'pipy'}.html`);toast('Formulário baixado. Envie o arquivo HTML para quem vai preencher.')},
+  async newPhase(){const p=pipeById(S.route.id);const n=await promptBox('Nova fase','Nome da fase','');if(!n)return;p.phases.push({id:uid(),name:n,color:COLORS[p.phases.length%COLORS.length],fields:[],automations:[]});save();renderMain()},
+  phaseMenu(el){const p=pipeById(S.route.id);openPop(el,phaseMenuHtml(phaseOf(p,el.dataset.ph)))},
+  async phRename(el){closePop();const p=pipeById(S.route.id),ph=phaseOf(p,el.dataset.ph);const n=await promptBox('Renomear fase','Nome da fase',ph.name);if(!n)return;ph.name=n;save();renderMain()},
+  phColor(el){const p=pipeById(S.route.id),ph=phaseOf(p,el.dataset.ph);ph.color=el.dataset.c;save();renderMain()},
+  phMove(el){const p=pipeById(S.route.id);const i=p.phases.findIndex(x=>x.id===el.dataset.ph);const j=i+ +el.dataset.d;if(j<0||j>=p.phases.length)return closePop();[p.phases[i],p.phases[j]]=[p.phases[j],p.phases[i]];save();renderMain()},
+  async phDelete(el){closePop();const p=pipeById(S.route.id),ph=phaseOf(p,el.dataset.ph);const n=p.cards.filter(c=>c.phaseId===ph.id).length;
+    if(n){toast(`A fase <b>${esc(ph.name)}</b> tem ${n} card(s). Mova-os para outra fase antes de excluir.`,'warn',5000);return}
+    if(!await confirmBox('Excluir fase',`Excluir a fase <b>${esc(ph.name)}</b>, seus ${ph.fields.length} campo(s) e ${ph.automations.length} automação(ões)? Valores desses campos nos cards serão perdidos.`,'Excluir',true))return;
+    const ids=ph.fields.map(f=>f.id);p.cards.forEach(c=>ids.forEach(id=>delete c.values[id]));p.phases=p.phases.filter(x=>x!==ph);save();renderMain()},
+  newCard(el){const p=pipeById(S.route.id);const phId=el.dataset.ph||p.phases[0]?.id;if(!phId)return;
+    const now=nowISO();const c=normCard({id:uid(),title:'',phaseId:phId,createdAt:now,phaseEnteredAt:now,history:[{phaseId:phId,enteredAt:now,leftAt:null}],values:{}});autoFill(p,c,phId);
+    S.draftCard=c;S.openCard={pipeId:p.id,cardId:c.id,draft:true};$('#modalRoot').innerHTML='';renderCardModal()},
+  createCard(){const{pipe,card}=curCard();card.title=(card.title||'').trim();
+    if(!card.title){toast('Informe o título do card.','warn');$('#draftTitle')?.focus();return}
+    const bl=blockers(pipe,card);if(bl.length){toast(`Resolva antes de criar: <b>${bl.map(esc).join(', ')}</b>`,'warn',5000);return}
+    const now=nowISO();card.createdAt=card.phaseEnteredAt=card.history[0].enteredAt=now;logCard(card,'Criou o card',`Fase ${phaseOf(pipe,card.phaseId).name}`);
+    pipe.cards.push(card);S.draftCard=null;S.openCard=null;$('#modalRoot').innerHTML='';runAuto(pipe,card,card.phaseId,'enter');save();renderMain();
+    const el=document.querySelector(`[data-card="${card.id}"]`);if(el){el.scrollIntoView({block:'nearest'});el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),1600)}toast('Card criado.')},
+  openCard(el){openCard(S.route.id,el.dataset.id)},
+  openCardAny(el){openCard(el.dataset.p,el.dataset.id)},
+  closeModal(){closeModal()},
+  cardTab(el){S.cardTab=el.dataset.t;renderCardModal();if(S.cardTab==='comments')$('#cmIn')?.focus()},
+  cfgFromCard(el){const p=S.openCard.pipeId;closeModal();go({v:'phase',id:p,ph:el.dataset.ph})},
+  tagToggle(el){const{pipe,card}=curCard();const{f}=findField(pipe,el.dataset.f);let v=Array.isArray(card.values[f.id])?card.values[f.id]:[];const o=el.dataset.o;const on=!v.includes(o);
+    v=on?(f.multiple?[...v,o]:[o]):v.filter(x=>x!==o);card.values[f.id]=v;card.updatedAt=nowISO();
+    if(!S.openCard.draft){logCard(card,on?'Aplicou tag':'Removeu tag',`${f.label}: ${optLabel(f,o)}`);save();checkComplete(pipe,card)}renderCardModal()},
+  async fileDl(el){const{card}=curCard();const x=card.values[el.dataset.f][+el.dataset.i];try{const f=await readFile(x.path);downloadBlob(f,x.name)}catch(e){toast('Arquivo não encontrado na pasta: '+esc(x.path),'err',5000)}},
+  async fileRm(el){const{pipe,card}=curCard();const list=card.values[el.dataset.f];const x=list[+el.dataset.i];if(!await confirmBox('Remover arquivo',`Remover <b>${esc(x.name)}</b> do card e da pasta?`,'Remover',true)){renderCardModal();return}
+    await removePath(x.path);list.splice(+el.dataset.i,1);if(!S.openCard.draft){logCard(card,'Removeu anexo',x.name);save()}$('#modalRoot').innerHTML='';renderCardModal()},
+  async cardDelete(){const{pipe,card}=curCard();if(await deleteCardFlow(pipe,card)){S.openCard=null;$('#modalRoot').innerHTML='';lastTrashed=card.id;renderMain()}else renderCardModal()},
+  async cardDel(el){const pipe=pipeById(el.dataset.p||S.route.id);const card=pipe?.cards.find(c=>c.id===el.dataset.id);if(!card)return;if(await deleteCardFlow(pipe,card)){lastTrashed=card.id;renderMain()}},
+  undoTrash(el){const t=S.db.trash.find(x=>x.kind==='card'&&x.item.id===lastTrashed);if(t&&restoreTrash(t)){renderMain();toast('Card restaurado.')}el.closest('.toast')?.remove()},
+  addComment(){const{card}=curCard();const t=$('#cmIn').value.trim();if(!t)return;card.comments.push({id:uid(),by:S.user,at:nowISO(),text:t});logCard(card,'Comentou',t.slice(0,80));save();renderCardModal();$('#cmIn')?.focus()},
+  rmComment(el){const{card}=curCard();card.comments=card.comments.filter(c=>c.id!==el.dataset.id);logCard(card,'Apagou um comentário');save();renderCardModal()},
+  addField(el){const{ph}=phaseCtx();const it=PALETTE.find(x=>x.k===el.dataset.t);const f=newField(it.t,it.preset);ph.fields.push(f);S.selField=f.id;save();renderFbAll();renderAutoPanel()},
+  selField(el,e){if(e.target.closest('[data-act="rmField"]'))return;S.selField=el.dataset.id;renderFbList();renderFbProps()},
+  async rmField(el,e){e.stopPropagation();const{p,ph}=phaseCtx();const f=ph.fields.find(x=>x.id===el.dataset.id);const used=p.cards.filter(c=>!isEmptyVal(f,c.values[f.id])&&!['time','phasetag'].includes(f.type)).length;
+    if(used&&!await confirmBox('Remover campo',`O campo <b>${esc(f.label)}</b> tem valores em ${used} card(s). Remover mesmo assim?`,'Remover',true))return;
+    ph.fields=ph.fields.filter(x=>x!==f);p.cards.forEach(c=>{if(f.type==='file'&&Array.isArray(c.values[f.id]))c.values[f.id].forEach(x=>removePath(x.path));delete c.values[f.id]});if(S.selField===f.id)S.selField=null;save();renderFbAll();renderAutoPanel()},
+  optAdd(){const f=selF();f.options.push(f.type==='tag'?{id:uid(),label:'Nova tag',color:COLORS[f.options.length%COLORS.length]}:{id:uid(),label:'Nova opção'});save();renderFbProps();renderFbMini()},
+  optRm(el){const f=selF();f.options=f.options.filter(o=>o.id!==el.dataset.o);save();renderFbProps();renderFbMini()},
+  adAdd(){const{ph}=phaseCtx();const a=S.ad;
+    const need={addTag:a.fieldId&&a.optId,removeTag:a.fieldId&&a.optId,setField:a.fieldId&&String(a.value).trim(),move:a.phaseId,comment:a.text.trim()}[a.action];
+    if(!need){toast('Complete os dados da automação.','warn');return}
+    ph.automations.push({id:uid(),trigger:a.trigger,action:a.action,fieldId:a.fieldId,optId:a.optId,value:a.value,phaseId:a.phaseId,text:a.text});S.ad=null;save();renderAutoPanel();renderFbAll();toast('Automação adicionada.')},
+  adRm(el){const{ph}=phaseCtx();ph.automations=ph.automations.filter(a=>a.id!==el.dataset.id);save();renderAutoPanel();renderFbAll()},
+  bfClear(){S.boardF[S.route.id]={q:'',tag:'',resp:'',stale:false};renderMain()},
+  printReport(){window.print()},
+  exportCsv(){exportCsv()},
+  trashRestore(el){const t=S.db.trash.find(x=>x.id===el.dataset.id);if(t&&restoreTrash(t)){toast(`${t.kind==='pipe'?'Pipy':'Card'} restaurado.`);renderMain()}},
+  async trashPurge(el){const t=S.db.trash.find(x=>x.id===el.dataset.id);if(!t)return;if(!await confirmBox('Excluir definitivamente',`Apagar <b>${esc(t.kind==='pipe'?t.item.name:t.item.title)}</b> e seus anexos da pasta? Isso não pode ser desfeito.`,'Excluir definitivamente',true))return;await purgeTrash(t);save();renderMain()},
+  async trashEmpty(){if(!await confirmBox('Esvaziar lixeira',`Apagar definitivamente os ${S.db.trash.length} item(ns) da lixeira e seus anexos?`,'Esvaziar',true))return;for(const t of S.db.trash.slice())await purgeTrash(t);save();renderMain()},
+  personAdd(){const n=$('#personIn').value.trim();if(!n)return;ensurePerson(n);renderMain()},
+  personRm(el){S.db.settings.people=S.db.settings.people.filter(x=>x!==el.dataset.n);save();renderMain()},
+  async zipDownload(){toast('Gerando ZIP...','ok',1500);try{downloadBlob(await buildBackupZip(),`pipyscox-${stamp()}.zip`)}catch(e){toast('Erro ao gerar ZIP: '+esc(e.message),'err')}},
+  async backupFolder(){try{await backupToFolder();loadBackups()}catch(e){toast('Erro no backup: '+esc(e.message),'err')}},
+  async bkDl(el){downloadBlob(await readFile('backups/'+el.dataset.n),el.dataset.n)},
+  async bkRm(el){if(!await confirmBox('Excluir backup',`Excluir <b>${esc(el.dataset.n)}</b>?`,'Excluir',true)){renderMain();return}await removePath('backups/'+el.dataset.n);renderMain()},
+  async bkRestore(el){if(!await confirmBox('Restaurar backup',`Restaurar <b>${esc(el.dataset.n)}</b>? Os dados atuais serão substituídos (um backup deles será criado antes).`,'Restaurar',true)){renderMain();return}
+    try{const f=await readFile('backups/'+el.dataset.n);await restoreZip(await f.arrayBuffer())}catch(e){toast('Erro ao restaurar: '+esc(e.message),'err',6000)}},
+  async changeFolder(){const h=await pickFolder();if(!h)return;if(!await verifyPerm(h,true))return;
+    if(await h.isSameEntry?.(S.dir)){toast('Essa já é a pasta atual.','warn');return}
+    let has=false;try{await h.getFileHandle(DBFILE);has=true}catch(e){}
+    if(!has&&S.db.pipes.length&&await confirmBox('Pasta vazia',`A pasta <b>${esc(h.name)}</b> ainda não tem dados do pipyscox. Copiar os dados atuais (incluindo arquivos) para ela?`,'Copiar dados')){
+      await flush();const all=await walk(S.dir);for(const e of all){if(e.path.startsWith('backups/'))continue;await writeFile(e.path,await e.handle.getFile(),h)}}
+    await openDir(h);S.route={v:'config'};renderAll();toast('Pasta alterada para <b>'+esc(h.name)+'</b>')},
+  async reloadData(){await loadDb();renderAll();toast('Dados recarregados da pasta.')},
+  async conflictReload(){$('#modalRoot').innerHTML='';S.openCard=null;await loadDb();renderAll();setSaveState('ok');toast('Dados recarregados da pasta.')},
+  async conflictOverwrite(){$('#modalRoot').innerHTML='';try{const n=await backupToFolder(true,'backup',true);await flush(true);toast(`Suas alterações foram gravadas. A versão externa ficou salva em <b>backups/${esc(n)}</b>.`,'ok',6000)}catch(e){toast('Erro: '+esc(e.message),'err')}},
+  async gateChoose(){const h=await pickFolder();if(h)await openDir(h)},
+  async gateReconnect(){const h=await kvGet('dir');if(h&&await verifyPerm(h,true))await openDir(h);else toast('Permissão não concedida.','warn')}
+};
+
+</script>
+<script>
+/* pipyscox · app/inputs.js
+   Inputs, mudanças e atalhos de teclado */
+'use strict';
+/* ===================== Inputs / changes ===================== */
+const I={
+  pipeName(el){const p=pipeById(S.route.id);el.size=Math.max(8,el.value.length+2);p.name=el.value.trim()||'Sem nome';save();renderSidebar()},
+  phName(el){const{ph}=phaseCtx();ph.name=el.value.trim()||'Sem nome';save();const t=document.querySelector('#phTabs .tab.on .tn');if(t)t.textContent=ph.name},
+  fv(el){const{pipe,card}=curCard();const{f}=findField(pipe,el.dataset.f);let v=el.value;
+    if(f.type==='cpf'){v=maskCPF(v);el.value=v}if(f.type==='phone'){v=maskPhone(v);el.value=v}
+    card.values[f.id]=v;card.updatedAt=nowISO();const err=validField(f,v);el.classList.toggle('bad',!!err);const e=$(`#modalRoot [data-err="${f.id}"]`);if(e)e.textContent=err;
+    if(!S.openCard.draft)save()},
+  cardTitle(el){const{card}=curCard();if(S.openCard.draft){card.title=el.value;return}card.title=el.value.trim()||'Sem título';save()},
+  fProp(el){const f=selF();f[el.dataset.k]=el.value;save();renderFbList();renderFbMini()},
+  optName(el){const f=selF();const o=f.options.find(x=>x.id===el.dataset.o);o.label=el.value;save();renderFbMini()},
+  adSet(el){S.ad[el.dataset.k]=el.value},
+  formSet(el){const p=pipeById(S.route.id);p.form[el.dataset.k]=el.value;save()},
+  bfQ(el){bf().q=el.value;renderBoard()},
+  dfQ(el){S.dataF.q=el.value;const pipe=S.dataF.pipe?pipeById(S.dataF.pipe):null;const rows=dataRows();$('#dataTbl').innerHTML=dataTable(rows,pipe);$('#dfCount').textContent=rows.length+' registro'+(rows.length===1?'':'s')}
+};
+const C={
+  phColorCustom(el){const p=pipeById(S.route.id),ph=phaseOf(p,el.dataset.ph);ph.color=el.value;save();renderMain()},
+  cardMove(el){const{pipe,card}=curCard();moveCard(pipe,card,el.value);renderCardModal()},
+  fsel(el){const{pipe,card}=curCard();const{f}=findField(pipe,el.dataset.f);card.values[f.id]=el.value;card.updatedAt=nowISO();if(!S.openCard.draft){logCard(card,'Alterou campo',`${f.label}: ${textVal(pipe,card,f)||'(vazio)'}`);save();checkComplete(pipe,card);renderCardModal()}},
+  fchk(el){const{pipe,card}=curCard();const{f}=findField(pipe,el.dataset.f);card.values[f.id]=el.checked;card.updatedAt=nowISO();if(!S.openCard.draft){logCard(card,el.checked?'Marcou':'Desmarcou',f.label);save();checkComplete(pipe,card);renderCardModal()}},
+  async fileAdd(el){const{pipe,card}=curCard();const fid=el.dataset.f;const files=[...el.files];if(!files.length)return;const list=Array.isArray(card.values[fid])?card.values[fid]:(card.values[fid]=[]);
+    for(const f of files){const safe=f.name.replace(/[\\/:*?"<>|]+/g,'_');const path=`arquivos/${pipe.id}/${card.id}/${Date.now()}-${safe}`;try{await writeFile(path,f);list.push({name:f.name,path,size:f.size,type:f.type,addedAt:nowISO()})}catch(e){toast('Erro ao gravar '+esc(f.name)+': '+esc(e.message),'err')}}
+    card.updatedAt=nowISO();if(!S.openCard.draft){logCard(card,'Anexou arquivo(s)',files.map(f=>f.name).join(', '));save();checkComplete(pipe,card)}renderCardModal();toast(files.length+' arquivo(s) salvo(s) na pasta.')},
+  fPropB(el){const f=selF();f[el.dataset.k]=el.checked;if(el.dataset.k==='multiple'&&!el.checked){const{p}=phaseCtx();p.cards.forEach(c=>{if(Array.isArray(c.values[f.id]))c.values[f.id]=c.values[f.id].slice(0,1)})}save();renderFbList();renderFbMini();if(el.dataset.k==='required')renderAutoPanel()},
+  optColor(el){const f=selF();f.options.find(x=>x.id===el.dataset.o).color=el.value;save();renderFbMini()},
+  adSet(el){const k=el.dataset.k;S.ad[k]=el.value;if(k==='action'){S.ad.fieldId='';S.ad.optId='';S.ad.value=''}else if(k==='fieldId'){S.ad.optId='';S.ad.value=''}renderAutoPanel()},
+  formSet(el){const p=pipeById(S.route.id);p.form[el.dataset.k]=el.type==='checkbox'?el.checked:el.value;save();formModal()},
+  async formImport(el){await importFormResponses([...el.files])},
+  async csvImport(el){const f=el.files[0];closePop();if(f)await csvImportFlow(f)},
+  bfTag(el){bf().tag=el.value;renderBoard()},
+  bfResp(el){bf().resp=el.value;renderBoard()},
+  bfStale(el){bf().stale=el.checked;renderBoard()},
+  abSet(el){const ab=S.db.settings.autoBackup;const k=el.dataset.k;ab[k]=el.type==='checkbox'?el.checked:(el.type==='number'?Math.max(1,+el.value||1):el.value);save();if(k==='mode'||k==='enabled')renderMain()},
+  dfPipe(el){S.dataF.pipe=el.value;S.dataF.phase='';renderMain()},
+  dfPhase(el){S.dataF.phase=el.value;renderMain()},
+  async zipImport(el){const f=el.files[0];if(!f)return;if(!await confirmBox('Importar ZIP',`Importar <b>${esc(f.name)}</b>? Os dados atuais da pasta serão substituídos (um backup será criado antes).`,'Importar',true)){renderMain();return}
+    try{await restoreZip(await f.arrayBuffer())}catch(e){toast('Erro ao importar: '+esc(e.message),'err',6000)}}
+};
+document.addEventListener('click',e=>{
+  if(e.target.matches('[data-overlay]')){if(S.openCard)closeModal();return}
+  if(S.pop!==null&&!e.target.closest('.pop')&&!e.target.closest('[data-act="phaseMenu"],[data-act="pipeMenu"]'))closePop();
+  const el=e.target.closest('[data-act]');if(!el||el.disabled)return;
+  if(el.dataset.act==='phaseMenu'||el.dataset.act==='pipeMenu')S.pop=el.dataset.ph||'pipe';
+  const fn=A[el.dataset.act];if(fn){if(el.tagName==='A')e.preventDefault();fn(el,e)}
+});
+document.addEventListener('input',e=>{const el=e.target.closest('[data-in]');if(el&&I[el.dataset.in])I[el.dataset.in](el,e)});
+document.addEventListener('change',e=>{const el=e.target.closest('[data-ch]');if(el&&C[el.dataset.ch]){C[el.dataset.ch](el,e);return}
+  const fv=e.target.closest('[data-in="fv"]');if(fv&&S.openCard&&!S.openCard.draft){const{pipe,card}=curCard();const{f}=findField(pipe,fv.dataset.f);if(f){const before=card.phaseId;logCard(card,'Alterou campo',`${f.label}: ${textVal(pipe,card,f)||'(vazio)'}`);save();checkComplete(pipe,card);if(card.phaseId!==before)renderCardModal()}}});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){if(S.pop!==null)closePop();else if(S.openCard)closeModal()}
+  if(e.key==='Enter'&&S.openCard?.draft&&e.target.id==='draftTitle'){e.preventDefault();A.createCard()}
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)&&e.target.id==='cmIn'){e.preventDefault();A.addComment()}
+  if(e.key==='Enter'&&e.target.id==='personIn'){A.personAdd()}
+  if((e.ctrlKey||e.metaKey)&&e.key==='/'){e.preventDefault();$('#gsearch').focus()}
+});
+$('#gsearch').addEventListener('keydown',e=>{if(e.key==='Enter'&&S.db){S.dataF={pipe:'',phase:'',q:e.target.value};go({v:'data'});e.target.value='';const q=$('#dfQ');if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}});
+
+</script>
+<script>
+/* pipyscox · app/dnd.js
+   Arrastar e soltar (cards, fases e campos) */
+'use strict';
+/* ===================== Arrastar e soltar ===================== */
+document.addEventListener('dragstart',e=>{
+  const card=e.target.closest?.('[data-card]'),ph=e.target.closest?.('[data-phdrag]'),pal=e.target.closest?.('[data-ftype]'),fb=e.target.closest?.('[data-fid]');
+  if(card)S.drag={k:'card',id:card.dataset.card,el:card};else if(ph)S.drag={k:'phase',id:ph.dataset.phdrag};
+  else if(pal)S.drag={k:'new',t:pal.dataset.ftype};else if(fb)S.drag={k:'field',id:fb.dataset.fid,el:fb};else return;
+  e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain','pipyscox');requestAnimationFrame(()=>S.drag?.el?.classList.add('dragging'));
+});
+function clearDnD(){document.querySelectorAll('.drop-target,.ph-target,.over').forEach(x=>x.classList.remove('drop-target','ph-target','over'));document.querySelectorAll('.fb-ph').forEach(x=>x.remove());const em=document.querySelector('.fb-empty');if(em)em.style.display=''}
+function fbIndex(list,y){const items=[...list.querySelectorAll('.fb-item:not(.dragging)')];for(let i=0;i<items.length;i++){const r=items[i].getBoundingClientRect();if(y<r.top+r.height/2)return{i,items}}return{i:items.length,items}}
+document.addEventListener('dragover',e=>{const d=S.drag;if(!d)return;
+  if(d.k==='card'||d.k==='phase'){const col=e.target.closest('.col[data-col]');if(!col)return;e.preventDefault();document.querySelectorAll('.drop-target,.ph-target').forEach(x=>x!==col&&x.classList.remove('drop-target','ph-target'));col.classList.add(d.k==='card'?'drop-target':'ph-target')}
+  if(d.k==='new'||d.k==='field'){const list=e.target.closest('#fbList');if(!list)return;e.preventDefault();list.classList.add('over');
+    const{i,items}=fbIndex(list,e.clientY);let ph=list.querySelector('.fb-ph');if(!ph){ph=document.createElement('div');ph.className='fb-ph'}
+    const empty=list.querySelector('.fb-empty');if(empty)empty.style.display='none';if(items[i])list.insertBefore(ph,items[i]);else list.appendChild(ph)}});
+document.addEventListener('dragleave',e=>{const list=e.target.closest?.('#fbList');if(list&&!list.contains(e.relatedTarget)){list.classList.remove('over');list.querySelectorAll('.fb-ph').forEach(x=>x.remove());const em=list.querySelector('.fb-empty');if(em)em.style.display=''}});
+document.addEventListener('drop',e=>{const d=S.drag;if(!d)return;e.preventDefault();
+  if(d.k==='card'){const col=e.target.closest('.col[data-col]');if(col){const p=pipeById(S.route.id);const c=p.cards.find(x=>x.id===d.id);if(c&&moveCard(p,c,col.dataset.col)){p.cards=p.cards.filter(x=>x!==c);p.cards.push(c)}renderBoard()}}
+  if(d.k==='phase'){const col=e.target.closest('.col[data-col]');if(col&&col.dataset.col!==d.id){const p=pipeById(S.route.id);const from=p.phases.findIndex(x=>x.id===d.id);const[m]=p.phases.splice(from,1);const to=p.phases.findIndex(x=>x.id===col.dataset.col);p.phases.splice(to,0,m);save();renderBoard()}}
+  if(d.k==='new'||d.k==='field'){const list=e.target.closest('#fbList');if(list){const{ph}=phaseCtx();const{i}=fbIndex(list,e.clientY);
+    if(d.k==='new'){const it=PALETTE.find(x=>x.k===d.t);const f=newField(it.t,it.preset);ph.fields.splice(i,0,f);S.selField=f.id}else{const f=ph.fields.find(x=>x.id===d.id);ph.fields=ph.fields.filter(x=>x!==f);ph.fields.splice(i,0,f)}save();renderFbAll();renderAutoPanel()}}
+  clearDnD();S.drag=null});
+document.addEventListener('dragend',()=>{clearDnD();document.querySelectorAll('.dragging').forEach(x=>x.classList.remove('dragging'));S.drag=null});
+
+</script>
+<script>
+/* pipyscox · ui/animations.js
+   Camada de animação: entrada de telas, contadores, destaque do card movido,
+   fechamento suave de modais e troca de tema. Não altera dados. */
+'use strict';
+const ANIM={on:true,lastKey:'',moved:null,theme:null,viewT:null};
+try{ANIM.on=localStorage.getItem('pipyscox-anim')!=='off'}catch(e){}
+const reduceMotion=window.matchMedia?matchMedia('(prefers-reduced-motion: reduce)'):{matches:false};
+const animOn=()=>ANIM.on&&!reduceMotion.matches;
+function applyAnimPref(){document.documentElement.classList.toggle('no-anim',!animOn())}
+function setAnim(on){ANIM.on=on;try{localStorage.setItem('pipyscox-anim',on?'on':'off')}catch(e){}applyAnimPref()}
+applyAnimPref();reduceMotion.addEventListener?.('change',applyAnimPref);
+
+/* Numera os elementos para criar o efeito "cascata" (--i usado no CSS) */
+function stagger(sel,root){root.querySelectorAll(sel).forEach((el,i)=>el.style.setProperty('--i',Math.min(i,24)))}
+
+/* Contador animado para números de destaque (widgets e indicadores) */
+function countUp(el){
+  const node=[...el.childNodes].find(n=>n.nodeType===3&&/\d/.test(n.textContent));if(!node)return;
+  const m=node.textContent.match(/^(\s*)(\d+)([\s\S]*)$/);if(!m)return;const target=+m[2];if(target<2)return;
+  const t0=performance.now(),dur=750;
+  const step=t=>{const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);node.textContent=m[1]+Math.round(target*e)+m[3];if(k<1)requestAnimationFrame(step)};
+  node.textContent=m[1]+'0'+m[3];requestAnimationFrame(step);
+}
+
+function animateView(){
+  if(!animOn())return;const c=$('#content');if(!c)return;
+  clearTimeout(ANIM.viewT);c.classList.remove('view-in');void c.offsetWidth;
+  ['.widget','.pipe-card','.stat','.col','.kcard','.panel','.pal-item','.fb-item','.tbl tbody tr','.rbar','.wchart g.wk','.auto-item'].forEach(s=>stagger(s,c));
+  c.querySelectorAll('.w-val,.stat b').forEach(countUp);
+  c.classList.add('view-in');
+  ANIM.viewT=setTimeout(()=>c.classList.remove('view-in'),1600);
+}
+
+/* Anima a tela apenas quando a rota muda (não a cada redesenho) */
+const _renderMain=renderMain;
+renderMain=function(){
+  _renderMain();
+  const r=S.route,key=[r.v,r.id||'',r.ph||''].join('|');
+  if(key!==ANIM.lastKey){ANIM.lastKey=key;animateView()}
+};
+
+/* Destaca o card que acabou de mudar de fase */
+const _moveCard=moveCard;
+moveCard=function(pipe,card,toId,opt){const ok=_moveCard(pipe,card,toId,opt);if(ok)ANIM.moved=card.id;return ok};
+const _renderBoard=renderBoard;
+renderBoard=function(){
+  _renderBoard();
+  if(ANIM.moved&&animOn()){const el=document.querySelector(`[data-card="${ANIM.moved}"]`);if(el){el.classList.add('drop-pop');setTimeout(()=>el.classList.remove('drop-pop'),600)}}
+  ANIM.moved=null;
+};
+
+/* Fechamento suave do modal do card */
+const _closeModal=closeModal;
+closeModal=function(){
+  const ov=$('#modalRoot .overlay');
+  if(animOn()&&ov&&!ov.classList.contains('closing')){ov.classList.add('closing');setTimeout(_closeModal,150)}
+  else _closeModal();
+};
+
+/* Transição de cores ao trocar o tema */
+const _renderTheme=renderTheme;
+renderTheme=function(){
+  if(ANIM.theme&&ANIM.theme!==S.theme&&animOn()){const h=document.documentElement;h.classList.add('theming');setTimeout(()=>h.classList.remove('theming'),420)}
+  ANIM.theme=S.theme;_renderTheme();
+};
+
+/* Opção em Configurações → Aparência */
+C.animSet=el=>{setAnim(el.checked);toast(el.checked?'Animações ativadas.':'Animações desativadas.')};
+
+</script>
+<script>
+/* pipyscox · app/timers.js
+   Contadores ao vivo, verificação da pasta e backup automático */
+'use strict';
+/* ===================== Timers ===================== */
+setInterval(()=>{document.querySelectorAll('[data-since]').forEach(el=>{const ms=Date.now()-new Date(el.dataset.since);(el.querySelector('.tv')||el).textContent=fmtDur(ms);if(el.classList.contains('time-b')){const d=ms/864e5;el.classList.toggle('late',d>7);el.classList.toggle('warn',d>3&&d<=7)}})},1000);
+setInterval(async()=>{
+  if(!S.dir||!S.db||S.saveT||S.saving||S.conflict||S.drag||document.hidden)return;
+  try{const f=await readFile(DBFILE);if(!S.lastMod||f.lastModified===S.lastMod)return;
+    const ae=document.activeElement;if(ae&&ae.matches('input,textarea,select')&&$('#modalRoot').contains(ae))return;
+    await loadDb();renderSidebar();
+    if(S.openCard&&!S.openCard.draft){if(curCard().card)renderCardModal();else{$('#modalRoot').innerHTML='';S.openCard=null;renderMain()}}
+    else if(!$('#modalRoot').innerHTML)renderMain();
+    toast('Dados atualizados: a pasta foi alterada em outra janela ou computador.','ok',4000);
+  }catch(e){}
+},4000);
+setInterval(()=>{if(S.db)maybeAutoBackup()},36e5);
+
+</script>
+<script>
+/* pipyscox · app/boot.js
+   Inicialização */
+'use strict';
+/* ===================== Inicialização ===================== */
+(async function boot(){
+  try{S.theme=localStorage.getItem('pipyscox-theme')||'dark';S.user=localStorage.getItem('pipyscox-user')||''}catch(e){}
+  renderTheme();renderAvatar();
+  if(!('showDirectoryPicker' in window)){showGate('unsupported');return}
+  const h=await kvGet('dir');
+  if(h){try{if(await verifyPerm(h,false)){await openDir(h);return}showGate('reconnect',h.name)}catch(e){showGate('choose')}}
+  else showGate('choose');
+})();
+
+</script>
+</body>
+</html>

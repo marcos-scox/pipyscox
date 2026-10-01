@@ -1,0 +1,16 @@
+/* pipyscox · dashboard.css
+   Dashboard: widgets e cards de pipys */
+.widgets{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-bottom:24px}
+.widget{border-radius:var(--radius);color:#fff;padding:18px 18px 0;overflow:hidden;min-height:162px;display:flex;flex-direction:column}
+.w-top{display:flex;justify-content:space-between;align-items:flex-start}
+.w-val{font-size:24px;font-weight:700}
+.w-val small{font-size:14px;font-weight:400;opacity:.9;margin-left:4px}
+.w-lbl{font-size:15px;opacity:.95;margin-top:2px}
+.w-chart{margin-top:auto;display:block;width:100%;height:80px}
+.pipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.pipe-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;cursor:pointer;position:relative;overflow:hidden;transition:transform .15s,border-color .15s}
+.pipe-card:hover{transform:translateY(-2px);border-color:var(--primary)}
+.pipe-card .bar{position:absolute;left:0;top:0;bottom:0;width:4px}
+.pipe-card h4{margin:0 0 6px;font-size:16px}
+.phase-strip{display:flex;gap:3px;margin-top:14px;height:6px}
+.phase-strip span{flex:1;border-radius:3px}

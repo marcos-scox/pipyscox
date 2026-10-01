@@ -1,0 +1,38 @@
+/* pipyscox · card.css
+   Modal do card: campos, abas, comentários e histórico */
+.card-modal{display:grid;grid-template-columns:1fr 290px;min-height:440px}
+.card-modal .l{padding:20px;border-right:1px solid var(--border);min-width:0}
+.card-modal .r{padding:20px;background:var(--bg);border-radius:0 0 10px 0}
+.title-in{font-size:20px;font-weight:600;background:none;border:1px solid transparent;border-radius:6px;padding:4px 8px;margin-left:-8px;width:100%;outline:0}
+.title-in:hover{border-color:var(--border)}
+.title-in:focus{border-color:var(--primary-2);background:var(--bg)}
+.ctabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin:10px 0 16px}
+.ctab{background:none;border:0;padding:8px 12px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;gap:6px;align-items:center}
+.ctab:hover{color:var(--text)}
+.ctab.on{color:var(--text);border-bottom-color:var(--primary-2)}
+.fsec{border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px}
+.fsec.cur{border-color:var(--primary)}
+.fsec-h{display:flex;align-items:center;gap:8px;font-weight:600;margin-bottom:14px}
+.fsec-h .dot{width:10px;height:10px;border-radius:3px}
+.req{color:var(--danger)}
+.tagsel{display:flex;gap:6px;flex-wrap:wrap}
+.tagsel button{border:1px solid var(--border);background:none;border-radius:20px;padding:3px 11px;cursor:pointer;font-size:12.5px;color:var(--text-2);display:inline-flex;gap:6px;align-items:center}
+.tagsel button .dt{width:8px;height:8px;border-radius:50%}
+.tagsel button.on{color:#fff;border-color:transparent}
+.files{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.file{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:13px}
+.file .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.timebox{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text-2);flex-wrap:wrap}
+.hist{list-style:none;padding:0;margin:0}
+.hist li{position:relative;padding:0 0 14px 20px;font-size:13px}
+.hist li:before{content:"";position:absolute;left:4px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--c,var(--primary))}
+.hist li:after{content:"";position:absolute;left:8px;top:16px;bottom:0;width:1px;background:var(--border)}
+.hist li:last-child:after{display:none}
+.kv{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border-soft)}
+.kv>span:first-child{color:var(--muted)}
+.cmt{display:flex;gap:10px;margin-bottom:14px}
+.cmt .bx{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;min-width:0}
+.cmt .meta{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.cmt .meta b{color:var(--text-2)}
+.cmt .tx{white-space:pre-wrap;word-break:break-word;margin-top:3px}
+.cmt.auto .bx{border-style:dashed}
