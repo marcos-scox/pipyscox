@@ -42,8 +42,14 @@ async function readZip(buf){
   return out;
 }
 async function buildBackupZip(skipFlush){
-  if(!skipFlush)await flush();const all=await walk(S.dir);const files=[];
-  for(const e of all){if(e.path.startsWith('backups/'))continue;const f=await e.handle.getFile();files.push({path:e.path,data:new Uint8Array(await f.arrayBuffer()),date:new Date(f.lastModified)})}
+  if(!skipFlush)await flush();const files=[];
+  if(isLocalStore()){
+    files.push({path:DBFILE,data:new TextEncoder().encode(JSON.stringify(S.db,null,2)),date:new Date()});
+    for(const e of await localFiles()){if(e.path.startsWith('backups/'))continue;files.push({path:e.path,data:new Uint8Array(await e.blob.arrayBuffer()),date:new Date()})}
+  }else{
+    const all=await walk(S.dir);
+    for(const e of all){if(e.path.startsWith('backups/'))continue;const f=await e.handle.getFile();files.push({path:e.path,data:new Uint8Array(await f.arrayBuffer()),date:new Date(f.lastModified)})}
+  }
   return makeZip(files);
 }
 function stamp(){const d=new Date(),z=n=>String(n).padStart(2,'0');return`${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}_${z(d.getHours())}${z(d.getMinutes())}${z(d.getSeconds())}`}
@@ -55,7 +61,7 @@ async function maybeAutoBackup(){
   const due=ab.mode==='daily'?Date.now()-last>=864e5:S.changeCount>=Math.max(1,+ab.changes||30);
   if(!due)return;S.backingUp=true;
   try{await backupToFolder(true,'auto',true);S.changeCount=0;S.db.settings.lastAutoBackup=nowISO();
-    const d=await dirAt(['backups'],false);const list=[];for await(const[n,h]of d.entries())if(h.kind==='file'&&n.startsWith('pipyscox-auto-'))list.push(n);
+    let list=[];if(isLocalStore())list=(await localFiles()).filter(f=>f.path.startsWith('backups/pipyscox-auto-')).map(f=>f.path.slice('backups/'.length));else{const d=await dirAt(['backups'],false);for await(const[n,h]of d.entries())if(h.kind==='file'&&n.startsWith('pipyscox-auto-'))list.push(n)}
     list.sort().reverse().slice(Math.max(1,+ab.keep||10)).forEach(n=>removePath('backups/'+n));save();
   }catch(e){console.warn('backup automático falhou',e)}finally{S.backingUp=false}
 }

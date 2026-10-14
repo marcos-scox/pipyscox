@@ -4,7 +4,8 @@
 /* ===================== Ações (cliques) ===================== */
 let lastTrashed=null;
 const A={
-  toggleSide(){if(innerWidth<=900)document.body.classList.toggle('mnav');else document.body.classList.toggle('collapsed')},
+  toggleSide(el){if(document.documentElement.classList.contains('mobile-device')||innerWidth<=900){document.body.classList.toggle('mnav');el?.setAttribute('aria-expanded',String(document.body.classList.contains('mnav')))}else document.body.classList.toggle('collapsed')},
+  closeSide(){document.body.classList.remove('mnav');document.querySelector('[data-act="toggleSide"]')?.setAttribute('aria-expanded','false')},
   toggleTheme(){A.setTheme({dataset:{t:S.theme==='dark'?'light':'dark'}})},
   setTheme(el){S.theme=el.dataset.t;try{localStorage.setItem('pipyscox-theme',S.theme)}catch(e){}renderTheme();if(S.route.v==='config')renderMain()},
   changeUser(){if(S.db)askUser(S.user)},
@@ -81,8 +82,8 @@ const A={
   async trashEmpty(){if(!await confirmBox('Esvaziar lixeira',`Apagar definitivamente os ${S.db.trash.length} item(ns) da lixeira e seus anexos?`,'Esvaziar',true))return;for(const t of S.db.trash.slice())await purgeTrash(t);save();renderMain()},
   personAdd(){const n=$('#personIn').value.trim();if(!n)return;ensurePerson(n);renderMain()},
   personRm(el){S.db.settings.people=S.db.settings.people.filter(x=>x!==el.dataset.n);save();renderMain()},
-  async zipDownload(){if(isLocalStore()){toast('No modo celular, os dados ficam salvos neste navegador. Abra no computador para baixar um ZIP.','warn',5000);return}toast('Gerando ZIP...','ok',1500);try{downloadBlob(await buildBackupZip(),`pipyscox-${stamp()}.zip`)}catch(e){toast('Erro ao gerar ZIP: '+esc(e.message),'err')}},
-  async backupFolder(){if(isLocalStore()){toast('Backups em pasta só estão disponíveis no modo computador.','warn',4500);return}try{await backupToFolder();loadBackups()}catch(e){toast('Erro no backup: '+esc(e.message),'err')}},
+  async zipDownload(){toast('Gerando ZIP...','ok',1500);try{downloadBlob(await buildBackupZip(),`pipyscox-${stamp()}.zip`)}catch(e){toast('Erro ao gerar ZIP: '+esc(e.message),'err')}},
+  async backupFolder(){try{await backupToFolder();loadBackups()}catch(e){toast('Erro no backup: '+esc(e.message),'err')}},
   async bkDl(el){downloadBlob(await readFile('backups/'+el.dataset.n),el.dataset.n)},
   async bkRm(el){if(!await confirmBox('Excluir backup',`Excluir <b>${esc(el.dataset.n)}</b>?`,'Excluir',true)){renderMain();return}await removePath('backups/'+el.dataset.n);renderMain()},
   async bkRestore(el){if(!await confirmBox('Restaurar backup',`Restaurar <b>${esc(el.dataset.n)}</b>? Os dados atuais serão substituídos (um backup deles será criado antes).`,'Restaurar',true)){renderMain();return}
@@ -91,7 +92,7 @@ const A={
     if(await h.isSameEntry?.(S.dir)){toast('Essa já é a pasta atual.','warn');return}
     let has=false;try{await h.getFileHandle(DBFILE);has=true}catch(e){}
     if(!has&&S.db.pipes.length&&await confirmBox('Pasta vazia',`A pasta <b>${esc(h.name)}</b> ainda não tem dados do pipyscox. Copiar os dados atuais (incluindo arquivos) para ela?`,'Copiar dados')){
-      await flush();const all=await walk(S.dir);for(const e of all){if(e.path.startsWith('backups/'))continue;await writeFile(e.path,await e.handle.getFile(),h)}}
+      await flush();if(S.dir.local)await writeFile(DBFILE,JSON.stringify(S.db,null,2),h);const all=await walk(S.dir);for(const e of all){if(e.path.startsWith('backups/'))continue;await writeFile(e.path,await e.handle.getFile(),h)}}
     await openDir(h);S.route={v:'config'};renderAll();toast('Pasta alterada para <b>'+esc(h.name)+'</b>')},
   async reloadData(){await loadDb();renderAll();toast('Dados recarregados da pasta.')},
   async conflictReload(){$('#modalRoot').innerHTML='';S.openCard=null;await loadDb();renderAll();setSaveState('ok');toast('Dados recarregados da pasta.')},
@@ -100,3 +101,4 @@ const A={
   async useLocalStore(){await openLocalStore()},
   async gateReconnect(){const h=await kvGet('dir');if(h&&await verifyPerm(h,true))await openDir(h);else toast('Permissão não concedida.','warn')}
 };
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('mnav'))A.closeSide()});

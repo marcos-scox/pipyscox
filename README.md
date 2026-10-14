@@ -6,12 +6,12 @@ Sistema de gestão de fluxos no estilo kanban, inspirado no Pipefy, para equipes
 
 O sistema roda diretamente no navegador, sem servidor e sem instalação. No computador, os dados ficam na pasta local escolhida pelo usuário. Em celulares sem suporte à seleção de pastas, o sistema oferece um modo local que salva os dados no armazenamento do navegador.
 
-> **Compatibilidade:** use uma versão atual do Google Chrome ou Microsoft Edge. O armazenamento em pasta usa a File System Access API; Firefox e Safari ainda não oferecem suporte suficiente para esse fluxo.
+> **Compatibilidade:** use uma versão atual do navegador. O modo de pasta compartilhada no computador requer a File System Access API (Chrome/Edge). Em celulares e navegadores sem essa API, use **Salvar neste celular**: os cards, anexos, relatórios, importação/exportação ZIP e backups continuam disponíveis, mas os dados ficam restritos ao armazenamento deste navegador e não sincronizam sozinhos entre aparelhos.
 
 ## Como usar
 
 1. Abra a [demonstração online](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/cac36be/index.html?v=mobile-20261001-fix5) ou descompacte o projeto e abra `index.html`.
-2. Na primeira execução, escolha uma pasta para os dados e informe seu nome.
+2. Na primeira execução, escolha uma pasta no computador ou, no celular, toque em **Salvar neste celular** e informe seu nome.
 3. Use o menu lateral para criar pipys, configurar fases, cadastrar cards e acompanhar relatórios.
 4. No computador, para compartilhar ou mover os dados, use **Configurações → Baixar ZIP** ou envie a pasta inteira. No celular, os dados ficam neste navegador; para exportar, abra o sistema no computador.
 
@@ -31,7 +31,7 @@ python3 tools/build_standalone.py
 - Formulário externo opcional e importação de cards por CSV.
 - Relatórios por pipy com exportação em PDF.
 - Lixeira de 30 dias, backup automático e aviso de alterações feitas em outro computador.
-- Tema escuro/claro, animações configuráveis e interface responsiva para celular e tablet.
+- Tema escuro/claro, animações configuráveis e interface responsiva para celular e tablet, com navegação em gaveta, áreas de toque maiores e quadro Kanban com rolagem horizontal; no celular, cards também podem ser movidos pela seleção **Mover para a fase** ao abrir o card.
 
 ## Estrutura do projeto
 

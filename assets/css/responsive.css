@@ -13,7 +13,7 @@
 
 @media (max-width:900px){
   .app,body.collapsed .app{grid-template-columns:0 minmax(0,1fr);width:100%}
-  .main{width:100vw;max-width:100vw;min-width:0}
+  .main{grid-column:2;width:100vw;max-width:100vw;min-width:0}
   .sidebar{position:fixed;z-index:70;left:0;top:0;bottom:0;width:min(250px,86vw);transform:translateX(-100%);transition:transform .2s;box-shadow:10px 0 30px rgba(0,0,0,.18)}
   body.mnav .sidebar{transform:none}
   .search{width:auto;flex:1;max-width:none;min-width:0}.search .kbd{display:none}
@@ -75,8 +75,8 @@
 /* Modo mobile forçado: htmlpreview/Safari pode entregar uma viewport CSS de desktop
    mesmo quando o dispositivo é um iPhone. A classe é aplicada pelo boot.js. */
 html.mobile-device,html.mobile-device body{width:100%;min-width:0;overflow-x:hidden}
-.mobile-device .app{width:100%;grid-template-columns:0 100vw!important}
-.mobile-device .main{width:100vw!important;max-width:100vw!important;min-width:0}
+.mobile-device .app{width:var(--mobile-app-width,100vw);grid-template-columns:0 minmax(0,1fr)!important;height:var(--mobile-app-height,100dvh)}
+.mobile-device .main{grid-column:2;width:100%;max-width:100%;min-width:0;height:var(--mobile-app-height,100dvh)}
 .mobile-device .sidebar{position:fixed;z-index:70;left:0;top:0;bottom:0;width:min(250px,86vw);transform:translateX(-100%)}
 body.mobile-device.mnav .sidebar{transform:none}
 .mobile-device .header{height:56px;padding:0 8px;gap:8px}
@@ -92,5 +92,41 @@ body.mobile-device.mnav .sidebar{transform:none}
 .mobile-device .filters>*{min-width:0;max-width:100%}
 .mobile-device .filters .search,.mobile-device .filters .input,.mobile-device .filters select{width:100%}
 .mobile-device .board{gap:10px;margin-right:-12px;padding-right:12px}
-.mobile-device .col{width:min(82vw,290px)}
+.mobile-device .board{min-height:calc(var(--mobile-app-height,100vh) - 230px)}
+.mobile-device .col{width:min(82vw,290px);max-height:calc(var(--mobile-app-height,100vh) - 245px)}
 .mobile-device .modal.lg,.mobile-device .modal.md,.mobile-device .modal.draft{max-width:100%;width:100%}
+
+/* Toque, safe area e menu em gaveta */
+.nav-scrim{display:none;position:fixed;inset:0;z-index:69;width:100%;height:100%;padding:0;border:0;background:rgba(5,8,14,.52);cursor:pointer;-webkit-tap-highlight-color:transparent}
+body.mnav .nav-scrim{display:block}
+body.mnav .sidebar{z-index:70}
+html.mobile-device body.mnav .sidebar{transform:none}
+@media (max-width:640px){
+  .app,.main{height:100vh;height:100dvh}
+  .main{width:100%;max-width:100%}
+  .content{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .header{padding-top:env(safe-area-inset-top,0px);height:calc(56px + env(safe-area-inset-top,0px))}
+  .icon-btn,.btn,.nav-item,.ctab,.add-card{min-height:44px}
+  input,select,textarea{font-size:16px}
+  .board{touch-action:pan-x pan-y;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .col{scroll-snap-align:start;flex:none}
+  .kdel{opacity:1}
+  .overlay{padding:calc(8px + env(safe-area-inset-top,0px)) 8px calc(8px + env(safe-area-inset-bottom,0px))}
+  .modal{max-height:calc(100dvh - 24px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .toasts{right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));left:12px}
+  .toast{max-width:100%}
+}
+.mobile-device .content{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.mobile-device .header{padding-top:env(safe-area-inset-top,0px);height:calc(56px + env(safe-area-inset-top,0px))}
+.mobile-device .icon-btn,.mobile-device .btn,.mobile-device .nav-item,.mobile-device .ctab,.mobile-device .add-card{min-height:44px}
+.mobile-device input,.mobile-device select,.mobile-device textarea{font-size:16px}
+.mobile-device .board{touch-action:pan-x pan-y;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+.mobile-device .col{scroll-snap-align:start;flex:none}
+.mobile-device .kdel{opacity:1}
+.mobile-device .overlay{padding:calc(8px + env(safe-area-inset-top,0px)) 8px calc(8px + env(safe-area-inset-bottom,0px))}
+.mobile-device .overlay,.mobile-device .gate{width:var(--mobile-app-width,100vw)}
+.mobile-device .overlay{height:var(--mobile-app-height,100dvh)}
+.mobile-device .gate{height:var(--mobile-app-height,100vh)}
+.mobile-device .modal{max-height:calc(var(--mobile-app-height,100dvh) - 24px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.mobile-device .toasts{right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));left:12px}
+.mobile-device .toast{max-width:100%}
