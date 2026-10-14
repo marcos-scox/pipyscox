@@ -4,6 +4,8 @@ Sistema de gestão de fluxos no estilo kanban, inspirado no Pipefy, para equipes
 
 **Demonstração online:** [abrir o pipyscox](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/cac36be/index.html?v=mobile-20261001-fix5)
 
+**Download offline:** [baixar o pipyscox standalone (.html)](https://github.com/marcos-scox/pipyscox/raw/refs/heads/feat/mobile-responsive-20261014/dist/pipyscox-standalone.html) — arquivo único, funciona sem instalação.
+
 O sistema roda diretamente no navegador, sem servidor e sem instalação. No computador, os dados ficam na pasta local escolhida pelo usuário. Em celulares sem suporte à seleção de pastas, o sistema oferece um modo local que salva os dados no armazenamento do navegador.
 
 > **Compatibilidade:** use uma versão atual do navegador. O modo de pasta compartilhada no computador requer a File System Access API (Chrome/Edge). Em celulares e navegadores sem essa API, use **Salvar neste celular**: os cards, anexos, relatórios, importação/exportação ZIP e backups continuam disponíveis, mas os dados ficam restritos ao armazenamento deste navegador e não sincronizam sozinhos entre aparelhos.
@@ -13,7 +15,7 @@ O sistema roda diretamente no navegador, sem servidor e sem instalação. No com
 1. Abra a [demonstração online](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/cac36be/index.html?v=mobile-20261001-fix5) ou descompacte o projeto e abra `index.html`.
 2. Na primeira execução, escolha uma pasta no computador ou, no celular, toque em **Salvar neste celular** e informe seu nome.
 3. Use o menu lateral para criar pipys, configurar fases, cadastrar cards e acompanhar relatórios.
-4. No computador, para compartilhar ou mover os dados, use **Configurações → Baixar ZIP** ou envie a pasta inteira. No celular, os dados ficam neste navegador; para exportar, abra o sistema no computador.
+4. Para compartilhar ou mover os dados, use **Configurações → Baixar ZIP**. No computador, também pode enviar a pasta inteira; no celular, o ZIP pode ser baixado e importado em outro aparelho.
 
 A versão [standalone](dist/pipyscox-standalone.html) reúne HTML, CSS e JavaScript em um único arquivo para distribuição offline. Para regenerá-la depois de editar o código:
 
