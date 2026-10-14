@@ -75,7 +75,7 @@ const A={
     ph.automations.push({id:uid(),trigger:a.trigger,action:a.action,fieldId:a.fieldId,optId:a.optId,value:a.value,phaseId:a.phaseId,text:a.text});S.ad=null;save();renderAutoPanel();renderFbAll();toast('Automação adicionada.')},
   adRm(el){const{ph}=phaseCtx();ph.automations=ph.automations.filter(a=>a.id!==el.dataset.id);save();renderAutoPanel();renderFbAll()},
   bfClear(){S.boardF[S.route.id]={q:'',tag:'',resp:'',stale:false};renderMain()},
-  printReport(){window.print()},
+  async printReport(){if(window.pipyscoxNativePrint){try{await window.pipyscoxNativePrint()}catch(e){toast('Não foi possível abrir a impressão: '+esc(e.message),'err',5000)}return}window.print()},
   exportCsv(){exportCsv()},
   trashRestore(el){const t=S.db.trash.find(x=>x.id===el.dataset.id);if(t&&restoreTrash(t)){toast(`${t.kind==='pipe'?'Pipy':'Card'} restaurado.`);renderMain()}},
   async trashPurge(el){const t=S.db.trash.find(x=>x.id===el.dataset.id);if(!t)return;if(!await confirmBox('Excluir definitivamente',`Apagar <b>${esc(t.kind==='pipe'?t.item.name:t.item.title)}</b> e seus anexos da pasta? Isso não pode ser desfeito.`,'Excluir definitivamente',true))return;await purgeTrash(t);save();renderMain()},
