@@ -4,7 +4,7 @@ Sistema de gestão de fluxos no estilo kanban, inspirado no Pipefy, para equipes
 
 **Demonstração online:** [abrir o pipyscox](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/cac36be/index.html?v=mobile-20261001-fix5)
 
-**Download offline:** [baixar o pipyscox standalone (.html)](https://github.com/marcos-scox/pipyscox/raw/refs/heads/feat/mobile-responsive-20261014/dist/pipyscox-standalone.html) — arquivo único, funciona sem instalação.
+**Download offline:** [baixar o pipyscox standalone (.html)](https://github.com/marcos-scox/pipyscox/raw/031247ce30baec46b289596517843bdce000963c/dist/pipyscox-standalone.html) — arquivo único, funciona sem instalação.
 
 O sistema roda diretamente no navegador, sem servidor e sem instalação. No computador, os dados ficam na pasta local escolhida pelo usuário. Em celulares sem suporte à seleção de pastas, o sistema oferece um modo local que salva os dados no armazenamento do navegador.
 
