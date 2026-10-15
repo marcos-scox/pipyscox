@@ -4,18 +4,18 @@ Sistema de gestão de fluxos no estilo kanban, inspirado no Pipefy, para equipes
 
 **Demonstração online:** [abrir o pipyscox](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/cac36be/index.html?v=mobile-20261001-fix5)
 
-**Download para Android (APK):** [baixar pipyscox-android.apk](https://github.com/marcos-scox/pipyscox/releases/download/android-v0.1.0/pipyscox-android.apk) — versão 0.1.0 (prévia, Android 7.0+). Assinado com chave de desenvolvimento; não é uma build da Play Store.
+**Download para Android (APK):** [baixar pipyscox-android.apk v0.2.0](https://github.com/marcos-scox/pipyscox/releases/download/android-v0.2.0/pipyscox-android.apk) — prévia para Android 7.0+ (cerca de 4,2 MB). Assinado com chave de desenvolvimento; não é uma build da Play Store.
 
-O sistema roda diretamente no navegador, sem servidor e sem instalação. No computador, os dados ficam na pasta local escolhida pelo usuário. Em celulares sem suporte à seleção de pastas, o sistema oferece um modo local que salva os dados no armazenamento do navegador.
+O sistema roda diretamente no navegador, sem servidor e sem instalação. No computador, os dados ficam na pasta local escolhida pelo usuário. No APK Android, também é possível escolher uma pasta pelo seletor nativo do sistema ou salvar no armazenamento interno do app. Em navegadores mobile sem seleção de pastas, os dados ficam no armazenamento local do navegador.
 
-> **Compatibilidade:** use uma versão atual do Google Chrome ou Microsoft Edge. O armazenamento em pasta usa a File System Access API; Firefox e Safari ainda não oferecem suporte suficiente para esse fluxo.
+> **Compatibilidade:** use uma versão atual do Google Chrome ou Microsoft Edge para o fluxo de pasta no navegador. No APK, a pasta é escolhida pelo seletor nativo Android; no Android 11 ou superior, selecione uma subpasta, pois o sistema não permite escolher a raiz do armazenamento ou a pasta Downloads. Firefox e Safari ainda não oferecem suporte suficiente à File System Access API no navegador.
 
 ## Como usar
 
-1. Abra a [demonstração online](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/cac36be/index.html?v=mobile-20261001-fix5) ou descompacte o projeto e abra `index.html`.
-2. Na primeira execução, escolha uma pasta para os dados e informe seu nome.
+1. Abra a [demonstração online](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/cac36be/index.html?v=mobile-20261001-fix5), descompacte o projeto e abra `index.html`, ou instale o APK Android pelo link acima.
+2. Na primeira execução, escolha uma pasta no computador; no APK Android, escolha uma pasta no seletor do sistema ou toque em **Salvar neste celular** e informe seu nome.
 3. Use o menu lateral para criar pipys, configurar fases, cadastrar cards e acompanhar relatórios.
-4. No computador, para compartilhar ou mover os dados, use **Configurações → Baixar ZIP** ou envie a pasta inteira. No celular, os dados ficam neste navegador; para exportar, abra o sistema no computador.
+4. Para compartilhar ou mover os dados, use **Configurações → Baixar ZIP**. No computador também pode enviar a pasta inteira; no APK Android, escolha onde salvar ou compartilhar o ZIP na folha nativa do sistema.
 
 A versão [standalone](dist/pipyscox-standalone.html) reúne HTML, CSS e JavaScript em um único arquivo para distribuição offline. Para regenerá-la depois de editar o código:
 
