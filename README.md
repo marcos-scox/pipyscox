@@ -4,6 +4,8 @@ Sistema de gestão de fluxos no estilo kanban, inspirado no Pipefy, para equipes
 
 **Demonstração online:** [abrir o pipyscox](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/cac36be/index.html?v=mobile-20261001-fix5)
 
+**Download para Android (APK):** [baixar pipyscox-android.apk](https://github.com/marcos-scox/pipyscox/releases/download/android-v0.1.0/pipyscox-android.apk) — versão 0.1.0 (prévia, Android 7.0+). Assinado com chave de desenvolvimento; não é uma build da Play Store.
+
 O sistema roda diretamente no navegador, sem servidor e sem instalação. No computador, os dados ficam na pasta local escolhida pelo usuário. Em celulares sem suporte à seleção de pastas, o sistema oferece um modo local que salva os dados no armazenamento do navegador.
 
 > **Compatibilidade:** use uma versão atual do Google Chrome ou Microsoft Edge. O armazenamento em pasta usa a File System Access API; Firefox e Safari ainda não oferecem suporte suficiente para esse fluxo.
