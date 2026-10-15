@@ -4,18 +4,22 @@ Sistema de gestão de fluxos no estilo kanban, inspirado no Pipefy, para equipes
 
 **Demonstração online:** [abrir o pipyscox](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/cac36be/index.html?v=mobile-20261001-fix5)
 
-**Download para Android (APK):** [baixar pipyscox-android.apk v0.2.0](https://github.com/marcos-scox/pipyscox/releases/download/android-v0.2.0/pipyscox-android.apk) — prévia para Android 7.0+ (cerca de 4,2 MB). Assinado com chave de desenvolvimento; não é uma build da Play Store.
+**Download offline:** [baixar o pipyscox standalone (.html)](https://github.com/marcos-scox/pipyscox/raw/031247ce30baec46b289596517843bdce000963c/dist/pipyscox-standalone.html) — arquivo único, funciona sem instalação.
+
+**Android (APK):** [baixar pipyscox para Android v0.2.0](https://github.com/marcos-scox/pipyscox/releases/download/android-v0.2.0/pipyscox-android.apk) — prévia para Android 7.0+ (cerca de 4,2 MB). É assinada com chave de desenvolvimento e não é uma build da Play Store; ao instalar, o Android pode pedir autorização para instalar apps desta fonte.
+
+> **Ao atualizar outra prévia:** builds assinadas com chaves de desenvolvimento diferentes podem exigir a desinstalação da versão anterior. Antes, exporte um ZIP em **Configurações → Baixar ZIP**; a desinstalação pode apagar os dados que estejam somente no armazenamento interno do app.
 
 > **Ao atualizar outra prévia:** builds assinadas com chaves de desenvolvimento diferentes podem exigir a desinstalação da versão anterior. Antes, exporte um ZIP em **Configurações → Baixar ZIP**; a desinstalação pode apagar os dados que estejam somente no armazenamento interno do app.
 
 O sistema roda diretamente no navegador, sem servidor e sem instalação. No computador, os dados ficam na pasta local escolhida pelo usuário. No APK Android, também é possível escolher uma pasta pelo seletor nativo do sistema ou salvar no armazenamento interno do app. Em navegadores mobile sem seleção de pastas, os dados ficam no armazenamento local do navegador.
 
-> **Compatibilidade:** use uma versão atual do Google Chrome ou Microsoft Edge para o fluxo de pasta no navegador. No APK, a pasta é escolhida pelo seletor nativo Android; no Android 11 ou superior, selecione uma subpasta, pois o sistema não permite escolher a raiz do armazenamento ou a pasta Downloads. Firefox e Safari ainda não oferecem suporte suficiente à File System Access API no navegador.
+> **Compatibilidade:** use uma versão atual do navegador. No APK, a pasta é escolhida pelo seletor nativo do Android; no Android 11 ou superior, escolha uma subpasta, pois o sistema não permite selecionar a raiz do armazenamento ou a pasta Downloads. No computador, o modo de pasta compartilhada requer a File System Access API (Chrome/Edge). Em navegadores mobile sem essa API, use **Salvar neste celular**: os recursos continuam disponíveis, mas os dados ficam restritos ao armazenamento desse navegador e não sincronizam sozinhos entre aparelhos.
 
 ## Como usar
 
-1. Abra a [demonstração online](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/cac36be/index.html?v=mobile-20261001-fix5), descompacte o projeto e abra `index.html`, ou instale o APK Android pelo link acima.
-2. Na primeira execução, escolha uma pasta no computador; no APK Android, escolha uma pasta no seletor do sistema ou toque em **Salvar neste celular** e informe seu nome.
+1. Abra a [demonstração online](https://htmlpreview.github.io/?https://raw.githubusercontent.com/marcos-scox/pipyscox/cac36be/index.html?v=mobile-20261001-fix5), descompacte o projeto e abra `index.html`, ou instale o APK no Android pelo link acima.
+2. Na primeira execução, escolha uma pasta no computador; no APK Android, escolha uma pasta pelo seletor do sistema ou toque em **Salvar neste celular** e informe seu nome. No navegador mobile sem seletor de pasta, use **Salvar neste celular**.
 3. Use o menu lateral para criar pipys, configurar fases, cadastrar cards e acompanhar relatórios.
 4. Para compartilhar ou mover os dados, use **Configurações → Baixar ZIP**. No computador também pode enviar a pasta inteira; no APK Android, escolha onde salvar ou compartilhar o ZIP na folha nativa do sistema.
 
@@ -35,7 +39,7 @@ python3 tools/build_standalone.py
 - Formulário externo opcional e importação de cards por CSV.
 - Relatórios por pipy com exportação em PDF.
 - Lixeira de 30 dias, backup automático e aviso de alterações feitas em outro computador.
-- Tema escuro/claro, animações configuráveis e interface responsiva para celular e tablet.
+- Tema escuro/claro, animações configuráveis e interface responsiva para celular e tablet, com navegação em gaveta, áreas de toque maiores e quadro Kanban com rolagem horizontal; no celular, cards também podem ser movidos pela seleção **Mover para a fase** ao abrir o card.
 
 ## Estrutura do projeto
 
@@ -52,8 +56,12 @@ pipyscox/
 │   │   └── app/                     ← ações, eventos, drag-and-drop e inicialização
 │   └── img/logo.svg
 ├── dist/pipyscox-standalone.html    ← versão em arquivo único
+├── android/                          ← projeto nativo Android (Capacitor)
+├── capacitor.config.json             ← configuração do app Android
+├── package.json                      ← dependências e comandos de build Android
+├── .github/workflows/android-apk.yml  ← build e publicação automática do APK
 ├── exemplos/importar-cards-exemplo.csv
-└── tools/build_standalone.py        ← gerador do arquivo standalone
+└── tools/                             ← geradores web/Android
 ```
 
 Os scripts são carregados em ordem no `index.html`, sem módulos ES, para que o sistema continue funcionando ao abrir o arquivo diretamente.

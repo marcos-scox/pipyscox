@@ -2,28 +2,28 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>pipyscox</title>
 <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
 <!-- Estilos (a ordem importa: base → telas → animações → responsivo → impressão) -->
-<link rel="stylesheet" href="assets/css/base.css?v=mobile-forced-1">
-<link rel="stylesheet" href="assets/css/layout.css?v=mobile-forced-1">
-<link rel="stylesheet" href="assets/css/components.css?v=mobile-forced-1">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=mobile-forced-1">
-<link rel="stylesheet" href="assets/css/board.css?v=mobile-forced-1">
-<link rel="stylesheet" href="assets/css/card.css?v=mobile-forced-1">
-<link rel="stylesheet" href="assets/css/builder.css?v=mobile-forced-1">
-<link rel="stylesheet" href="assets/css/reports.css?v=mobile-forced-1">
-<link rel="stylesheet" href="assets/css/animations.css?v=mobile-forced-1">
-<link rel="stylesheet" href="assets/css/responsive.css?v=mobile-forced-1">
-<link rel="stylesheet" href="assets/css/print.css?v=mobile-forced-1">
+<link rel="stylesheet" href="assets/css/base.css?v=mobile-apk-20261015-1">
+<link rel="stylesheet" href="assets/css/layout.css?v=mobile-apk-20261015-1">
+<link rel="stylesheet" href="assets/css/components.css?v=mobile-apk-20261015-1">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=mobile-apk-20261015-1">
+<link rel="stylesheet" href="assets/css/board.css?v=mobile-apk-20261015-1">
+<link rel="stylesheet" href="assets/css/card.css?v=mobile-apk-20261015-1">
+<link rel="stylesheet" href="assets/css/builder.css?v=mobile-apk-20261015-1">
+<link rel="stylesheet" href="assets/css/reports.css?v=mobile-apk-20261015-1">
+<link rel="stylesheet" href="assets/css/animations.css?v=mobile-apk-20261015-1">
+<link rel="stylesheet" href="assets/css/responsive.css?v=mobile-apk-20261015-1">
+<link rel="stylesheet" href="assets/css/print.css?v=mobile-apk-20261015-1">
 </head>
 <body>
 <div class="app">
-  <aside class="sidebar" id="sidebar"></aside>
+  <aside class="sidebar" id="sidebar" aria-label="Navegação principal"></aside>
   <div class="main">
     <header class="header">
-      <button class="icon-btn" data-act="toggleSide" title="Menu"><svg class="i" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <button class="icon-btn" data-act="toggleSide" title="Menu" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false"><svg class="i" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
       <label class="search"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input id="gsearch" placeholder="Buscar cards em todos os pipys..." autocomplete="off"><span class="kbd">Ctrl /</span></label>
       <div class="sp"></div>
       <div class="save-st" id="saveSt"><span class="d"></span><span class="tx">Salvo</span></div>
@@ -36,6 +36,7 @@
     <main class="content" id="content"></main>
   </div>
 </div>
+<button id="navScrim" class="nav-scrim" data-act="closeSide" aria-label="Fechar menu"></button>
 <div id="gate" class="gate hidden"></div>
 <div id="modalRoot"></div>
 <div id="popRoot"></div>
@@ -44,31 +45,32 @@
 <noscript><div style="padding:40px;text-align:center">O pipyscox precisa de JavaScript ativado.</div></noscript>
 
 <!-- Scripts (ordem de carregamento: núcleo → interface → telas → recursos → app) -->
-<script src="assets/js/core/config.js?v=mobile-forced-1"></script>
-<script src="assets/js/core/icons.js?v=mobile-forced-1"></script>
-<script src="assets/js/core/storage.js?v=mobile-forced-1"></script>
-<script src="assets/js/core/zip.js?v=mobile-forced-1"></script>
-<script src="assets/js/core/model.js?v=mobile-forced-1"></script>
-<script src="assets/js/core/automations.js?v=mobile-forced-1"></script>
-<script src="assets/js/core/trash.js?v=mobile-forced-1"></script>
-<script src="assets/js/core/sample.js?v=mobile-forced-1"></script>
-<script src="assets/js/ui/modals.js?v=mobile-forced-1"></script>
-<script src="assets/js/ui/shell.js?v=mobile-forced-1"></script>
-<script src="assets/js/views/dashboard.js?v=mobile-forced-1"></script>
-<script src="assets/js/views/board.js?v=mobile-forced-1"></script>
-<script src="assets/js/views/card.js?v=mobile-forced-1"></script>
-<script src="assets/js/views/phase-config.js?v=mobile-forced-1"></script>
-<script src="assets/js/views/reports.js?v=mobile-forced-1"></script>
-<script src="assets/js/views/data.js?v=mobile-forced-1"></script>
-<script src="assets/js/views/trash.js?v=mobile-forced-1"></script>
-<script src="assets/js/views/settings.js?v=mobile-forced-1"></script>
-<script src="assets/js/features/external-form.js?v=mobile-forced-1"></script>
-<script src="assets/js/features/csv-import.js?v=mobile-forced-1"></script>
-<script src="assets/js/app/actions.js?v=mobile-forced-1"></script>
-<script src="assets/js/app/inputs.js?v=mobile-forced-1"></script>
-<script src="assets/js/app/dnd.js?v=mobile-forced-1"></script>
-<script src="assets/js/ui/animations.js?v=mobile-forced-1"></script>
-<script src="assets/js/app/timers.js?v=mobile-forced-1"></script>
-<script src="assets/js/app/boot.js?v=mobile-forced-1"></script>
+<script src="assets/js/core/config.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/core/icons.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/core/storage.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/core/zip.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/core/model.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/core/automations.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/core/trash.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/core/sample.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/ui/modals.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/ui/shell.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/views/dashboard.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/views/board.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/views/card.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/views/phase-config.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/views/reports.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/views/data.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/views/trash.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/views/settings.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/views/about.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/features/external-form.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/features/csv-import.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/app/actions.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/app/inputs.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/app/dnd.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/ui/animations.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/app/timers.js?v=mobile-apk-20261015-1"></script>
+<script src="assets/js/app/boot.js?v=mobile-apk-20261015-1"></script>
 </body>
 </html>

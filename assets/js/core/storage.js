@@ -2,7 +2,7 @@
    Pasta local: IndexedDB, File System Access, leitura/gravação e detecção de conflito */
 'use strict';
 /* ===================== IndexedDB (referência da pasta) ===================== */
-function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('pipyscox',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('pipyscox',2);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains('kv'))d.createObjectStore('kv');if(!d.objectStoreNames.contains('files'))d.createObjectStore('files')};r.onsuccess=()=>{r.result.onversionchange=()=>r.result.close();res(r.result)};r.onerror=()=>rej(r.error)})}
 async function kvGet(k){try{const d=await idb();return await new Promise(res=>{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(undefined)})}catch(e){return undefined}}
 async function kvSet(k,v){try{const d=await idb();await new Promise(res=>{const tx=d.transaction('kv','readwrite');tx.objectStore('kv').put(v,k);tx.oncomplete=res;tx.onerror=res})}catch(e){}}
 
@@ -11,6 +11,7 @@ const LOCAL_DB_KEY='pipyscox-local-db';
 function isLocalStore(){return !!S.dir?.local}
 async function openLocalStore(){
   S.dir={name:'Armazenamento deste celular',local:true};
+  await kvSet('dir',{local:true,name:S.dir.name});
   try{
     const raw=localStorage.getItem(LOCAL_DB_KEY);
     S.db=normalize(raw?JSON.parse(raw):{});
@@ -20,13 +21,17 @@ async function openLocalStore(){
   await autoPurge();return true;
 }
 
-/* ===================== Sistema de arquivos ===================== */
+/* ===================== Sistema de arquivos / anexos locais ===================== */
+async function localFiles(){const d=await idb();return new Promise((res,rej)=>{const tx=d.transaction('files','readonly'),s=tx.objectStore('files'),kr=s.getAllKeys(),vr=s.getAll();tx.onabort=()=>rej(tx.error);tx.onerror=()=>rej(tx.error);let keys,values;const done=()=>{if(keys&&values)res(keys.map((path,i)=>({path:String(path),blob:values[i]})))};kr.onsuccess=()=>{keys=kr.result;done()};kr.onerror=()=>rej(kr.error);vr.onsuccess=()=>{values=vr.result;done()};vr.onerror=()=>rej(vr.error)})}
+async function localFilePut(path,data){const d=await idb(),blob=data instanceof Blob?data:new Blob([data]);return new Promise((res,rej)=>{const tx=d.transaction('files','readwrite');tx.objectStore('files').put(blob,path);tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)})}
+async function localFileGet(path){const d=await idb();return new Promise((res,rej)=>{const r=d.transaction('files','readonly').objectStore('files').get(path);r.onsuccess=()=>r.result===undefined?rej(new Error(`Arquivo não encontrado: ${path}`)):res(r.result);r.onerror=()=>rej(r.error)})}
+async function localFileRemove(path){const d=await idb();return new Promise((res,rej)=>{const tx=d.transaction('files','readwrite'),s=tx.objectStore('files'),r=s.getAllKeys();r.onsuccess=()=>r.result.filter(k=>k===path||String(k).startsWith(path+'/')).forEach(k=>s.delete(k));r.onerror=()=>rej(r.error);tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)})}
 async function dirAt(parts,create,root=S.dir){let d=root;for(const p of parts){if(!p)continue;d=await d.getDirectoryHandle(p,{create})}return d}
-async function writeFile(path,data,root=S.dir){const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,true,root);const fh=await d.getFileHandle(name,{create:true});const w=await fh.createWritable();await w.write(data);await w.close()}
-async function readFile(path,root=S.dir){const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,false,root);const fh=await d.getFileHandle(name);return fh.getFile()}
-async function removePath(path,root=S.dir){try{const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,false,root);await d.removeEntry(name,{recursive:true})}catch(e){}}
-async function walk(dir,prefix='',out=[]){for await(const[name,h]of dir.entries()){const p=prefix+name;if(h.kind==='file')out.push({path:p,handle:h});else await walk(h,p+'/',out)}return out}
-async function verifyPerm(h,ask){if(!h.queryPermission)return true;const o={mode:'readwrite'};if(await h.queryPermission(o)==='granted')return true;if(ask&&await h.requestPermission(o)==='granted')return true;return false}
+async function writeFile(path,data,root=S.dir){if(root?.local)return localFilePut(path,data);const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,true,root);const fh=await d.getFileHandle(name,{create:true});const w=await fh.createWritable();await w.write(data);await w.close()}
+async function readFile(path,root=S.dir){if(root?.local)return localFileGet(path);const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,false,root);const fh=await d.getFileHandle(name);return fh.getFile()}
+async function removePath(path,root=S.dir){if(root?.local){try{await localFileRemove(path)}catch(e){}return}try{const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,false,root);await d.removeEntry(name,{recursive:true})}catch(e){}}
+async function walk(dir,prefix='',out=[]){if(dir?.local){const files=await localFiles();return files.filter(f=>f.path.startsWith(prefix)).map(f=>({path:f.path,handle:{kind:'file',getFile:async()=>f.blob}}))}for await(const[name,h]of dir.entries()){const p=prefix+name;if(h.kind==='file')out.push({path:p,handle:h});else await walk(h,p+'/',out)}return out}
+async function verifyPerm(h,ask){if(h?.native)return !!(window.pipyscoxFolderApi&&await window.pipyscoxFolderApi.hasAccess(h));if(!h.queryPermission)return true;const o={mode:'readwrite'};if(await h.queryPermission(o)==='granted')return true;if(ask&&await h.requestPermission(o)==='granted')return true;return false}
 
 function normalize(db){
   db=db&&typeof db==='object'?db:{};
@@ -64,7 +69,7 @@ function setSaveState(st){const el=$('#saveSt');el.className='save-st '+(st==='s
 function save(){if(!S.db)return;clearTimeout(S.saveT);setSaveState('saving');S.saveT=setTimeout(()=>flush(),350)}
 async function flush(force){
   clearTimeout(S.saveT);S.saveT=null;if(!S.dir||!S.db)return;if(S.conflict&&!force)return;
-  if(isLocalStore()){try{S.db.updatedAt=nowISO();localStorage.setItem(LOCAL_DB_KEY,JSON.stringify(S.db));setSaveState('ok');S.changeCount++}catch(e){setSaveState('err');toast('Não foi possível salvar neste celular: '+esc(e.message),'err',6000)}return;}
+  if(isLocalStore()){try{S.db.updatedAt=nowISO();localStorage.setItem(LOCAL_DB_KEY,JSON.stringify(S.db));setSaveState('ok');S.changeCount++;setTimeout(maybeAutoBackup,50)}catch(e){setSaveState('err');toast('Não foi possível salvar neste celular: '+esc(e.message),'err',6000)}return;}
   S.saving=true;
   try{
     if(!force&&S.lastMod){let ext=0;try{ext=(await readFile(DBFILE)).lastModified}catch(e){}

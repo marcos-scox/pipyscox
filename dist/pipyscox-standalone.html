@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>pipyscox</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHBhdGggZD0iTTE2IDIuNSAyNy43IDkuMnYxMy42TDE2IDI5LjUgNC4zIDIyLjhWOS4yWiIgZmlsbD0iIzIxMjYzMSIgc3Ryb2tlPSIjZTRlNmVhIiBzdHJva2Utd2lkdGg9IjIiLz48cmVjdCB4PSIxMCIgeT0iMTAiIHdpZHRoPSIzLjIiIGhlaWdodD0iMTIiIHJ4PSIxLjIiIGZpbGw9IiM1ODU2ZDYiLz48cmVjdCB4PSIxNC40IiB5PSIxMCIgd2lkdGg9IjMuMiIgaGVpZ2h0PSI4IiByeD0iMS4yIiBmaWxsPSIjMzM5OWZmIi8+PHJlY3QgeD0iMTguOCIgeT0iMTAiIHdpZHRoPSIzLjIiIGhlaWdodD0iMTAiIHJ4PSIxLjIiIGZpbGw9IiNmMGFkMWEiLz48L3N2Zz4=">
 <!-- Estilos (a ordem importa: base → telas → animações → responsivo → impressão) -->
@@ -436,7 +436,7 @@ body:not(.collapsed) .nav-item:hover{padding-left:16px}
 
 @media (max-width:900px){
   .app,body.collapsed .app{grid-template-columns:0 minmax(0,1fr);width:100%}
-  .main{width:100vw;max-width:100vw;min-width:0}
+  .main{grid-column:2;width:100vw;max-width:100vw;min-width:0}
   .sidebar{position:fixed;z-index:70;left:0;top:0;bottom:0;width:min(250px,86vw);transform:translateX(-100%);transition:transform .2s;box-shadow:10px 0 30px rgba(0,0,0,.18)}
   body.mnav .sidebar{transform:none}
   .search{width:auto;flex:1;max-width:none;min-width:0}.search .kbd{display:none}
@@ -498,8 +498,8 @@ body:not(.collapsed) .nav-item:hover{padding-left:16px}
 /* Modo mobile forçado: htmlpreview/Safari pode entregar uma viewport CSS de desktop
    mesmo quando o dispositivo é um iPhone. A classe é aplicada pelo boot.js. */
 html.mobile-device,html.mobile-device body{width:100%;min-width:0;overflow-x:hidden}
-.mobile-device .app{width:100%;grid-template-columns:0 100vw!important}
-.mobile-device .main{width:100vw!important;max-width:100vw!important;min-width:0}
+.mobile-device .app{width:var(--mobile-app-width,100vw);grid-template-columns:0 minmax(0,1fr)!important;height:var(--mobile-app-height,100dvh)}
+.mobile-device .main{grid-column:2;width:100%;max-width:100%;min-width:0;height:var(--mobile-app-height,100dvh)}
 .mobile-device .sidebar{position:fixed;z-index:70;left:0;top:0;bottom:0;width:min(250px,86vw);transform:translateX(-100%)}
 body.mobile-device.mnav .sidebar{transform:none}
 .mobile-device .header{height:56px;padding:0 8px;gap:8px}
@@ -515,8 +515,123 @@ body.mobile-device.mnav .sidebar{transform:none}
 .mobile-device .filters>*{min-width:0;max-width:100%}
 .mobile-device .filters .search,.mobile-device .filters .input,.mobile-device .filters select{width:100%}
 .mobile-device .board{gap:10px;margin-right:-12px;padding-right:12px}
-.mobile-device .col{width:min(82vw,290px)}
+.mobile-device .board{min-height:calc(var(--mobile-app-height,100vh) - 230px)}
+.mobile-device .col{width:min(82vw,290px);max-height:calc(var(--mobile-app-height,100vh) - 245px)}
 .mobile-device .modal.lg,.mobile-device .modal.md,.mobile-device .modal.draft{max-width:100%;width:100%}
+
+/* Toque, safe area e menu em gaveta */
+.nav-scrim{display:none;position:fixed;inset:0;z-index:69;width:100%;height:100%;padding:0;border:0;background:rgba(5,8,14,.52);cursor:pointer;-webkit-tap-highlight-color:transparent}
+body.mnav .nav-scrim{display:block}
+body.mnav .sidebar{z-index:70}
+html.mobile-device body.mnav .sidebar{transform:none}
+@media (max-width:640px){
+  .app,.main{height:100vh;height:100dvh}
+  .main{width:100%;max-width:100%}
+  .content{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .header{padding-top:env(safe-area-inset-top,0px);height:calc(56px + env(safe-area-inset-top,0px))}
+  .icon-btn,.btn,.nav-item,.ctab,.add-card{min-height:44px}
+  input,select,textarea{font-size:16px}
+  .board{touch-action:pan-x pan-y;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .col{scroll-snap-align:start;flex:none}
+  .kdel{opacity:1}
+  .overlay{padding:calc(8px + env(safe-area-inset-top,0px)) 8px calc(8px + env(safe-area-inset-bottom,0px))}
+  .modal{max-height:calc(100dvh - 24px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .toasts{right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));left:12px}
+  .toast{max-width:100%}
+}
+.mobile-device .content{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.mobile-device .header{padding-top:env(safe-area-inset-top,0px);height:calc(56px + env(safe-area-inset-top,0px))}
+.mobile-device .icon-btn,.mobile-device .btn,.mobile-device .nav-item,.mobile-device .ctab,.mobile-device .add-card{min-height:44px}
+.mobile-device input,.mobile-device select,.mobile-device textarea{font-size:16px}
+.mobile-device .board{touch-action:pan-x pan-y;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+.mobile-device .col{scroll-snap-align:start;flex:none}
+.mobile-device .kdel{opacity:1}
+.mobile-device .overlay{padding:calc(8px + env(safe-area-inset-top,0px)) 8px calc(8px + env(safe-area-inset-bottom,0px))}
+.mobile-device .overlay,.mobile-device .gate{width:var(--mobile-app-width,100vw)}
+.mobile-device .overlay{height:var(--mobile-app-height,100dvh)}
+.mobile-device .gate{height:var(--mobile-app-height,100vh)}
+.mobile-device .modal{max-height:calc(var(--mobile-app-height,100dvh) - 24px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.mobile-device .toasts{right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));left:12px}
+.mobile-device .toast{max-width:100%}
+
+
+/* ---------- Aparência exclusiva do APK Android ---------- */
+html.android-apk button:not(.sw):not(.kdel):not(.avatar){
+  min-height:50px;padding:10px 14px;border-radius:13px;font-weight:650;letter-spacing:.01em;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  transition:transform .16s cubic-bezier(.2,.8,.2,1),filter .18s,background-color .18s,border-color .18s,box-shadow .18s
+}
+html.android-apk .btn,html.android-apk label.btn{
+  min-height:52px;padding:12px 17px;border-radius:15px;gap:9px;font-weight:700;
+  box-shadow:0 5px 14px rgba(0,0,0,.16)
+}
+html.android-apk .btn.primary{
+  border:1px solid color-mix(in srgb,var(--primary) 70%,white 12%);
+  background:linear-gradient(135deg,var(--primary),color-mix(in srgb,var(--primary) 58%,var(--info)));
+  box-shadow:0 7px 18px color-mix(in srgb,var(--primary) 28%,transparent)
+}
+html.android-apk .btn.info{border:1px solid color-mix(in srgb,var(--info) 72%,white 10%);background:linear-gradient(135deg,var(--info),color-mix(in srgb,var(--info) 55%,var(--primary)));color:#fff}
+html.android-apk .btn.ghost{border:1px solid var(--border);background:var(--surface-2);box-shadow:0 3px 10px rgba(0,0,0,.1)}
+html.android-apk .icon-btn{min-width:48px;min-height:48px;padding:10px;border:1px solid var(--border);border-radius:14px;background:var(--surface-2);display:inline-flex;align-items:center;justify-content:center}
+html.android-apk .nav-item{min-height:54px;padding:12px 14px;border-radius:14px}
+html.android-apk .ctab{min-height:48px;padding:10px 14px;border-radius:12px 12px 0 0}
+html.android-apk .add-card{min-height:52px;border-radius:14px}
+html.android-apk .tagsel button{min-height:44px;padding:8px 14px;border-radius:22px}
+html.android-apk .sw{width:38px;height:38px;border-radius:12px}
+html.android-apk .kdel{min-width:42px;min-height:42px;border-radius:12px}
+html.android-apk input:not([type=checkbox]):not([type=radio]),html.android-apk select,html.android-apk textarea{min-height:48px;border-radius:12px}
+html.android-apk button:active:not(:disabled):not(.sw):not(.avatar),html.android-apk .btn:active:not(:disabled){transform:scale(.965);filter:brightness(1.08)}
+html.android-apk button:focus-visible,html.android-apk .btn:focus-visible,html.android-apk a.btn:focus-visible{outline:3px solid color-mix(in srgb,var(--info) 70%,transparent);outline-offset:2px}
+html.android-apk button:disabled{opacity:.55;box-shadow:none}
+@media (hover:hover){html.android-apk button:not(:disabled):not(.sw):not(.avatar):hover,html.android-apk .btn:hover{filter:brightness(1.06);box-shadow:0 8px 20px rgba(0,0,0,.2)}}
+@media (max-width:640px){
+  html.android-apk .about-hero{grid-template-columns:1fr;text-align:center;padding:22px 18px}
+  html.android-apk .about-brand{margin:0 auto}
+  html.android-apk .about-actions{width:100%;flex-direction:column;align-items:stretch}
+  html.android-apk .about-actions .btn{width:100%;justify-content:center}
+  html.android-apk .about-grid{grid-template-columns:1fr}
+}
+html.android-apk .about-page{max-width:1000px;margin:0 auto;display:grid;gap:16px}
+html.android-apk .about-hero{display:grid;grid-template-columns:76px minmax(0,1fr);gap:18px;align-items:center;padding:26px}
+html.android-apk .about-brand{width:68px;height:68px;border-radius:22px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--primary),var(--info));box-shadow:0 12px 26px color-mix(in srgb,var(--primary) 28%,transparent)}
+html.android-apk .about-brand .brand-logo{width:42px;height:42px}
+html.android-apk .about-intro h1{margin:10px 0 8px;font-size:clamp(22px,4vw,32px);line-height:1.15}
+html.android-apk .about-intro p,html.android-apk .about-repo p{margin:0;color:var(--text-2);line-height:1.6}
+html.android-apk .about-actions{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+html.android-apk .about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+html.android-apk .about-card{display:flex;align-items:flex-start;gap:14px;padding:18px;min-height:132px}
+html.android-apk .about-icon{width:46px;height:46px;display:grid;place-items:center;flex:none;border-radius:15px;background:color-mix(in srgb,var(--primary) 16%,var(--surface-2));color:var(--primary-2)}
+html.android-apk .about-icon .i{width:22px;height:22px}
+html.android-apk .about-label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+html.android-apk .about-card h2,html.android-apk .about-repo h2{font-size:17px;margin:4px 0 6px}
+html.android-apk .about-card p{font-size:13px;color:var(--text-2);line-height:1.5;margin:0}
+html.android-apk .about-repo{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px;flex-wrap:wrap}
+html.android-apk .about-repo .about-actions{margin:0}
+@media (prefers-reduced-motion:reduce){html.android-apk button,html.android-apk .btn{transition:none!important;transform:none!important}}
+html.android-apk.no-anim button,html.android-apk.no-anim .btn{transition:none!important}
+
+
+/* A tela Sobre mantém a mesma hierarquia visual também na versão web. */
+.about-page{max-width:1000px;margin:0 auto;display:grid;gap:16px}
+.about-hero{display:grid;grid-template-columns:76px minmax(0,1fr);gap:18px;align-items:center;padding:26px}
+.about-brand{width:68px;height:68px;border-radius:22px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--primary),var(--info));box-shadow:0 12px 26px rgba(88,86,214,.24)}
+.about-brand .brand-logo{width:42px;height:42px}
+.about-intro h1{margin:10px 0 8px;font-size:clamp(22px,4vw,32px);line-height:1.15}
+.about-intro p,.about-repo p{margin:0;color:var(--text-2);line-height:1.6}
+.about-actions{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.about-card{display:flex;align-items:flex-start;gap:14px;padding:18px;min-height:132px}
+.about-icon{width:46px;height:46px;display:grid;place-items:center;flex:none;border-radius:15px;background:rgba(88,86,214,.14);color:var(--primary-2)}
+.about-icon .i{width:22px;height:22px}
+.about-label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.about-card h2,.about-repo h2{font-size:17px;margin:4px 0 6px}
+.about-card p{font-size:13px;color:var(--text-2);line-height:1.5;margin:0}
+.about-repo{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px;flex-wrap:wrap}
+.about-repo .about-actions{margin:0}
+@media (max-width:640px){.about-hero{grid-template-columns:1fr;text-align:center;padding:22px 18px}.about-brand{margin:0 auto}.about-actions{width:100%;flex-direction:column;align-items:stretch}.about-actions .btn{width:100%;justify-content:center}.about-grid{grid-template-columns:1fr}}
+
+.about-note{display:flex;align-items:flex-start;gap:10px;padding:13px 16px;border:1px solid color-mix(in srgb,var(--warning) 30%,var(--border));border-radius:14px;background:color-mix(in srgb,var(--warning) 8%,var(--surface));color:var(--text-2);font-size:13px;line-height:1.5}
+.about-note .i{width:18px;height:18px;flex:none;color:var(--warning);margin-top:1px}
 
 </style>
 <style>
@@ -535,10 +650,10 @@ body.mobile-device.mnav .sidebar{transform:none}
 </head>
 <body>
 <div class="app">
-  <aside class="sidebar" id="sidebar"></aside>
+  <aside class="sidebar" id="sidebar" aria-label="Navegação principal"></aside>
   <div class="main">
     <header class="header">
-      <button class="icon-btn" data-act="toggleSide" title="Menu"><svg class="i" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <button class="icon-btn" data-act="toggleSide" title="Menu" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false"><svg class="i" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
       <label class="search"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input id="gsearch" placeholder="Buscar cards em todos os pipys..." autocomplete="off"><span class="kbd">Ctrl /</span></label>
       <div class="sp"></div>
       <div class="save-st" id="saveSt"><span class="d"></span><span class="tx">Salvo</span></div>
@@ -551,6 +666,7 @@ body.mobile-device.mnav .sidebar{transform:none}
     <main class="content" id="content"></main>
   </div>
 </div>
+<button id="navScrim" class="nav-scrim" data-act="closeSide" aria-label="Fechar menu"></button>
 <div id="gate" class="gate hidden"></div>
 <div id="modalRoot"></div>
 <div id="popRoot"></div>
@@ -566,6 +682,7 @@ body.mobile-device.mnav .sidebar{transform:none}
 /* =====================================================================
    pipyscox — gestão de fluxos estilo kanban com dados numa pasta local
    ===================================================================== */
+const APP_VERSION='0.2.0';
 const DBFILE='pipyscox.json';
 const TRASH_DAYS=30;
 const COLORS=['#5856d6','#3399ff','#2eb85c','#f0ad1a','#e05555','#e83e8c','#8b5cf6','#20c997','#fd7e14','#64748b'];
@@ -646,6 +763,7 @@ const ICONS={
   phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/>',
   idc:'<rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M14 10h4M14 14h4"/>',
   list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',chkb:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="m9 12 2 2 4-4"/>',
+  info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',github:'<path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 6v-3.9a3.4 3.4 0 0 0-.9-2.7c3-.3 6.1-1.5 6.1-6.7a5.2 5.2 0 0 0-1.4-3.6 4.8 4.8 0 0 0-.1-3.6S17.5 1.2 15 3a13.3 13.3 0 0 0-6 0C6.5 1.2 5.3 1.5 5.3 1.5a4.8 4.8 0 0 0-.1 3.6 5.2 5.2 0 0 0-1.4 3.6c0 5.2 3.1 6.4 6.1 6.7a3.4 3.4 0 0 0-.9 2.7V22"/>',
   user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',zap:'<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>',
   chat:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',act:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
   chart:'<path d="M3 3v18h18"/><path d="M7 16v-5M12 16V7M17 16v-3"/>',filter:'<path d="M22 3H2l8 9.5V19l4 2v-8.5z"/>',
@@ -659,7 +777,7 @@ const ICONS={
    Pasta local: IndexedDB, File System Access, leitura/gravação e detecção de conflito */
 'use strict';
 /* ===================== IndexedDB (referência da pasta) ===================== */
-function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('pipyscox',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('pipyscox',2);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains('kv'))d.createObjectStore('kv');if(!d.objectStoreNames.contains('files'))d.createObjectStore('files')};r.onsuccess=()=>{r.result.onversionchange=()=>r.result.close();res(r.result)};r.onerror=()=>rej(r.error)})}
 async function kvGet(k){try{const d=await idb();return await new Promise(res=>{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(undefined)})}catch(e){return undefined}}
 async function kvSet(k,v){try{const d=await idb();await new Promise(res=>{const tx=d.transaction('kv','readwrite');tx.objectStore('kv').put(v,k);tx.oncomplete=res;tx.onerror=res})}catch(e){}}
 
@@ -668,6 +786,7 @@ const LOCAL_DB_KEY='pipyscox-local-db';
 function isLocalStore(){return !!S.dir?.local}
 async function openLocalStore(){
   S.dir={name:'Armazenamento deste celular',local:true};
+  await kvSet('dir',{local:true,name:S.dir.name});
   try{
     const raw=localStorage.getItem(LOCAL_DB_KEY);
     S.db=normalize(raw?JSON.parse(raw):{});
@@ -677,13 +796,17 @@ async function openLocalStore(){
   await autoPurge();return true;
 }
 
-/* ===================== Sistema de arquivos ===================== */
+/* ===================== Sistema de arquivos / anexos locais ===================== */
+async function localFiles(){const d=await idb();return new Promise((res,rej)=>{const tx=d.transaction('files','readonly'),s=tx.objectStore('files'),kr=s.getAllKeys(),vr=s.getAll();tx.onabort=()=>rej(tx.error);tx.onerror=()=>rej(tx.error);let keys,values;const done=()=>{if(keys&&values)res(keys.map((path,i)=>({path:String(path),blob:values[i]})))};kr.onsuccess=()=>{keys=kr.result;done()};kr.onerror=()=>rej(kr.error);vr.onsuccess=()=>{values=vr.result;done()};vr.onerror=()=>rej(vr.error)})}
+async function localFilePut(path,data){const d=await idb(),blob=data instanceof Blob?data:new Blob([data]);return new Promise((res,rej)=>{const tx=d.transaction('files','readwrite');tx.objectStore('files').put(blob,path);tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)})}
+async function localFileGet(path){const d=await idb();return new Promise((res,rej)=>{const r=d.transaction('files','readonly').objectStore('files').get(path);r.onsuccess=()=>r.result===undefined?rej(new Error(`Arquivo não encontrado: ${path}`)):res(r.result);r.onerror=()=>rej(r.error)})}
+async function localFileRemove(path){const d=await idb();return new Promise((res,rej)=>{const tx=d.transaction('files','readwrite'),s=tx.objectStore('files'),r=s.getAllKeys();r.onsuccess=()=>r.result.filter(k=>k===path||String(k).startsWith(path+'/')).forEach(k=>s.delete(k));r.onerror=()=>rej(r.error);tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)})}
 async function dirAt(parts,create,root=S.dir){let d=root;for(const p of parts){if(!p)continue;d=await d.getDirectoryHandle(p,{create})}return d}
-async function writeFile(path,data,root=S.dir){const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,true,root);const fh=await d.getFileHandle(name,{create:true});const w=await fh.createWritable();await w.write(data);await w.close()}
-async function readFile(path,root=S.dir){const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,false,root);const fh=await d.getFileHandle(name);return fh.getFile()}
-async function removePath(path,root=S.dir){try{const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,false,root);await d.removeEntry(name,{recursive:true})}catch(e){}}
-async function walk(dir,prefix='',out=[]){for await(const[name,h]of dir.entries()){const p=prefix+name;if(h.kind==='file')out.push({path:p,handle:h});else await walk(h,p+'/',out)}return out}
-async function verifyPerm(h,ask){if(!h.queryPermission)return true;const o={mode:'readwrite'};if(await h.queryPermission(o)==='granted')return true;if(ask&&await h.requestPermission(o)==='granted')return true;return false}
+async function writeFile(path,data,root=S.dir){if(root?.local)return localFilePut(path,data);const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,true,root);const fh=await d.getFileHandle(name,{create:true});const w=await fh.createWritable();await w.write(data);await w.close()}
+async function readFile(path,root=S.dir){if(root?.local)return localFileGet(path);const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,false,root);const fh=await d.getFileHandle(name);return fh.getFile()}
+async function removePath(path,root=S.dir){if(root?.local){try{await localFileRemove(path)}catch(e){}return}try{const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,false,root);await d.removeEntry(name,{recursive:true})}catch(e){}}
+async function walk(dir,prefix='',out=[]){if(dir?.local){const files=await localFiles();return files.filter(f=>f.path.startsWith(prefix)).map(f=>({path:f.path,handle:{kind:'file',getFile:async()=>f.blob}}))}for await(const[name,h]of dir.entries()){const p=prefix+name;if(h.kind==='file')out.push({path:p,handle:h});else await walk(h,p+'/',out)}return out}
+async function verifyPerm(h,ask){if(h?.native)return !!(window.pipyscoxFolderApi&&await window.pipyscoxFolderApi.hasAccess(h));if(!h.queryPermission)return true;const o={mode:'readwrite'};if(await h.queryPermission(o)==='granted')return true;if(ask&&await h.requestPermission(o)==='granted')return true;return false}
 
 function normalize(db){
   db=db&&typeof db==='object'?db:{};
@@ -721,7 +844,7 @@ function setSaveState(st){const el=$('#saveSt');el.className='save-st '+(st==='s
 function save(){if(!S.db)return;clearTimeout(S.saveT);setSaveState('saving');S.saveT=setTimeout(()=>flush(),350)}
 async function flush(force){
   clearTimeout(S.saveT);S.saveT=null;if(!S.dir||!S.db)return;if(S.conflict&&!force)return;
-  if(isLocalStore()){try{S.db.updatedAt=nowISO();localStorage.setItem(LOCAL_DB_KEY,JSON.stringify(S.db));setSaveState('ok');S.changeCount++}catch(e){setSaveState('err');toast('Não foi possível salvar neste celular: '+esc(e.message),'err',6000)}return;}
+  if(isLocalStore()){try{S.db.updatedAt=nowISO();localStorage.setItem(LOCAL_DB_KEY,JSON.stringify(S.db));setSaveState('ok');S.changeCount++;setTimeout(maybeAutoBackup,50)}catch(e){setSaveState('err');toast('Não foi possível salvar neste celular: '+esc(e.message),'err',6000)}return;}
   S.saving=true;
   try{
     if(!force&&S.lastMod){let ext=0;try{ext=(await readFile(DBFILE)).lastModified}catch(e){}
@@ -787,8 +910,14 @@ async function readZip(buf){
   return out;
 }
 async function buildBackupZip(skipFlush){
-  if(!skipFlush)await flush();const all=await walk(S.dir);const files=[];
-  for(const e of all){if(e.path.startsWith('backups/'))continue;const f=await e.handle.getFile();files.push({path:e.path,data:new Uint8Array(await f.arrayBuffer()),date:new Date(f.lastModified)})}
+  if(!skipFlush)await flush();const files=[];
+  if(isLocalStore()){
+    files.push({path:DBFILE,data:new TextEncoder().encode(JSON.stringify(S.db,null,2)),date:new Date()});
+    for(const e of await localFiles()){if(e.path.startsWith('backups/'))continue;files.push({path:e.path,data:new Uint8Array(await e.blob.arrayBuffer()),date:new Date()})}
+  }else{
+    const all=await walk(S.dir);
+    for(const e of all){if(e.path.startsWith('backups/'))continue;const f=await e.handle.getFile();files.push({path:e.path,data:new Uint8Array(await f.arrayBuffer()),date:new Date(f.lastModified)})}
+  }
   return makeZip(files);
 }
 function stamp(){const d=new Date(),z=n=>String(n).padStart(2,'0');return`${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}_${z(d.getHours())}${z(d.getMinutes())}${z(d.getSeconds())}`}
@@ -800,7 +929,7 @@ async function maybeAutoBackup(){
   const due=ab.mode==='daily'?Date.now()-last>=864e5:S.changeCount>=Math.max(1,+ab.changes||30);
   if(!due)return;S.backingUp=true;
   try{await backupToFolder(true,'auto',true);S.changeCount=0;S.db.settings.lastAutoBackup=nowISO();
-    const d=await dirAt(['backups'],false);const list=[];for await(const[n,h]of d.entries())if(h.kind==='file'&&n.startsWith('pipyscox-auto-'))list.push(n);
+    let list=[];if(isLocalStore())list=(await localFiles()).filter(f=>f.path.startsWith('backups/pipyscox-auto-')).map(f=>f.path.slice('backups/'.length));else{const d=await dirAt(['backups'],false);for await(const[n,h]of d.entries())if(h.kind==='file'&&n.startsWith('pipyscox-auto-'))list.push(n)}
     list.sort().reverse().slice(Math.max(1,+ab.keep||10)).forEach(n=>removePath('backups/'+n));save();
   }catch(e){console.warn('backup automático falhou',e)}finally{S.backingUp=false}
 }
@@ -982,16 +1111,17 @@ function openPop(anchor,html){closePop();const r=anchor.getBoundingClientRect();
 /* ===================== Pasta / usuário ===================== */
 function showGate(mode,name){
   const g=$('#gate');g.classList.remove('hidden');let body='';
-  if(mode==='unsupported')body=`<h2>Use o pipyscox no celular</h2><p>Este navegador não permite escolher uma pasta do aparelho. Você pode usar o modo local para salvar os dados neste celular ou abrir no Chrome/Edge do computador para trabalhar com uma pasta compartilhada.</p><div class="row" style="justify-content:center;flex-wrap:wrap"><button class="btn primary" data-act="useLocalStore">${ic('save')} Salvar neste celular</button></div>`;
+  if(mode==='unsupported'&&window.pipyscoxFolderApi)body=`<h2>Onde salvar os dados?</h2><p>Escolha uma pasta do aparelho para manter seus dados e anexos nela. O Android vai pedir autorização. Se preferir, você também pode usar o armazenamento interno deste app.</p><div class="row" style="justify-content:center;flex-wrap:wrap"><button class="btn primary" data-act="gateChoose">${ic('folder')} Escolher pasta</button><button class="btn ghost" data-act="useLocalStore">${ic('save')} Salvar neste celular</button></div><p class="muted" style="font-size:12px;margin:16px 0 0">No Android 11 ou superior, escolha uma subpasta: o sistema não permite selecionar a raiz do aparelho ou a pasta Downloads.</p>`;
+  else if(mode==='unsupported')body=`<h2>Use o pipyscox no celular</h2><p>Este navegador não permite escolher uma pasta do aparelho. Você pode usar o modo local para salvar os dados neste celular ou abrir no Chrome/Edge do computador para trabalhar com uma pasta compartilhada.</p><div class="row" style="justify-content:center;flex-wrap:wrap"><button class="btn primary" data-act="useLocalStore">${ic('save')} Salvar neste celular</button></div>`;
   else if(mode==='reconnect')body=`<h2>Bem-vindo de volta</h2><p>Por segurança, o navegador pede confirmação para acessar a pasta <b>${esc(name)}</b> novamente.</p><div class="row" style="justify-content:center;flex-wrap:wrap"><button class="btn primary" data-act="gateReconnect">${ic('folder')} Reconectar à pasta</button><button class="btn ghost" data-act="gateChoose">Escolher outra pasta</button></div>`;
-  else body=`<h2>Escolha a pasta de dados</h2><p>Todos os pipys, cards e arquivos ficam salvos nessa pasta. Você escolhe uma vez e pode trocar depois em Configurações. Se a pasta já tiver dados do pipyscox, eles são carregados automaticamente.</p><button class="btn primary" data-act="gateChoose">${ic('folder')} Escolher pasta</button>`;
+  else body=`<h2>Onde salvar os dados?</h2><p>Escolha uma pasta para compartilhar os dados entre computadores ou salve neste navegador para manter tudo neste aparelho. A pasta existente do pipyscox será reconhecida automaticamente.</p><div class="row" style="justify-content:center;flex-wrap:wrap"><button class="btn primary" data-act="gateChoose">${ic('folder')} Escolher pasta</button><button class="btn ghost" data-act="useLocalStore">${ic('save')} Salvar neste navegador</button></div>`;
   g.innerHTML=`<div class="box"><div style="color:var(--text);display:flex;justify-content:center">${LOGO.replace('class="brand-logo"','style="width:64px;height:64px"')}</div><div style="font-size:15px;margin-top:6px"><b>pipy</b><span style="color:var(--info)">scox</span></div>${body}</div>`;
 }
 const hideGate=()=>$('#gate').classList.add('hidden');
-async function pickFolder(){try{return await window.showDirectoryPicker({mode:'readwrite',id:'pipyscox'})}catch(e){if(e.name!=='AbortError')toast('Erro ao abrir a pasta: '+esc(e.message),'err');return null}}
+async function pickFolder(){try{if(window.pipyscoxFolderApi)return await window.pipyscoxFolderApi.pickDirectory();return await window.showDirectoryPicker({mode:'readwrite',id:'pipyscox'})}catch(e){if(e.name!=='AbortError')toast('Erro ao abrir a pasta: '+esc(e.message),'err');return null}}
 async function openDir(h){
   if(!await verifyPerm(h,true)){toast('Permissão de escrita negada para a pasta.','err');return false}
-  S.dir=h;await loadDb();await kvSet('dir',h);hideGate();renderAll();setSaveState('ok');
+  S.dir=h;await loadDb();await kvSet('dir',h?.native?{native:true,uri:h.uri,name:h.name}:h);hideGate();renderAll();setSaveState('ok');
   if(!S.user)await askUser();else ensurePerson(S.user);
   await autoPurge();maybeAutoBackup();return true;
 }
@@ -1015,6 +1145,7 @@ function renderSidebar(){
     <button class="nav-item ${act('trash')}" data-act="go" data-v="trash" title="Lixeira">${ic('bin')}<span class="lbl">Lixeira</span>${S.db.trash.length?`<span class="badge">${S.db.trash.length}</span>`:''}</button>
     <div class="nav-title">Sistema</div>
     <button class="nav-item ${act('config')}" data-act="go" data-v="config" title="Configurações">${ic('cog')}<span class="lbl">Configurações</span></button>
+    <button class="nav-item ${act('about')}" data-act="go" data-v="about" title="Sobre">${ic('info')}<span class="lbl">Sobre</span></button>
   </nav>
   <div class="side-foot" data-act="go" data-v="config" title="Pasta: ${esc(S.dir?.name)}"><span class="st"></span>${ic('folder')}<span class="txt">${esc(S.dir?.name||'')}</span></div>`;
 }
@@ -1024,10 +1155,10 @@ function renderMain(){
   closePop();const v=S.route.v;
   if(['pipe','phase','report'].includes(v)&&!pipeById(S.route.id))S.route={v:'home'};
   if(S.route.v==='phase'){const p=pipeById(S.route.id);if(!phaseOf(p,S.route.ph))S.route={v:'pipe',id:p.id}}
-  ({home:viewHome,pipe:viewPipe,phase:viewPhase,report:viewReport,data:viewData,trash:viewTrash,config:viewConfig})[S.route.v]();
+  ({home:viewHome,pipe:viewPipe,phase:viewPhase,report:viewReport,data:viewData,trash:viewTrash,config:viewConfig,about:viewAbout})[S.route.v]();
   renderSidebar();
 }
-function go(route){S.route=route;S.selField=null;S.ad=null;document.body.classList.remove('mnav');renderMain();$('#content').scrollTop=0}
+function go(route){S.route=route;S.selField=null;S.ad=null;document.body.classList.remove('mnav');document.querySelector('[data-act="toggleSide"]')?.setAttribute('aria-expanded','false');renderMain();$('#content').scrollTop=0}
 function refreshAfterChange(){if(S.openCard&&!S.openCard.draft)renderCardModal();else if(!S.openCard)renderMain()}
 
 </script>
@@ -1415,14 +1546,14 @@ function viewTrash(){
 'use strict';
 /* ===================== Configurações ===================== */
 function viewConfig(){
-  crumbs([{t:'Home',attrs:'data-v="home"'},{t:'Configurações'}]);const ab=S.db.settings.autoBackup;
+  crumbs([{t:'Home',attrs:'data-v="home"'},{t:'Configurações'}]);const ab=S.db.settings.autoBackup,local=isLocalStore();
   $('#content').innerHTML=`<div class="page-head"><h1 class="page">Configurações</h1></div><div class="cfg-grid">
-  <div class="panel"><div class="panel-h">${ic('folder')}<h3>Pasta de dados</h3></div><div class="panel-b">
-    <div class="kv"><span>Pasta atual</span><b>${esc(S.dir.name)}</b></div>
+  <div class="panel"><div class="panel-h">${ic('folder')}<h3>${local?'Armazenamento local':'Pasta de dados'}</h3></div><div class="panel-b">
+    <div class="kv"><span>${local?'Dispositivo':'Pasta atual'}</span><b>${esc(S.dir.name)}</b></div>
     <div class="kv"><span>Última gravação</span><span>${S.db.updatedAt?fmtDateTime(S.db.updatedAt):'-'}</span></div>
-    <div class="kv" style="margin-bottom:16px"><span>Status</span><span style="color:var(--success)">● Conectada · verifica alterações externas a cada 4 s</span></div>
-    <div class="row wrap"><button class="btn primary" data-act="changeFolder">${ic('folder')} Trocar pasta</button><button class="btn ghost" data-act="reloadData">${ic('refresh')} Recarregar da pasta</button></div>
-    <p class="muted" style="font-size:12.5px;margin:14px 0 0">Se outra pessoa (ou outro computador sincronizado) alterar a mesma pasta, o pipyscox recarrega sozinho quando você não tem alterações pendentes. Se houver conflito, ele pergunta antes de gravar.</p></div></div>
+    <div class="kv" style="margin-bottom:16px"><span>Status</span><span style="color:var(--success)">● ${local?'Salvo neste navegador':'Conectada · verifica alterações externas a cada 4 s'}</span></div>
+    ${local?`<div class="muted" style="font-size:13px">O cadastro, os cards e os anexos ficam neste ${window.pipyscoxFolderApi?'app':'navegador'}. Use Baixar ZIP para levar os dados a outro aparelho ou computador.</div>${'showDirectoryPicker' in window||window.pipyscoxFolderApi?`<div class="row wrap" style="margin-top:12px"><button class="btn ghost" data-act="changeFolder">${ic('folder')} Migrar para uma pasta compartilhada</button></div>`:''}`:`<div class="row wrap"><button class="btn primary" data-act="changeFolder">${ic('folder')} Trocar pasta</button><button class="btn ghost" data-act="reloadData">${ic('refresh')} Recarregar da pasta</button></div>
+    <p class="muted" style="font-size:12.5px;margin:14px 0 0">Se outra pessoa (ou outro computador sincronizado) alterar a mesma pasta, o pipyscox recarrega sozinho quando você não tem alterações pendentes. Se houver conflito, ele pergunta antes de gravar.</p>`}</div></div>
   <div class="panel"><div class="panel-h">${ic('user')}<h3>Usuário e equipe</h3></div><div class="panel-b">
     <div class="kv" style="margin-bottom:14px"><span>Você está como</span><span class="row"><b>${esc(S.user)}</b><button class="btn ghost sm" data-act="changeUser">Trocar</button></span></div>
     <div class="fl">Equipe (aparece no campo Responsável)</div>
@@ -1430,30 +1561,69 @@ function viewConfig(){
     <div class="row"><input class="input" id="personIn" placeholder="Nome da pessoa"><button class="btn ghost" data-act="personAdd">${ic('plus')} Adicionar</button></div></div></div>
   <div class="panel"><div class="panel-h">${ic('archive')}<h3>Backup e compartilhamento</h3></div><div class="panel-b">
     <div class="row wrap" style="margin-bottom:12px"><button class="btn info" data-act="backupFolder">${ic('archive')} Salvar backup agora</button><button class="btn ghost" data-act="zipDownload">${ic('down')} Baixar ZIP</button><label class="btn ghost" style="cursor:pointer">${ic('up')} Importar ZIP<input type="file" accept=".zip" hidden data-ch="zipImport"></label></div>
-    <p class="muted" style="font-size:12.5px;margin:0 0 14px">O ZIP contém tudo (dados e arquivos). Para compartilhar, envie o ZIP ou a própria pasta. Antes de importar ou restaurar, um backup automático é criado.</p>
+    <p class="muted" style="font-size:12.5px;margin:0 0 14px">${local?'O ZIP contém dados, anexos e pode ser transferido para outro aparelho. Antes de importar ou restaurar, um backup automático é criado.':'O ZIP contém tudo (dados e arquivos). Para compartilhar, envie o ZIP ou a própria pasta. Antes de importar ou restaurar, um backup automático é criado.'}</p>
     <div class="fsec" style="margin-bottom:14px"><label class="chk"><input type="checkbox" data-ch="abSet" data-k="enabled" ${ab.enabled?'checked':''}> <b>Backup automático</b></label>
       <div class="row wrap" style="gap:12px"><label class="f" style="margin:0;flex:1;min-width:150px"><span>Frequência</span><select class="input" data-ch="abSet" data-k="mode"><option value="daily" ${ab.mode==='daily'?'selected':''}>Uma vez por dia</option><option value="changes" ${ab.mode==='changes'?'selected':''}>A cada X alterações</option></select></label>
       ${ab.mode==='changes'?`<label class="f" style="margin:0;width:120px"><span>Alterações</span><input type="number" min="1" class="input" data-ch="abSet" data-k="changes" value="${ab.changes}"></label>`:''}
       <label class="f" style="margin:0;width:120px"><span>Manter últimos</span><input type="number" min="1" class="input" data-ch="abSet" data-k="keep" value="${ab.keep}"></label></div>
       <div class="muted" style="font-size:12px;margin-top:8px">Último automático: ${S.db.settings.lastAutoBackup?fmtDateTime(S.db.settings.lastAutoBackup):'nenhum ainda'}</div></div>
-    <div class="fl">Backups na pasta <span class="muted" style="font-weight:400">(backups/)</span></div><div id="bkList" class="muted">Carregando...</div></div></div>
+    <div class="fl">${local?'Backups neste navegador':'Backups na pasta <span class="muted" style="font-weight:400">(backups/)</span>'}</div><div id="bkList" class="muted">Carregando...</div></div></div>
   <div class="panel"><div class="panel-h">${ic(S.theme==='dark'?'moon':'sun')}<h3>Aparência</h3></div><div class="panel-b"><div class="row"><button class="btn ${S.theme==='dark'?'primary':'ghost'}" data-act="setTheme" data-t="dark">${ic('moon')} Escuro</button><button class="btn ${S.theme==='light'?'primary':'ghost'}" data-act="setTheme" data-t="light">${ic('sun')} Claro</button></div><label class="chk" style="margin:16px 0 0"><input type="checkbox" data-ch="animSet" ${ANIM.on?'checked':''}> Animações na interface</label>${reduceMotion.matches?'<div class="muted" style="font-size:12px;margin-top:6px">Seu sistema pede movimento reduzido, então as animações ficam desligadas.</div>':''}</div></div>
-  <div class="panel"><div class="panel-h">${ic('db')}<h3>Estrutura da pasta</h3></div><div class="panel-b"><div class="tree">${esc(S.dir.name)}/
+  <div class="panel"><div class="panel-h">${ic('db')}<h3>${local?'Armazenamento do celular':'Estrutura da pasta'}</h3></div><div class="panel-b">${local?'<p class="muted" style="margin:0">Os dados e anexos ficam no armazenamento do navegador neste aparelho (IndexedDB). Eles não são sincronizados com outros dispositivos automaticamente. Baixe ou importe um ZIP para transferi-los.</p>':`<div class="tree">${esc(S.dir.name)}/
 ├── pipyscox.json        ← pipys, fases, campos, cards, lixeira
 ├── arquivos/
 │   └── &lt;pipy&gt;/&lt;card&gt;/   ← anexos dos cards
-└── backups/             ← backups .zip (manuais e automáticos)</div></div></div>
+└── backups/             ← backups .zip (manuais e automáticos)</div>`}</div></div>
   </div>`;
   loadBackups();
 }
-async function loadBackups(){const el=$('#bkList');if(!el)return;try{const d=await dirAt(['backups'],false);const list=[];for await(const[n,h]of d.entries())if(h.kind==='file'&&n.endsWith('.zip')){const f=await h.getFile();list.push({n,size:f.size,t:f.lastModified})}
-  list.sort((a,b)=>b.t-a.t);el.innerHTML=list.length?`<div class="files">${list.map(b=>`<div class="file">${ic('archive')}<span class="nm">${esc(b.n)}</span><span class="muted">${fmtSize(b.size)}</span><button class="icon-btn" title="Baixar" data-act="bkDl" data-n="${esc(b.n)}">${ic('down')}</button><button class="icon-btn" title="Restaurar" data-act="bkRestore" data-n="${esc(b.n)}">${ic('refresh')}</button><button class="icon-btn" title="Excluir" data-act="bkRm" data-n="${esc(b.n)}">${ic('trash')}</button></div>`).join('')}</div>`:'Nenhum backup ainda.'}catch(e){el.textContent='Nenhum backup ainda.'}}
+async function loadBackups(){const el=$('#bkList');if(!el)return;try{const list=[];if(isLocalStore()){for(const f of await localFiles())if(f.path.startsWith('backups/')&&f.path.endsWith('.zip'))list.push({n:f.path.slice('backups/'.length),size:f.blob.size,t:f.path})}else{const d=await dirAt(['backups'],false);for await(const[n,h]of d.entries())if(h.kind==='file'&&n.endsWith('.zip')){const f=await h.getFile();list.push({n,size:f.size,t:f.lastModified})}}
+  list.sort((a,b)=>isLocalStore()?b.t.localeCompare(a.t):b.t-a.t);el.innerHTML=list.length?`<div class="files">${list.map(b=>`<div class="file">${ic('archive')}<span class="nm">${esc(b.n)}</span><span class="muted">${fmtSize(b.size)}</span><button class="icon-btn" title="Baixar" data-act="bkDl" data-n="${esc(b.n)}">${ic('down')}</button><button class="icon-btn" title="Restaurar" data-act="bkRestore" data-n="${esc(b.n)}">${ic('refresh')}</button><button class="icon-btn" title="Excluir" data-act="bkRm" data-n="${esc(b.n)}">${ic('trash')}</button></div>`).join('')}</div>`:'Nenhum backup ainda.'}catch(e){el.textContent='Nenhum backup ainda.'}}
 async function restoreZip(buf){
   const entries=await readZip(buf);const dbE=entries.find(e=>e.path===DBFILE);if(!dbE)throw new Error('O ZIP não contém pipyscox.json');
   JSON.parse(new TextDecoder().decode(dbE.data));
   await backupToFolder(true);await removePath('arquivos');
-  for(const e of entries){if(e.path.startsWith('backups/')||e.path.includes('..'))continue;await writeFile(e.path,e.data)}
+  for(const e of entries){if(e.path.startsWith('backups/')||e.path.includes('..'))continue;if(isLocalStore()&&e.path===DBFILE){localStorage.setItem(LOCAL_DB_KEY,new TextDecoder().decode(e.data));continue}await writeFile(e.path,e.data)}
   await loadDb();S.route={v:'home'};renderAll();toast('Dados importados com sucesso. Um backup do estado anterior foi salvo em backups/.');
+}
+
+</script>
+<script>
+/* pipyscox · views/about.js
+   Informações do aplicativo e links de distribuição */
+'use strict';
+function viewAbout(){
+  crumbs([{t:'Sistema'},{t:'Sobre'}]);
+  const repo='https://github.com/marcos-scox/pipyscox';
+  const apk=`${repo}/releases/download/android-v${APP_VERSION}/pipyscox-android.apk`;
+  $('#content').innerHTML=`<div class="about-page view-in">
+    <section class="panel about-hero">
+      <div class="about-brand">${LOGO}</div>
+      <div class="about-intro">
+        <span class="badge new">PIPYSCOX PARA ANDROID</span>
+        <h1>Seu fluxo de trabalho, no seu celular.</h1>
+        <p>Organize pipys, fases, cards, anexos e relatórios em uma interface feita para acompanhar você.</p>
+      </div>
+      <div class="about-actions">
+        <a class="btn primary" href="${apk}" target="_blank" rel="noopener">${ic('down')} Baixar APK v${APP_VERSION}</a>
+        <a class="btn ghost" href="${repo}" target="_blank" rel="noopener">${ic('github')} Abrir meu GitHub</a>
+      </div>
+    </section>
+    <div class="about-note">${ic('info')} <span>APK de prévia com assinatura de desenvolvimento para instalação direta. Não é uma build da Play Store; o Android pode pedir autorização para instalar apps desta fonte.</span></div>
+    <section class="about-grid">
+      <article class="panel about-card"><span class="about-icon">${ic('info')}</span><div><span class="about-label">Aplicativo</span><h2>pipyscox</h2><p>Gestão visual de fluxos no estilo Kanban.</p></div></article>
+      <article class="panel about-card"><span class="about-icon">${ic('refresh')}</span><div><span class="about-label">Versão Android</span><h2>${APP_VERSION}</h2><p>Compatível com Android 7.0 ou superior.</p></div></article>
+      <article class="panel about-card"><span class="about-icon">${ic('folder')}</span><div><span class="about-label">Seus dados</span><h2>Você escolhe a pasta</h2><p>O Android pede autorização para a pasta escolhida. Também é possível usar o armazenamento local deste app.</p></div></article>
+      <article class="panel about-card"><span class="about-icon">${ic('zap')}</span><div><span class="about-label">Uso offline</span><h2>Funciona sem internet</h2><p>Depois de instalado, os dados permanecem no aparelho ou na pasta que você autorizou.</p></div></article>
+    </section>
+    <section class="panel about-repo">
+      <div><h2>Projeto e atualizações</h2><p>Veja o código-fonte, acompanhe mudanças e encontre as versões publicadas no GitHub.</p></div>
+      <div class="about-actions">
+        <a class="btn ghost" href="${repo}" target="_blank" rel="noopener">${ic('github')} Repositório</a>
+        <a class="btn ghost" href="${repo}/releases" target="_blank" rel="noopener">${ic('archive')} Todas as versões</a>
+      </div>
+    </section>
+  </div>`;
 }
 
 </script>
@@ -1580,7 +1750,8 @@ async function csvImportFlow(file){
 /* ===================== Ações (cliques) ===================== */
 let lastTrashed=null;
 const A={
-  toggleSide(){if(innerWidth<=900)document.body.classList.toggle('mnav');else document.body.classList.toggle('collapsed')},
+  toggleSide(el){if(document.documentElement.classList.contains('mobile-device')||innerWidth<=900){document.body.classList.toggle('mnav');el?.setAttribute('aria-expanded',String(document.body.classList.contains('mnav')))}else document.body.classList.toggle('collapsed')},
+  closeSide(){document.body.classList.remove('mnav');document.querySelector('[data-act="toggleSide"]')?.setAttribute('aria-expanded','false')},
   toggleTheme(){A.setTheme({dataset:{t:S.theme==='dark'?'light':'dark'}})},
   setTheme(el){S.theme=el.dataset.t;try{localStorage.setItem('pipyscox-theme',S.theme)}catch(e){}renderTheme();if(S.route.v==='config')renderMain()},
   changeUser(){if(S.db)askUser(S.user)},
@@ -1650,15 +1821,15 @@ const A={
     ph.automations.push({id:uid(),trigger:a.trigger,action:a.action,fieldId:a.fieldId,optId:a.optId,value:a.value,phaseId:a.phaseId,text:a.text});S.ad=null;save();renderAutoPanel();renderFbAll();toast('Automação adicionada.')},
   adRm(el){const{ph}=phaseCtx();ph.automations=ph.automations.filter(a=>a.id!==el.dataset.id);save();renderAutoPanel();renderFbAll()},
   bfClear(){S.boardF[S.route.id]={q:'',tag:'',resp:'',stale:false};renderMain()},
-  printReport(){window.print()},
+  async printReport(){if(window.pipyscoxNativePrint){try{await window.pipyscoxNativePrint()}catch(e){toast('Não foi possível abrir a impressão: '+esc(e.message),'err',5000)}return}window.print()},
   exportCsv(){exportCsv()},
   trashRestore(el){const t=S.db.trash.find(x=>x.id===el.dataset.id);if(t&&restoreTrash(t)){toast(`${t.kind==='pipe'?'Pipy':'Card'} restaurado.`);renderMain()}},
   async trashPurge(el){const t=S.db.trash.find(x=>x.id===el.dataset.id);if(!t)return;if(!await confirmBox('Excluir definitivamente',`Apagar <b>${esc(t.kind==='pipe'?t.item.name:t.item.title)}</b> e seus anexos da pasta? Isso não pode ser desfeito.`,'Excluir definitivamente',true))return;await purgeTrash(t);save();renderMain()},
   async trashEmpty(){if(!await confirmBox('Esvaziar lixeira',`Apagar definitivamente os ${S.db.trash.length} item(ns) da lixeira e seus anexos?`,'Esvaziar',true))return;for(const t of S.db.trash.slice())await purgeTrash(t);save();renderMain()},
   personAdd(){const n=$('#personIn').value.trim();if(!n)return;ensurePerson(n);renderMain()},
   personRm(el){S.db.settings.people=S.db.settings.people.filter(x=>x!==el.dataset.n);save();renderMain()},
-  async zipDownload(){if(isLocalStore()){toast('No modo celular, os dados ficam salvos neste navegador. Abra no computador para baixar um ZIP.','warn',5000);return}toast('Gerando ZIP...','ok',1500);try{downloadBlob(await buildBackupZip(),`pipyscox-${stamp()}.zip`)}catch(e){toast('Erro ao gerar ZIP: '+esc(e.message),'err')}},
-  async backupFolder(){if(isLocalStore()){toast('Backups em pasta só estão disponíveis no modo computador.','warn',4500);return}try{await backupToFolder();loadBackups()}catch(e){toast('Erro no backup: '+esc(e.message),'err')}},
+  async zipDownload(){toast('Gerando ZIP...','ok',1500);try{downloadBlob(await buildBackupZip(),`pipyscox-${stamp()}.zip`)}catch(e){toast('Erro ao gerar ZIP: '+esc(e.message),'err')}},
+  async backupFolder(){try{await backupToFolder();loadBackups()}catch(e){toast('Erro no backup: '+esc(e.message),'err')}},
   async bkDl(el){downloadBlob(await readFile('backups/'+el.dataset.n),el.dataset.n)},
   async bkRm(el){if(!await confirmBox('Excluir backup',`Excluir <b>${esc(el.dataset.n)}</b>?`,'Excluir',true)){renderMain();return}await removePath('backups/'+el.dataset.n);renderMain()},
   async bkRestore(el){if(!await confirmBox('Restaurar backup',`Restaurar <b>${esc(el.dataset.n)}</b>? Os dados atuais serão substituídos (um backup deles será criado antes).`,'Restaurar',true)){renderMain();return}
@@ -1667,15 +1838,16 @@ const A={
     if(await h.isSameEntry?.(S.dir)){toast('Essa já é a pasta atual.','warn');return}
     let has=false;try{await h.getFileHandle(DBFILE);has=true}catch(e){}
     if(!has&&S.db.pipes.length&&await confirmBox('Pasta vazia',`A pasta <b>${esc(h.name)}</b> ainda não tem dados do pipyscox. Copiar os dados atuais (incluindo arquivos) para ela?`,'Copiar dados')){
-      await flush();const all=await walk(S.dir);for(const e of all){if(e.path.startsWith('backups/'))continue;await writeFile(e.path,await e.handle.getFile(),h)}}
+      await flush();if(S.dir.local)await writeFile(DBFILE,JSON.stringify(S.db,null,2),h);const all=await walk(S.dir);for(const e of all){if(e.path.startsWith('backups/'))continue;await writeFile(e.path,await e.handle.getFile(),h)}}
     await openDir(h);S.route={v:'config'};renderAll();toast('Pasta alterada para <b>'+esc(h.name)+'</b>')},
   async reloadData(){await loadDb();renderAll();toast('Dados recarregados da pasta.')},
   async conflictReload(){$('#modalRoot').innerHTML='';S.openCard=null;await loadDb();renderAll();setSaveState('ok');toast('Dados recarregados da pasta.')},
   async conflictOverwrite(){$('#modalRoot').innerHTML='';try{const n=await backupToFolder(true,'backup',true);await flush(true);toast(`Suas alterações foram gravadas. A versão externa ficou salva em <b>backups/${esc(n)}</b>.`,'ok',6000)}catch(e){toast('Erro: '+esc(e.message),'err')}},
   async gateChoose(){const h=await pickFolder();if(h)await openDir(h)},
   async useLocalStore(){await openLocalStore()},
-  async gateReconnect(){const h=await kvGet('dir');if(h&&await verifyPerm(h,true))await openDir(h);else toast('Permissão não concedida.','warn')}
+  async gateReconnect(){let h=await kvGet('dir');if(h?.native)h=window.pipyscoxFolderApi?.openRoot(h);if(h&&await verifyPerm(h,true)){await openDir(h);return}if(window.pipyscoxFolderApi){const next=await pickFolder();if(next)await openDir(next);return}toast('Permissão não concedida.','warn')}
 };
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('mnav'))A.closeSide()});
 
 </script>
 <script>
@@ -1864,15 +2036,20 @@ setInterval(()=>{if(S.db)maybeAutoBackup()},36e5);
    Inicialização */
 'use strict';
 /* ===================== Inicialização ===================== */
-const isMobileDevice=/Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent)||window.matchMedia?.('(max-width:640px)').matches;
+const mobileUA=/Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+const deviceWidth=Number(window.screen?.width)||window.innerWidth;
+const isMobileDevice=window.matchMedia?.('(max-width:640px)').matches||/iPhone|iPod|Windows Phone/i.test(navigator.userAgent)||(mobileUA&&deviceWidth<=900);
 document.documentElement.classList.toggle('mobile-device',!!isMobileDevice);
+if(isMobileDevice&&deviceWidth){document.documentElement.style.setProperty('--mobile-app-width',`${deviceWidth}px`);if(window.screen?.height)document.documentElement.style.setProperty('--mobile-app-height',`${window.screen.height}px`)}
 (async function boot(){
   try{S.theme=localStorage.getItem('pipyscox-theme')||'dark';S.user=localStorage.getItem('pipyscox-user')||''}catch(e){}
   renderTheme();renderAvatar();
-  if(!('showDirectoryPicker' in window)){showGate('unsupported');return}
   const h=await kvGet('dir');
+  if(h?.local){await openLocalStore();return}
+  if(h?.native){const root=window.pipyscoxFolderApi?.openRoot(h);if(root){try{if(await verifyPerm(root,false)){await openDir(root);return}}catch(e){}showGate('reconnect',h.name||'pasta escolhida');return}}
+  if(!('showDirectoryPicker' in window)&&!window.pipyscoxFolderApi){showGate('unsupported');return}
   if(h){try{if(await verifyPerm(h,false)){await openDir(h);return}showGate('reconnect',h.name)}catch(e){showGate('choose')}}
-  else showGate('choose');
+  else showGate(window.pipyscoxFolderApi?'unsupported':'choose');
 })();
 
 </script>

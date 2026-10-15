@@ -1,0 +1,8 @@
+{
+  "appId": "com.marcos.scox.pipyscox",
+  "appName": "pipyscox",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  }
+}
