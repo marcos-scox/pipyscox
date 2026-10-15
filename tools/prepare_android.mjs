@@ -22,8 +22,10 @@ await build({
 });
 
 const indexPath = path.join(webDir, 'index.html');
-const html = await readFile(indexPath, 'utf8');
+let html = await readFile(indexPath, 'utf8');
+html = html.replace('<html lang="pt-BR">', '<html lang="pt-BR" class="android-apk">');
 const injection = '  <script src="assets/js/mobile-download-bridge.js"></script>\n';
-if (!html.includes('</body>')) throw new Error('index.html não contém </body>');
-await writeFile(indexPath, html.replace('</body>', `${injection}</body>`));
+const bootScript = /<script src="assets\/js\/app\/boot\.js[^\"]*"><\/script>/;
+if (!bootScript.test(html)) throw new Error('index.html não contém o script de inicialização');
+await writeFile(indexPath, html.replace(bootScript, `${injection}$&`));
 console.log(`App Android preparado em ${webDir}`);

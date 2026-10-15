@@ -31,7 +31,7 @@ async function writeFile(path,data,root=S.dir){if(root?.local)return localFilePu
 async function readFile(path,root=S.dir){if(root?.local)return localFileGet(path);const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,false,root);const fh=await d.getFileHandle(name);return fh.getFile()}
 async function removePath(path,root=S.dir){if(root?.local){try{await localFileRemove(path)}catch(e){}return}try{const parts=path.split('/');const name=parts.pop();const d=await dirAt(parts,false,root);await d.removeEntry(name,{recursive:true})}catch(e){}}
 async function walk(dir,prefix='',out=[]){if(dir?.local){const files=await localFiles();return files.filter(f=>f.path.startsWith(prefix)).map(f=>({path:f.path,handle:{kind:'file',getFile:async()=>f.blob}}))}for await(const[name,h]of dir.entries()){const p=prefix+name;if(h.kind==='file')out.push({path:p,handle:h});else await walk(h,p+'/',out)}return out}
-async function verifyPerm(h,ask){if(!h.queryPermission)return true;const o={mode:'readwrite'};if(await h.queryPermission(o)==='granted')return true;if(ask&&await h.requestPermission(o)==='granted')return true;return false}
+async function verifyPerm(h,ask){if(h?.native)return !!(window.pipyscoxFolderApi&&await window.pipyscoxFolderApi.hasAccess(h));if(!h.queryPermission)return true;const o={mode:'readwrite'};if(await h.queryPermission(o)==='granted')return true;if(ask&&await h.requestPermission(o)==='granted')return true;return false}
 
 function normalize(db){
   db=db&&typeof db==='object'?db:{};

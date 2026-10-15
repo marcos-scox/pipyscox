@@ -4,6 +4,7 @@
 /* =====================================================================
    pipyscox — gestão de fluxos estilo kanban com dados numa pasta local
    ===================================================================== */
+const APP_VERSION='0.2.0';
 const DBFILE='pipyscox.json';
 const TRASH_DAYS=30;
 const COLORS=['#5856d6','#3399ff','#2eb85c','#f0ad1a','#e05555','#e83e8c','#8b5cf6','#20c997','#fd7e14','#64748b'];

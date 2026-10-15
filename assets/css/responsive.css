@@ -130,3 +130,82 @@ html.mobile-device body.mnav .sidebar{transform:none}
 .mobile-device .modal{max-height:calc(var(--mobile-app-height,100dvh) - 24px);overflow-y:auto;-webkit-overflow-scrolling:touch}
 .mobile-device .toasts{right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));left:12px}
 .mobile-device .toast{max-width:100%}
+
+
+/* ---------- Aparência exclusiva do APK Android ---------- */
+html.android-apk button:not(.sw):not(.kdel):not(.avatar){
+  min-height:50px;padding:10px 14px;border-radius:13px;font-weight:650;letter-spacing:.01em;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  transition:transform .16s cubic-bezier(.2,.8,.2,1),filter .18s,background-color .18s,border-color .18s,box-shadow .18s
+}
+html.android-apk .btn,html.android-apk label.btn{
+  min-height:52px;padding:12px 17px;border-radius:15px;gap:9px;font-weight:700;
+  box-shadow:0 5px 14px rgba(0,0,0,.16)
+}
+html.android-apk .btn.primary{
+  border:1px solid color-mix(in srgb,var(--primary) 70%,white 12%);
+  background:linear-gradient(135deg,var(--primary),color-mix(in srgb,var(--primary) 58%,var(--info)));
+  box-shadow:0 7px 18px color-mix(in srgb,var(--primary) 28%,transparent)
+}
+html.android-apk .btn.info{border:1px solid color-mix(in srgb,var(--info) 72%,white 10%);background:linear-gradient(135deg,var(--info),color-mix(in srgb,var(--info) 55%,var(--primary)));color:#fff}
+html.android-apk .btn.ghost{border:1px solid var(--border);background:var(--surface-2);box-shadow:0 3px 10px rgba(0,0,0,.1)}
+html.android-apk .icon-btn{min-width:48px;min-height:48px;padding:10px;border:1px solid var(--border);border-radius:14px;background:var(--surface-2);display:inline-flex;align-items:center;justify-content:center}
+html.android-apk .nav-item{min-height:54px;padding:12px 14px;border-radius:14px}
+html.android-apk .ctab{min-height:48px;padding:10px 14px;border-radius:12px 12px 0 0}
+html.android-apk .add-card{min-height:52px;border-radius:14px}
+html.android-apk .tagsel button{min-height:44px;padding:8px 14px;border-radius:22px}
+html.android-apk .sw{width:38px;height:38px;border-radius:12px}
+html.android-apk .kdel{min-width:42px;min-height:42px;border-radius:12px}
+html.android-apk input:not([type=checkbox]):not([type=radio]),html.android-apk select,html.android-apk textarea{min-height:48px;border-radius:12px}
+html.android-apk button:active:not(:disabled):not(.sw):not(.avatar),html.android-apk .btn:active:not(:disabled){transform:scale(.965);filter:brightness(1.08)}
+html.android-apk button:focus-visible,html.android-apk .btn:focus-visible,html.android-apk a.btn:focus-visible{outline:3px solid color-mix(in srgb,var(--info) 70%,transparent);outline-offset:2px}
+html.android-apk button:disabled{opacity:.55;box-shadow:none}
+@media (hover:hover){html.android-apk button:not(:disabled):not(.sw):not(.avatar):hover,html.android-apk .btn:hover{filter:brightness(1.06);box-shadow:0 8px 20px rgba(0,0,0,.2)}}
+@media (max-width:640px){
+  html.android-apk .about-hero{grid-template-columns:1fr;text-align:center;padding:22px 18px}
+  html.android-apk .about-brand{margin:0 auto}
+  html.android-apk .about-actions{width:100%;flex-direction:column;align-items:stretch}
+  html.android-apk .about-actions .btn{width:100%;justify-content:center}
+  html.android-apk .about-grid{grid-template-columns:1fr}
+}
+html.android-apk .about-page{max-width:1000px;margin:0 auto;display:grid;gap:16px}
+html.android-apk .about-hero{display:grid;grid-template-columns:76px minmax(0,1fr);gap:18px;align-items:center;padding:26px}
+html.android-apk .about-brand{width:68px;height:68px;border-radius:22px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--primary),var(--info));box-shadow:0 12px 26px color-mix(in srgb,var(--primary) 28%,transparent)}
+html.android-apk .about-brand .brand-logo{width:42px;height:42px}
+html.android-apk .about-intro h1{margin:10px 0 8px;font-size:clamp(22px,4vw,32px);line-height:1.15}
+html.android-apk .about-intro p,html.android-apk .about-repo p{margin:0;color:var(--text-2);line-height:1.6}
+html.android-apk .about-actions{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+html.android-apk .about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+html.android-apk .about-card{display:flex;align-items:flex-start;gap:14px;padding:18px;min-height:132px}
+html.android-apk .about-icon{width:46px;height:46px;display:grid;place-items:center;flex:none;border-radius:15px;background:color-mix(in srgb,var(--primary) 16%,var(--surface-2));color:var(--primary-2)}
+html.android-apk .about-icon .i{width:22px;height:22px}
+html.android-apk .about-label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+html.android-apk .about-card h2,html.android-apk .about-repo h2{font-size:17px;margin:4px 0 6px}
+html.android-apk .about-card p{font-size:13px;color:var(--text-2);line-height:1.5;margin:0}
+html.android-apk .about-repo{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px;flex-wrap:wrap}
+html.android-apk .about-repo .about-actions{margin:0}
+@media (prefers-reduced-motion:reduce){html.android-apk button,html.android-apk .btn{transition:none!important;transform:none!important}}
+html.android-apk.no-anim button,html.android-apk.no-anim .btn{transition:none!important}
+
+
+/* A tela Sobre mantém a mesma hierarquia visual também na versão web. */
+.about-page{max-width:1000px;margin:0 auto;display:grid;gap:16px}
+.about-hero{display:grid;grid-template-columns:76px minmax(0,1fr);gap:18px;align-items:center;padding:26px}
+.about-brand{width:68px;height:68px;border-radius:22px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--primary),var(--info));box-shadow:0 12px 26px rgba(88,86,214,.24)}
+.about-brand .brand-logo{width:42px;height:42px}
+.about-intro h1{margin:10px 0 8px;font-size:clamp(22px,4vw,32px);line-height:1.15}
+.about-intro p,.about-repo p{margin:0;color:var(--text-2);line-height:1.6}
+.about-actions{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.about-card{display:flex;align-items:flex-start;gap:14px;padding:18px;min-height:132px}
+.about-icon{width:46px;height:46px;display:grid;place-items:center;flex:none;border-radius:15px;background:rgba(88,86,214,.14);color:var(--primary-2)}
+.about-icon .i{width:22px;height:22px}
+.about-label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.about-card h2,.about-repo h2{font-size:17px;margin:4px 0 6px}
+.about-card p{font-size:13px;color:var(--text-2);line-height:1.5;margin:0}
+.about-repo{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px;flex-wrap:wrap}
+.about-repo .about-actions{margin:0}
+@media (max-width:640px){.about-hero{grid-template-columns:1fr;text-align:center;padding:22px 18px}.about-brand{margin:0 auto}.about-actions{width:100%;flex-direction:column;align-items:stretch}.about-actions .btn{width:100%;justify-content:center}.about-grid{grid-template-columns:1fr}}
+
+.about-note{display:flex;align-items:flex-start;gap:10px;padding:13px 16px;border:1px solid color-mix(in srgb,var(--warning) 30%,var(--border));border-radius:14px;background:color-mix(in srgb,var(--warning) 8%,var(--surface));color:var(--text-2);font-size:13px;line-height:1.5}
+.about-note .i{width:18px;height:18px;flex:none;color:var(--warning);margin-top:1px}

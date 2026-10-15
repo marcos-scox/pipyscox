@@ -99,6 +99,6 @@ const A={
   async conflictOverwrite(){$('#modalRoot').innerHTML='';try{const n=await backupToFolder(true,'backup',true);await flush(true);toast(`Suas alterações foram gravadas. A versão externa ficou salva em <b>backups/${esc(n)}</b>.`,'ok',6000)}catch(e){toast('Erro: '+esc(e.message),'err')}},
   async gateChoose(){const h=await pickFolder();if(h)await openDir(h)},
   async useLocalStore(){await openLocalStore()},
-  async gateReconnect(){const h=await kvGet('dir');if(h&&await verifyPerm(h,true))await openDir(h);else toast('Permissão não concedida.','warn')}
+  async gateReconnect(){let h=await kvGet('dir');if(h?.native)h=window.pipyscoxFolderApi?.openRoot(h);if(h&&await verifyPerm(h,true)){await openDir(h);return}if(window.pipyscoxFolderApi){const next=await pickFolder();if(next)await openDir(next);return}toast('Permissão não concedida.','warn')}
 };
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('mnav'))A.closeSide()});

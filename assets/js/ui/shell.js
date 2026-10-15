@@ -4,16 +4,17 @@
 /* ===================== Pasta / usuário ===================== */
 function showGate(mode,name){
   const g=$('#gate');g.classList.remove('hidden');let body='';
-  if(mode==='unsupported')body=`<h2>Use o pipyscox no celular</h2><p>Este navegador não permite escolher uma pasta do aparelho. Você pode usar o modo local para salvar os dados neste celular ou abrir no Chrome/Edge do computador para trabalhar com uma pasta compartilhada.</p><div class="row" style="justify-content:center;flex-wrap:wrap"><button class="btn primary" data-act="useLocalStore">${ic('save')} Salvar neste celular</button></div>`;
+  if(mode==='unsupported'&&window.pipyscoxFolderApi)body=`<h2>Onde salvar os dados?</h2><p>Escolha uma pasta do aparelho para manter seus dados e anexos nela. O Android vai pedir autorização. Se preferir, você também pode usar o armazenamento interno deste app.</p><div class="row" style="justify-content:center;flex-wrap:wrap"><button class="btn primary" data-act="gateChoose">${ic('folder')} Escolher pasta</button><button class="btn ghost" data-act="useLocalStore">${ic('save')} Salvar neste celular</button></div><p class="muted" style="font-size:12px;margin:16px 0 0">No Android 11 ou superior, escolha uma subpasta: o sistema não permite selecionar a raiz do aparelho ou a pasta Downloads.</p>`;
+  else if(mode==='unsupported')body=`<h2>Use o pipyscox no celular</h2><p>Este navegador não permite escolher uma pasta do aparelho. Você pode usar o modo local para salvar os dados neste celular ou abrir no Chrome/Edge do computador para trabalhar com uma pasta compartilhada.</p><div class="row" style="justify-content:center;flex-wrap:wrap"><button class="btn primary" data-act="useLocalStore">${ic('save')} Salvar neste celular</button></div>`;
   else if(mode==='reconnect')body=`<h2>Bem-vindo de volta</h2><p>Por segurança, o navegador pede confirmação para acessar a pasta <b>${esc(name)}</b> novamente.</p><div class="row" style="justify-content:center;flex-wrap:wrap"><button class="btn primary" data-act="gateReconnect">${ic('folder')} Reconectar à pasta</button><button class="btn ghost" data-act="gateChoose">Escolher outra pasta</button></div>`;
   else body=`<h2>Onde salvar os dados?</h2><p>Escolha uma pasta para compartilhar os dados entre computadores ou salve neste navegador para manter tudo neste aparelho. A pasta existente do pipyscox será reconhecida automaticamente.</p><div class="row" style="justify-content:center;flex-wrap:wrap"><button class="btn primary" data-act="gateChoose">${ic('folder')} Escolher pasta</button><button class="btn ghost" data-act="useLocalStore">${ic('save')} Salvar neste navegador</button></div>`;
   g.innerHTML=`<div class="box"><div style="color:var(--text);display:flex;justify-content:center">${LOGO.replace('class="brand-logo"','style="width:64px;height:64px"')}</div><div style="font-size:15px;margin-top:6px"><b>pipy</b><span style="color:var(--info)">scox</span></div>${body}</div>`;
 }
 const hideGate=()=>$('#gate').classList.add('hidden');
-async function pickFolder(){try{return await window.showDirectoryPicker({mode:'readwrite',id:'pipyscox'})}catch(e){if(e.name!=='AbortError')toast('Erro ao abrir a pasta: '+esc(e.message),'err');return null}}
+async function pickFolder(){try{if(window.pipyscoxFolderApi)return await window.pipyscoxFolderApi.pickDirectory();return await window.showDirectoryPicker({mode:'readwrite',id:'pipyscox'})}catch(e){if(e.name!=='AbortError')toast('Erro ao abrir a pasta: '+esc(e.message),'err');return null}}
 async function openDir(h){
   if(!await verifyPerm(h,true)){toast('Permissão de escrita negada para a pasta.','err');return false}
-  S.dir=h;await loadDb();await kvSet('dir',h);hideGate();renderAll();setSaveState('ok');
+  S.dir=h;await loadDb();await kvSet('dir',h?.native?{native:true,uri:h.uri,name:h.name}:h);hideGate();renderAll();setSaveState('ok');
   if(!S.user)await askUser();else ensurePerson(S.user);
   await autoPurge();maybeAutoBackup();return true;
 }
@@ -37,6 +38,7 @@ function renderSidebar(){
     <button class="nav-item ${act('trash')}" data-act="go" data-v="trash" title="Lixeira">${ic('bin')}<span class="lbl">Lixeira</span>${S.db.trash.length?`<span class="badge">${S.db.trash.length}</span>`:''}</button>
     <div class="nav-title">Sistema</div>
     <button class="nav-item ${act('config')}" data-act="go" data-v="config" title="Configurações">${ic('cog')}<span class="lbl">Configurações</span></button>
+    <button class="nav-item ${act('about')}" data-act="go" data-v="about" title="Sobre">${ic('info')}<span class="lbl">Sobre</span></button>
   </nav>
   <div class="side-foot" data-act="go" data-v="config" title="Pasta: ${esc(S.dir?.name)}"><span class="st"></span>${ic('folder')}<span class="txt">${esc(S.dir?.name||'')}</span></div>`;
 }
@@ -46,7 +48,7 @@ function renderMain(){
   closePop();const v=S.route.v;
   if(['pipe','phase','report'].includes(v)&&!pipeById(S.route.id))S.route={v:'home'};
   if(S.route.v==='phase'){const p=pipeById(S.route.id);if(!phaseOf(p,S.route.ph))S.route={v:'pipe',id:p.id}}
-  ({home:viewHome,pipe:viewPipe,phase:viewPhase,report:viewReport,data:viewData,trash:viewTrash,config:viewConfig})[S.route.v]();
+  ({home:viewHome,pipe:viewPipe,phase:viewPhase,report:viewReport,data:viewData,trash:viewTrash,config:viewConfig,about:viewAbout})[S.route.v]();
   renderSidebar();
 }
 function go(route){S.route=route;S.selField=null;S.ad=null;document.body.classList.remove('mnav');document.querySelector('[data-act="toggleSide"]')?.setAttribute('aria-expanded','false');renderMain();$('#content').scrollTop=0}
