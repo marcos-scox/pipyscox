@@ -8,6 +8,8 @@ Sistema de gestão de fluxos no estilo kanban, inspirado no Pipefy, para equipes
 
 **Android (APK):** [baixar pipyscox para Android v0.2.0](https://github.com/marcos-scox/pipyscox/releases/download/android-v0.2.0/pipyscox-android.apk) — prévia para Android 7.0+ (cerca de 4,2 MB). É assinada com chave de desenvolvimento e não é uma build da Play Store; ao instalar, o Android pode pedir autorização para instalar apps desta fonte.
 
+> **Ao atualizar outra prévia:** builds assinadas com chaves de desenvolvimento diferentes podem exigir a desinstalação da versão anterior. Antes, exporte um ZIP em **Configurações → Baixar ZIP**; a desinstalação pode apagar os dados que estejam somente no armazenamento interno do app.
+
 O sistema roda diretamente no navegador, sem servidor e sem instalação. No computador, os dados ficam na pasta local escolhida pelo usuário. No APK Android, também é possível escolher uma pasta pelo seletor nativo do sistema ou salvar no armazenamento interno do app. Em navegadores mobile sem seleção de pastas, os dados ficam no armazenamento local do navegador.
 
 > **Compatibilidade:** use uma versão atual do navegador. No APK, a pasta é escolhida pelo seletor nativo do Android; no Android 11 ou superior, escolha uma subpasta, pois o sistema não permite selecionar a raiz do armazenamento ou a pasta Downloads. No computador, o modo de pasta compartilhada requer a File System Access API (Chrome/Edge). Em navegadores mobile sem essa API, use **Salvar neste celular**: os recursos continuam disponíveis, mas os dados ficam restritos ao armazenamento desse navegador e não sincronizam sozinhos entre aparelhos.
